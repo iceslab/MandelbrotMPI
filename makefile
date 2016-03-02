@@ -1,4 +1,4 @@
-CXX=clang++
+CXX=mpic++
 CXXFLAGS=-c -O3 -std=c++11
 LIBS=-lGL -lglut -lGLU
 LDFLAGS=

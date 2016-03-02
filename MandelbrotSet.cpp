@@ -1,7 +1,7 @@
 // MandelbrotSet.cpp : Defines the entry point for the console application.
 //
 
-//#include <mpi.h>
+#include <mpi.h>
 #include <cstdio>
 #include <cstring>
 #include <GL/gl.h>
@@ -27,6 +27,8 @@ double yMax = (divergenceLimit + 0.5);
 double zoom = 2.0;
 bool isColor = true;
 bool verbose = false;
+
+typedef void (* FractalFnPtr)(complex<double>&, complex<double>&);
 
 void magnify(int x, int y, double magnitude)
 {
@@ -68,6 +70,25 @@ void magnify(int x, int y, double magnitude)
 	yMax = yCenter + difference;
 }
 
+void mandelbrotFractal(complex<double> &z, complex<double> &c)
+{
+	z = pow(z, 2.0) + c;
+}
+
+int getConvergence(double z_real, double z_imag, double c_real, double c_imag, FractalFnPtr fn)
+{
+	complex<double> z(z_real, z_imag);
+	complex<double> c(c_real, c_imag); // c_real => c(e)real xD
+	
+	// Sprawdzanie zbieznosci
+	int j = 0;
+	for (; j < convergenceSteps && abs(z) < divergenceLimit; j++)
+	{
+		fn(z, c);
+	}
+	return j;
+}
+
 void calcMandelbrot(int* mandelbrot, int width, int height, point2int vecX, point2int vecY)
 {
 	for (int k = vecY[0]; k < vecY[1]; k++)
@@ -77,15 +98,12 @@ void calcMandelbrot(int* mandelbrot, int width, int height, point2int vecX, poin
 		{
 			double x = xMin + (xMax - xMin) * (double(i) / double(width));
 			
-			complex<double> z(0, 0);
-			complex<double> c(x, y);
-			// Sprawdzanie zbieznosci
-			int j = 0;
-			for (; j < convergenceSteps && abs(z) < divergenceLimit; j++)
-			{
-				z = z * z + c;
-			}
-			mandelbrot[k * width + i] = j;
+			//complex<double> z(x, y);
+			//-0.70176-0.3842i
+			//-0.835-0.2321i
+			//complex<double> c(-0.70176, -0.3842);
+			
+			mandelbrot[k * width + i] = getConvergence(0, 0, x, y, mandelbrotFractal);
 		}
 	}
 }
@@ -178,10 +196,18 @@ void RenderScene(void)
 			<< timePerIteration	<<" ns"<< endl << endl;
 }
 
-void MyInit(void)
+void printHelp(void)
 {
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Kolor okna wnêtrza okna - ustawiono na bia³y
+	cout <<
+		"Parametry wywolania:\n"
+		"\t\"-v, --verbose\" - dodatkowe informacje w konsoli przy zdarzeniach\n"
+		"\t\"-h, --help\" - ten tekst pomocy\n" 
+		"\nKlawiszologia:\n"
+		"\tLMB, RMB - powiekszenie/pomniejszenie\n"
+		"\t\"+, -\" - zwiekszanie/zmniejszanie powiekszenia\n"
+		"\t\"r\" - wymuszenie przerysowania\n"
+		"\t\"c\" - wymuszenie zmiany rozmiaru\n"
+		;
 }
 
 void ChangeSize(GLsizei horizontal, GLsizei vertical)
@@ -322,44 +348,42 @@ int main(int argc, char** argv)
 			verbose = true;
 		if(!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help"))
 		{
-			cout <<
-				"Parametry wywolania:\n"
-				"\t\"-v, --verbose\" - dodatkowe informacje w konsoli przy zdarzeniach\n"
-				"\t\"-h, --help\" - ten tekst pomocy\n" 
-				"\nKlawiszologia:\n"
-				"\tLMB, RMB - powiekszenie/pomniejszenie\n"
-				"\t\"+, -\" - zwiekszanie/zmniejszanie powiekszenia\n"
-				"\t\"r\" - wymuszenie przerysowania\n"
-				"\t\"c\" - wymuszenie zmiany rozmiaru\n"
-				;
+			printHelp();
 			return 0;
 		}
 	}
 	
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-	// Ustawienie trybu wyœwietlania
-	// GLUT_SINGLE - pojedynczy bufor wyswietlania
-	// GLUT_RGBA - model kolorów RGB
-
 	glutCreateWindow("Mandelbrot Set");
-	// Utworzenie okna i okreslenie tresci napisu w naglowku okna
-
 	glutDisplayFunc(RenderScene);
-	// Okreœlenie, ¿e funkcja RenderScene bêdzie funkcj¹ zwrotn¹ (callback)
-	// Biblioteka GLUT bêdzie wywo³ywa³a t¹ funkcjê za ka¿dym razem, gdy
-	// trzeba bêdzie przerysowaæ okno
-
 	glutReshapeFunc(ChangeSize);
-	// Dla aktualnego okna ustala funkcjê zwrotn¹ odpowiedzialn¹ za
-	// zmiany rozmiaru okna
-
 	glutKeyboardFunc(keys);
 	glutMouseFunc(mouse);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-	MyInit();
-	// Funkcja MyInit (zdefiniowana powy¿ej) wykonuje wszelkie 
-	// inicjalizacje konieczneprzed przyst¹pieniem do renderowania
+	// MPI initialization
+    MPI_Init(&argc, &argv);
+    // Get the number of processes
+    int world_size;
+    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+    // Get the rank of the process
+    int world_rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+
+    // Get the name of the processor
+    char processor_name[MPI_MAX_PROCESSOR_NAME];
+    int name_len;
+    MPI_Get_processor_name(processor_name, &name_len);
+
+    // Print off a hello world message
+    printf("Hello world from processor %s, rank %d"
+           " out of %d processors\n",
+           processor_name, world_rank, world_size);
+
+    // Finalize the MPI environment.
+    MPI_Finalize();
 
 	glutMainLoop();
 	// Funkcja uruchamia szkielet biblioteki GLUT
