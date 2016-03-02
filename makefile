@@ -2,7 +2,7 @@ CXX=mpic++
 CXXFLAGS=-c -O3 -std=c++11
 LIBS=-lGL -lglut -lGLU
 LDFLAGS=
-SOURCES=MandelbrotSet.cpp
+SOURCES=MandelbrotSet.cpp main.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=main
 
@@ -13,3 +13,6 @@ $(EXECUTABLE): $(OBJECTS)
 
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $< -o $@
+
+clean:
+	rm -rf $(EXECUTABLE) *.o
