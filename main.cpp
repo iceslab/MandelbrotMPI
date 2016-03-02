@@ -82,15 +82,15 @@ void compareArguments(int argc, char** argv)
 	}
 }
 
-void magnify(int x, int y, double magnitude)
+void magnify(int x, int y, mpf_class magnitude)
 {
-	if (magnitude <= 0.0)
+	if (magnitude <= mpf_class(0.0, FractalCalc::precision))
 		return;
 
-	double size = (xMax - xMin);
+	auto size = (FractalCalc::xMax - FractalCalc::xMin);
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
-	double windowSize;
+	mpf_class windowSize;
 
 	if (!height)
 		height = 1;
@@ -100,26 +100,28 @@ void magnify(int x, int y, double magnitude)
 	if (height < width)
 	{
 		x -= ((width - height) / 2);
-		windowSize = height;
+		windowSize = mpf_class(height, FractalCalc::precision);
 	}
 	else
 	{
 		y -= ((height - width) / 2);
-		windowSize = width;
+		windowSize = mpf_class(width, FractalCalc::precision);
 	}
-
+	mpf_class x_f(x, FractalCalc::precision);
+	mpf_class y_f(y, FractalCalc::precision);
+	mpf_class two(2.0, FractalCalc::precision);
 	//y = windowSize - y;
-	x -= windowSize / 2.0;
-	y -= windowSize / 2.0;
+	x_f -= windowSize / two;
+	y_f -= windowSize / two;
 
-	double xCenter = (((double)x / windowSize) * size) + ((xMax + xMin) / 2.0);
-	double yCenter = (((double)y / windowSize) * size) + ((yMax + yMin) / 2.0);
-	double difference = (size * magnitude) / 2.0;
+	mpf_class xCenter = ((x_f / windowSize) * size) + ((FractalCalc::xMax + FractalCalc::xMin) / two);
+	mpf_class yCenter = ((y_f / windowSize) * size) + ((FractalCalc::yMax + FractalCalc::yMin) / two);
+	mpf_class difference = (size * magnitude) / two;
 
-	xMin = xCenter - difference;
-	xMax = xCenter + difference;
-	yMin = yCenter - difference;
-	yMax = yCenter + difference;
+	FractalCalc::xMin = xCenter - difference;
+	FractalCalc::xMax = xCenter + difference;
+	FractalCalc::yMin = yCenter - difference;
+	FractalCalc::yMax = yCenter + difference;
 }
 
 void RenderScene(void)
@@ -127,8 +129,8 @@ void RenderScene(void)
 	if(verbose)
 	{
 		cout << "Entering RenderScene++" << endl;
-		cout << "x=(" << xMin << ", " << xMax << ")" << endl;
-		cout << "y=(" << yMin << ", " << yMax << ")" << endl;
+		cout << "x=(" << FractalCalc::xMin << ", " << FractalCalc::xMax << ")" << endl;
+		cout << "y=(" << FractalCalc::yMin << ", " << FractalCalc::yMax << ")" << endl;
 	}
 	
 	// Clear the model-view matrix
@@ -168,10 +170,10 @@ void RenderScene(void)
 	{ 0, height },
 	{ 0, height } };
 
-	thread t0(calcMandelbrot, mandelbrot, width, height, vecX[0], vecY[0]);
-	thread t1(calcMandelbrot, mandelbrot, width, height, vecX[1], vecY[1]);
-	thread t2(calcMandelbrot, mandelbrot, width, height, vecX[2], vecY[2]);
-	thread t3(calcMandelbrot, mandelbrot, width, height, vecX[3], vecY[3]);
+	thread t0(FractalCalc::calcMandelbrot, mandelbrot, width, height, vecX[0], vecY[0]);
+	thread t1(FractalCalc::calcMandelbrot, mandelbrot, width, height, vecX[1], vecY[1]);
+	thread t2(FractalCalc::calcMandelbrot, mandelbrot, width, height, vecX[2], vecY[2]);
+	thread t3(FractalCalc::calcMandelbrot, mandelbrot, width, height, vecX[3], vecY[3]);
 	
 	t0.join();
 	t1.join();
@@ -181,14 +183,19 @@ void RenderScene(void)
 	glBegin(GL_POINTS);
 	for (int i = 0; i < width; i++)
 	{
-		double x = xMin + (xMax - xMin) * (double(i) / double(width));
+		mpf_class x = FractalCalc::xMin + (FractalCalc::xMax - FractalCalc::xMin) * 
+			(mpf_class(i, FractalCalc::precision) / mpf_class(width, FractalCalc::precision));
 		for (int k = 0; k < height; k++)
 		{
-			double y = yMin + (yMax - yMin) * (double(k) / double(height));
+			// double y = yMin + (yMax - yMin) * (double(k) / double(height));
+			mpf_class y = FractalCalc::yMin + (FractalCalc::yMax - FractalCalc::yMin) * 
+				(mpf_class(k, FractalCalc::precision) / mpf_class(height, FractalCalc::precision));
 
-			double color = (double)mandelbrot[i * width + k] / (double)convergenceSteps;
+			mpf_class color = mpf_class(mandelbrot[i * width + k], FractalCalc::precision) / 
+				mpf_class(FractalCalc::convergenceSteps, FractalCalc::precision);
 			int maxColor = 0xffffff;
-			int clr = floor(color * (double)maxColor);
+			mpf_class clr_mpf = floor(color * mpf_class(maxColor, FractalCalc::precision));
+			auto clr = clr_mpf.get_ui();
 			int r, g, b;
 			r = (clr & (0xff << 16)) >> 16;
 			g = (clr & (0xff << 8)) >> 8;
@@ -243,8 +250,8 @@ void ChangeSize(GLsizei horizontal, GLsizei vertical)
 
 void mouse(int button, int state, int x, int y) {
 	static int leftX, leftY, rightX, rightY;
-	double xSize = xMax - xMin;
-	double ySize = yMax - yMin;
+	// auto xSize = FractalCalc::xMax - FractalCalc::xMin;
+	// auto ySize = FractalCalc::yMax - FractalCalc::yMin;
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 

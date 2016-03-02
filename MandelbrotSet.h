@@ -1,25 +1,26 @@
 #ifndef _MANDELBROT_SET_H_
 #define _MANDELBROT_SET_H_
 #include <complex>
-
-using namespace std;
-
-const int convergenceSteps = 50;
-const double divergenceLimit = 2.0;
-extern double xMin;
-extern double xMax;
-extern double yMin;
-extern double yMax;
+#include <gmpxx.h>
 
 typedef float point2[2];
 typedef int point2int[2];
 typedef double point2d[2];
-typedef void (* FractalFnPtr)(complex<double>&, complex<double>&); 
 
-void mandelbrotFractal(complex<double> &z, complex<double> &c);
+using namespace std;
 
-int getConvergence(double z_real, double z_imag, double c_real, double c_imag, FractalFnPtr fn);
+class FractalCalc
+{
+public:
+	typedef void (* FractalFnPtr)(complex<mpf_class>&, complex<mpf_class>&);
+	static const int convergenceSteps;
+	static const int precision;
+	static const mpf_class divergenceLimit;
+	static mpf_class xMin, xMax, yMin, yMax;
 
-void calcMandelbrot(int* mandelbrot, int width, int height, point2int vecX, point2int vecY);
+	static void mandelbrotFractal(complex<mpf_class> &z, complex<mpf_class> &c);
+	static int getConvergence(mpf_class z_real, mpf_class z_imag, mpf_class c_real, mpf_class c_imag, FractalFnPtr fn);
+	static void calcMandelbrot(int* mandelbrot, int width, int height, point2int vecX, point2int vecY);
+};
 
 #endif

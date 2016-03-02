@@ -1,6 +1,6 @@
 CXX=mpic++
 CXXFLAGS=-c -O3 -std=c++11
-LIBS=-lGL -lglut -lGLU
+LIBS=-lGL -lglut -lGLU -lgmpxx -lgmp
 LDFLAGS=
 SOURCES=MandelbrotSet.cpp main.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
