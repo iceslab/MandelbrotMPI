@@ -11,6 +11,7 @@
 #include <ctime>
 #include <vector>
 #include <thread>
+#include <cstdarg>
 #include "MandelbrotSet.h"
 
 // extern double xMin, xMax, yMin, yMax;
@@ -18,6 +19,68 @@
 double zoom = 2.0;
 bool isColor = true;
 bool verbose = false;
+bool noDisplay = true;
+
+void printHelp(void)
+{
+	cout <<
+		"Parametry wywolania:\n"
+		"\t\"-v, --verbose\" - dodatkowe informacje w konsoli przy zdarzeniach\n"
+		"\t\"-h, --help\" - ten tekst pomocy\n" 
+		"\t\"-d, --display\" - wyÅ›wietla podglÄ…d w OpenGL\n" 
+		"\t\"-n, --no-display\" - wyÅ‚Ä…cza wyÅ›wietlanie podglÄ…du w OpenGL\n" 
+		"\nKlawiszologia:\n"
+		"\tLMB, RMB - powiekszenie/pomniejszenie\n"
+		"\t\"+, -\" - zwiekszanie/zmniejszanie powiekszenia\n"
+		"\t\"r\" - wymuszenie przerysowania\n"
+		"\t\"c\" - wymuszenie zmiany rozmiaru\n"
+		;
+}
+
+bool compareArgumentStrings(int passedVars, ...)
+{
+	va_list ap;
+    va_start(ap, passedVars);
+    char* argument = va_arg(ap, char*);
+    for(int i = 1; i < passedVars; i++) 
+    {
+        char* a = va_arg(ap, char*);
+        if(!strcmp(argument, a))
+        {
+        	va_end(ap);
+        	return true;
+        }
+    }
+    va_end(ap);
+    return false;
+}
+
+void compareArguments(int argc, char** argv)
+{
+	for(int i = 1; i < argc; ++i)
+	{
+		if(compareArgumentStrings(3, argv[i], "-v", "--verbose"))
+		{
+			verbose = true;
+			continue;
+		}
+		if(compareArgumentStrings(3, argv[i], "-h", "--help"))
+		{
+			printHelp();
+			exit(0);
+		}
+		if(compareArgumentStrings(3, argv[i], "-n", "--no-display"))
+		{
+			noDisplay = true;
+			continue;
+		}
+		if(compareArgumentStrings(3, argv[i], "-d", "--display"))
+		{
+			noDisplay = false;
+			continue;
+		}
+	}
+}
 
 void magnify(int x, int y, double magnitude)
 {
@@ -70,7 +133,7 @@ void RenderScene(void)
 	
 	// Clear the model-view matrix
 	glClear(GL_COLOR_BUFFER_BIT);
-	// Czyszczenie okna aktualnym kolorem czyszcz¹cym
+	// Czyszczenie okna aktualnym kolorem czyszczÂ¹cym
 
 	unsigned long long iterations = 0;
 	double timePerIteration = 0.0, overallTime = 0.0;
@@ -141,39 +204,25 @@ void RenderScene(void)
 	start = clock() - start;
 	overallTime = start / (double)CLOCKS_PER_SEC;
 	timePerIteration /= (double)iterations;
-	// Przekazanie poleceñ rysuj¹cych do wykonania
+	// Przekazanie poleceÃ± rysujÂ¹cych do wykonania
 	if(verbose)
 		cout << "Exiting RenderScene after " <<overallTime<<" s, "<< iterations << " iterations, \ntime per iteration: " 
 			<< timePerIteration	<<" ns"<< endl << endl;
 }
 
-void printHelp(void)
-{
-	cout <<
-		"Parametry wywolania:\n"
-		"\t\"-v, --verbose\" - dodatkowe informacje w konsoli przy zdarzeniach\n"
-		"\t\"-h, --help\" - ten tekst pomocy\n" 
-		"\nKlawiszologia:\n"
-		"\tLMB, RMB - powiekszenie/pomniejszenie\n"
-		"\t\"+, -\" - zwiekszanie/zmniejszanie powiekszenia\n"
-		"\t\"r\" - wymuszenie przerysowania\n"
-		"\t\"c\" - wymuszenie zmiany rozmiaru\n"
-		;
-}
-
 void ChangeSize(GLsizei horizontal, GLsizei vertical)
-// Parametry horizontal i vertical (szerokoœæ i wysokoœæ okna) s¹
-// przekazywane do funkcji za ka¿dym razem, gdy zmieni siê rozmiar okna
+// Parametry horizontal i vertical (szerokoÅ“Ã¦ i wysokoÅ“Ã¦ okna) sÂ¹
+// przekazywane do funkcji za kaÂ¿dym razem, gdy zmieni siÃª rozmiar okna
 {
 	if (vertical == 0)
 		// Zabezpieczenie pzred dzieleniem przez 0
 		vertical = 1;
 
 	glMatrixMode(GL_PROJECTION);
-	// Okreœlenie uk³adu wspó³rzêdnych obserwatora
+	// OkreÅ“lenie ukÂ³adu wspÃ³Â³rzÃªdnych obserwatora
 
 	glLoadIdentity();
-	// Okreœlenie przestrzeni ograniczaj¹cej
+	// OkreÅ“lenie przestrzeni ograniczajÂ¹cej
 
 	if (horizontal <= vertical)
 	{
@@ -187,7 +236,7 @@ void ChangeSize(GLsizei horizontal, GLsizei vertical)
 	}
 
 	glMatrixMode(GL_MODELVIEW);
-	// Okreœlenie uk³adu wspó³rzêdnych    
+	// OkreÅ“lenie ukÂ³adu wspÃ³Â³rzÃªdnych    
 
 	glLoadIdentity();
 }
@@ -293,26 +342,8 @@ void keys(unsigned char key, int x, int y)
 
 int main(int argc, char** argv)
 {
-	for(int i = 1; i < argc; ++i)
-	{
-		if(!strcmp(argv[i], "-v") || !strcmp(argv[i], "--verbose"))
-			verbose = true;
-		if(!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help"))
-		{
-			printHelp();
-			return 0;
-		}
-	}
+	compareArguments(argc, argv);
 	
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-	glutCreateWindow("Mandelbrot Set");
-	glutDisplayFunc(RenderScene);
-	glutReshapeFunc(ChangeSize);
-	glutKeyboardFunc(keys);
-	glutMouseFunc(mouse);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
 	// MPI initialization
     MPI_Init(&argc, &argv);
     // Get the number of processes
@@ -328,15 +359,23 @@ int main(int argc, char** argv)
     int name_len;
     MPI_Get_processor_name(processor_name, &name_len);
 
-    // Print off a hello world message
-    printf("Hello world from processor %s, rank %d"
-           " out of %d processors\n",
-           processor_name, world_rank, world_size);
-
     // Finalize the MPI environment.
     MPI_Finalize();
 
-	glutMainLoop();
+	if(!noDisplay)
+	{
+		glutInit(&argc, argv);
+		glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
+		glutCreateWindow("Mandelbrot Set");
+		glutDisplayFunc(RenderScene);
+		glutReshapeFunc(ChangeSize);
+		glutKeyboardFunc(keys);
+		glutMouseFunc(mouse);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+	if(!noDisplay)
+		glutMainLoop();
+
 	// Funkcja uruchamia szkielet biblioteki GLUT
 }
 
