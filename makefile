@@ -2,8 +2,8 @@ CXX=mpic++
 CXXFLAGS=-c -O3 -std=c++11
 LIBS=-lGL -lglut -lGLU -lgmpxx -lgmp
 LDFLAGS=
-SOURCES=MandelbrotSet.cpp main.cpp
-OBJECTS=$(SOURCES:.cpp=.o)
+SOURCES=main.cpp FractalCalc.cpp Display.cpp Utils.cpp
+OBJECTS=$(SOURCES:%.cpp=%.o)
 EXECUTABLE=main
 
 all: $(SOURCES) $(EXECUTABLE)

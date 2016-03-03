@@ -1,4 +1,4 @@
-#include "MandelbrotSet.h" 
+#include "FractalCalc.h" 
 
 const int FractalCalc::convergenceSteps = 50;
 const int FractalCalc::precision = 128;

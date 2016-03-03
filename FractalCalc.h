@@ -1,5 +1,5 @@
-#ifndef _MANDELBROT_SET_H_
-#define _MANDELBROT_SET_H_
+#ifndef _FRACTAL_CALC_H_
+#define _FRACTAL_CALC_H_
 #include <complex>
 #include <gmpxx.h>
 
