@@ -19,8 +19,8 @@ public:
 	static mpf_class xMin, xMax, yMin, yMax;
 
 	static void mandelbrotFractal(complex<mpf_class> &z, complex<mpf_class> &c);
-	static int getConvergence(mpf_class z_real, mpf_class z_imag, mpf_class c_real, mpf_class c_imag, FractalFnPtr fn);
-	static void calcMandelbrot(int* mandelbrot, int width, int height, point2int vecX, point2int vecY);
+	static double getConvergence(mpf_class z_real, mpf_class z_imag, mpf_class c_real, mpf_class c_imag, FractalFnPtr fn);
+	static void calcMandelbrot(double* mandelbrot, int width, int height, point2int vecX, point2int vecY);
 };
 
 #endif

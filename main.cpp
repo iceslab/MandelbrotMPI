@@ -45,17 +45,16 @@ void master(int &argc, char** &argv)
 int main(int argc, char** argv)
 {
 	compareArguments(argc, argv);
-	
 	// MPI initialization
     MPI_Init(&argc, &argv);
     // Get the number of processes
     int world_size;
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-
+    cout << world_size << endl;
     // Get the rank of the process
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
+    cout << rank << endl;
     if(rank == 0)
     	master(argc, argv);
     else

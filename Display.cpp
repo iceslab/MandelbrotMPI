@@ -49,6 +49,47 @@ void magnify(int x, int y, mpf_class magnitude)
 	FractalCalc::yMax = yCenter + difference;
 }
 
+void HSVtoRGB(double& fR, double& fG, double& fB, float fH, float fS, float fV) {
+  float fC = fV * fS; // Chroma
+  float fHPrime = fmod(fH / 60.0, 6);
+  float fX = fC * (1 - fabs(fmod(fHPrime, 2) - 1));
+  float fM = fV - fC;
+  
+  if(0 <= fHPrime && fHPrime < 1) {
+    fR = fC;
+    fG = fX;
+    fB = 0;
+  } else if(1 <= fHPrime && fHPrime < 2) {
+    fR = fX;
+    fG = fC;
+    fB = 0;
+  } else if(2 <= fHPrime && fHPrime < 3) {
+    fR = 0;
+    fG = fC;
+    fB = fX;
+  } else if(3 <= fHPrime && fHPrime < 4) {
+    fR = 0;
+    fG = fX;
+    fB = fC;
+  } else if(4 <= fHPrime && fHPrime < 5) {
+    fR = fX;
+    fG = 0;
+    fB = fC;
+  } else if(5 <= fHPrime && fHPrime < 6) {
+    fR = fC;
+    fG = 0;
+    fB = fX;
+  } else {
+    fR = 0;
+    fG = 0;
+    fB = 0;
+  }
+  
+  fR += fM;
+  fG += fM;
+  fB += fM;
+}
+
 void RenderScene(void)
 {
 	if(verbose)
@@ -82,7 +123,7 @@ void RenderScene(void)
 		width = height;
 	}
 
-	int *mandelbrot = new int[height * width];
+	double *mandelbrot = new double[height * width]; 
 	
 	point2int vecX[4] = { { 0, width / 4 },
 	{ width / 4, width / 2 },
@@ -114,18 +155,12 @@ void RenderScene(void)
 			// double y = yMin + (yMax - yMin) * (double(k) / double(height));
 			mpf_class y = FractalCalc::yMin + (FractalCalc::yMax - FractalCalc::yMin) * 
 				(mpf_class(k, FractalCalc::precision) / mpf_class(height, FractalCalc::precision));
-
-			mpf_class color = mpf_class(mandelbrot[i * width + k], FractalCalc::precision) / 
-				mpf_class(FractalCalc::convergenceSteps, FractalCalc::precision);
-			int maxColor = 0xffffff;
-			mpf_class clr_mpf = floor(color * mpf_class(maxColor, FractalCalc::precision));
-			auto clr = clr_mpf.get_ui();
-			int r, g, b;
-			r = (clr & (0xff << 16)) >> 16;
-			g = (clr & (0xff << 8)) >> 8;
-			b = clr & (0xff);
-
-			glColor3b(r, g, b);
+			double color = mandelbrot[i * width + k];
+			// color = (color > 0.5 ) ? 1.0 - color : color;
+			// color *= 2;
+			double r,g,b;
+			HSVtoRGB(r, g, b, 10*color * 360,1.0,1.0);
+			glColor3f(r, g, b);
 			glVertex2i(k, i);
 		}
 	}
