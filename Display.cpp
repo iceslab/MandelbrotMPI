@@ -94,17 +94,24 @@ void RenderScene(void)
 {
 	if(verbose)
 	{
+		mp_exp_t exp;
 		cout << "Entering RenderScene++" << endl;
 		cout << "x=(" << FractalCalc::xMin << ", " << FractalCalc::xMax << ")" << endl;
 		cout << "y=(" << FractalCalc::yMin << ", " << FractalCalc::yMax << ")" << endl;
+		mpf_class center_x, center_y, width, height;
+		FractalCalc::getCenter(center_x, center_y);
+		FractalCalc::getWidth(width);
+		FractalCalc::getHeight(height);
+		cout << "center=(" << center_x.get_str(exp) << " " << exp << ", " << center_y.get_str(exp) << " " << exp << ")" << endl;
+		cout << "width=" << width.get_str(exp) << " " << exp << ", height=" << height.get_str(exp) << " " << exp << endl;
 	}
 	
 	// Clear the model-view matrix
 	glClear(GL_COLOR_BUFFER_BIT);
 	// Czyszczenie okna aktualnym kolorem czyszcz¹cym
 
-	unsigned long long iterations = 0;
-	double timePerIteration = 0.0, overallTime = 0.0;
+	// unsigned long long pixels = 0, lines = 0;
+	double timePerPixel = 0.0, timePerLine = 0.0, overallTime = 0.0;
 	clock_t start = clock();
 	int width, height;
 	width = glutGet(GLUT_WINDOW_WIDTH);
@@ -146,11 +153,11 @@ void RenderScene(void)
 	t3.join();
 
 	glBegin(GL_POINTS);
-	for (int i = 0; i < width; i++)
+	for (int i = 0; i < width; ++i)
 	{
 		mpf_class x = FractalCalc::xMin + (FractalCalc::xMax - FractalCalc::xMin) * 
 			(mpf_class(i, FractalCalc::precision) / mpf_class(width, FractalCalc::precision));
-		for (int k = 0; k < height; k++)
+		for (int k = 0; k < height; ++k)
 		{
 			// double y = yMin + (yMax - yMin) * (double(k) / double(height));
 			mpf_class y = FractalCalc::yMin + (FractalCalc::yMax - FractalCalc::yMin) * 
@@ -172,11 +179,14 @@ void RenderScene(void)
 	glFlush();
 	start = clock() - start;
 	overallTime = start / (double)CLOCKS_PER_SEC;
-	timePerIteration /= (double)iterations;
+	timePerPixel = overallTime / (double)(height * width);
+	timePerLine = overallTime / (double)(height);
 	// Przekazanie poleceñ rysuj¹cych do wykonania
 	if(verbose)
-		cout << "Exiting RenderScene after " <<overallTime<<" s, "<< iterations << " iterations, \ntime per iteration: " 
-			<< timePerIteration	<<" ns"<< endl << endl;
+		cout << "Exiting RenderScene after " <<overallTime<<" s\n"
+			<< (height * width) << " pixels, "<< timePerPixel<<" s per pixel\n" 
+			<<	height <<" lines, " << timePerLine << " s per line\n" 
+			<< endl;
 }
 
 void ChangeSize(GLsizei horizontal, GLsizei vertical)
