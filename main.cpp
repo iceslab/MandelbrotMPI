@@ -8,7 +8,7 @@
 #include "Display.h"
 #include "Utils.h"
 
-double zoom = 2.0;
+double zoom = 1.01;
 extern bool noDisplay;
 
 // Struktura która stoi za mpf_class
@@ -67,6 +67,8 @@ void master(int &argc, char** &argv)
 	cout<<"Master"<<endl;
 	if(!noDisplay)
 	{
+		// FractalCalc::setPosition(0.44455674999001, 0.409933299999945, 0.00000000000009, 0.00000000000009);
+		FractalCalc::setPosition(0.44455674999001, 0.409933299999945, 2.0, 2.0);
 		glutInit(&argc, argv);
 		glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
 		glutCreateWindow("Mandelbrot Set");
@@ -83,6 +85,18 @@ void master(int &argc, char** &argv)
 int main(int argc, char** argv)
 {
 	compareArguments(argc, argv);
+
+	// LEFT x: 133, y: 131
+	// Magnify: 2.01
+	// Using double
+	// Entering RenderScene++
+	// x=(0.444557, 0.444557)
+	// y=(0.409933, 0.409933)
+	// center=(0, 0)
+	// width=5, height=5
+	// Exiting RenderScene after 0.249608 s
+	// 90000 pixels, 2.77342e-06 s per pixel
+	// 300 lines, 0.000832027 s per line
 
 	// MPI initialization
     MPI_Init(&argc, &argv);

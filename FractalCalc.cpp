@@ -65,8 +65,8 @@ void FractalCalc::getHeight(double &height)
 void FractalCalc::mandelbrotFractal(complex<double> &z, complex<double> &c)
 {
 	// z = exp( z ) + c;
-	z = exp(pow(z,3)) - 0.521;
-	// z = z * z + c;
+	// z = exp(pow(z,3)) - 0.521;
+	z = z * z + c;
 }
 void FractalCalc::mandelbrotFractal(complex<mpf_class> &z, complex<mpf_class> &c)
 {
@@ -140,7 +140,7 @@ void FractalCalc::calcMandelbrotD(double* mandelbrot, int width, int height, poi
 			//-0.835-0.2321i
 			//complex<double> c(-0.70176, -0.3842);
 			
-			mandelbrot[k * width + i] = getConvergence(x, y, -0.85, 0.2321, mandelbrotFractal);
+			mandelbrot[k * width + i] = getConvergence(0, 0, x, y, mandelbrotFractal);
 		}
 	}
 }
