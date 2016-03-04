@@ -156,10 +156,13 @@ void RenderScene(void)
 			mpf_class y = FractalCalc::yMin + (FractalCalc::yMax - FractalCalc::yMin) * 
 				(mpf_class(k, FractalCalc::precision) / mpf_class(height, FractalCalc::precision));
 			double color = mandelbrot[i * width + k];
-			// color = (color > 0.5 ) ? 1.0 - color : color;
-			// color *= 2;
+			// color = sin( 2*M_PI*color - M_PI/2 ) + 1;
+			// cout << color << endl;
 			double r,g,b;
-			HSVtoRGB(r, g, b, 10*color * 360,1.0,1.0);
+			r = sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1;
+			g = sin( 2*M_PI*color - M_PI/2 			 ) + 1;
+			b = sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1;
+			//HSVtoRGB(r, g, b, 10*color * 360,1.0,1.0);
 			glColor3f(r, g, b);
 			glVertex2i(k, i);
 		}
