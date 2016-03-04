@@ -6,6 +6,7 @@
 bool isColor = true;
 bool verbose = false;
 bool noDisplay = true;
+bool enableMPF = false;
 
 using namespace std;
 
@@ -22,6 +23,7 @@ void printHelp(void)
 		"\t\"+, -\" - zwiekszanie/zmniejszanie powiekszenia\n"
 		"\t\"r\" - wymuszenie przerysowania\n"
 		"\t\"c\" - wymuszenie zmiany rozmiaru\n"
+		"\t\"-m, -mpf_class\" - uruchomienie z mpf_class (bez z double)\n"
 		;
 }
 
@@ -65,6 +67,11 @@ void compareArguments(int argc, char** argv)
 		if(compareArgumentStrings(3, argv[i], "-d", "--display"))
 		{
 			noDisplay = false;
+			continue;
+		}
+		if(compareArgumentStrings(3, argv[i], "-m", "--mpf_class"))
+		{
+			enableMPF = true;;
 			continue;
 		}
 	}

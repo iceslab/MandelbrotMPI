@@ -83,13 +83,6 @@ void master(int &argc, char** &argv)
 int main(int argc, char** argv)
 {
 	compareArguments(argc, argv);
-	// center=(343906995972568088465 0, -700620020235004931248 0)
-	// width=181899218749999997054 -17, height=181899218749999997054 -17
-// 1.23e-1_mpf
-	FractalCalc::setPosition(mpf_class(343906995972568088465e-21_mpf),
-		mpf_class(-700620020235004931248e-21_mpf),
-		mpf_class(181899218749999997054e-38_mpf),
-		mpf_class(181899218749999997054e-38_mpf));
 
 	// MPI initialization
     MPI_Init(&argc, &argv);

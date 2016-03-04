@@ -5,14 +5,15 @@
 extern bool verbose;
 extern double zoom;
 extern bool isColor;
+extern bool enableMPF;
 using namespace std;
 
-void magnify(int x, int y, mpf_class magnitude)
+void magnifyM(int x, int y, mpf_class magnitude)
 {
 	if (magnitude <= mpf_class(0.0, FractalCalc::precision))
 		return;
 
-	auto size = (FractalCalc::xMax - FractalCalc::xMin);
+	auto size = (FractalCalc::xMaxM - FractalCalc::xMinM);
 	int width = glutGet(GLUT_WINDOW_WIDTH);
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 	mpf_class windowSize;
@@ -39,14 +40,56 @@ void magnify(int x, int y, mpf_class magnitude)
 	x_f -= windowSize / two;
 	y_f -= windowSize / two;
 
-	mpf_class xCenter = ((x_f / windowSize) * size) + ((FractalCalc::xMax + FractalCalc::xMin) / two);
-	mpf_class yCenter = ((y_f / windowSize) * size) + ((FractalCalc::yMax + FractalCalc::yMin) / two);
+	mpf_class xCenter = ((x_f / windowSize) * size) + ((FractalCalc::xMaxM + FractalCalc::xMinM) / two);
+	mpf_class yCenter = ((y_f / windowSize) * size) + ((FractalCalc::yMaxM + FractalCalc::yMinM) / two);
 	mpf_class difference = (size * magnitude) / two;
 
-	FractalCalc::xMin = xCenter - difference;
-	FractalCalc::xMax = xCenter + difference;
-	FractalCalc::yMin = yCenter - difference;
-	FractalCalc::yMax = yCenter + difference;
+	FractalCalc::xMinM = xCenter - difference;
+	FractalCalc::xMaxM = xCenter + difference;
+	FractalCalc::yMinM = yCenter - difference;
+	FractalCalc::yMaxM = yCenter + difference;
+}
+
+void magnifyD(int x, int y, double magnitude)
+{
+	if (magnitude <= double(0.0) )
+		return;
+
+	auto size = (FractalCalc::xMaxD - FractalCalc::xMinD);
+	int width = glutGet(GLUT_WINDOW_WIDTH);
+	int height = glutGet(GLUT_WINDOW_HEIGHT);
+	double windowSize;
+
+	if (!height)
+		height = 1;
+	if (!width)
+		width = 1;
+
+	if (height < width)
+	{
+		x -= ((width - height) / 2);
+		windowSize = double(height);
+	}
+	else
+	{
+		y -= ((height - width) / 2);
+		windowSize = double(width);
+	}
+	double x_f(x);
+	double y_f(y);
+	double two(2.0);
+	//y = windowSize - y;
+	x_f -= windowSize / two;
+	y_f -= windowSize / two;
+
+	double xCenter = ((x_f / windowSize) * size) + ((FractalCalc::xMaxD + FractalCalc::xMinD) / two);
+	double yCenter = ((y_f / windowSize) * size) + ((FractalCalc::yMaxD + FractalCalc::yMinD) / two);
+	double difference = (size * magnitude) / two;
+
+	FractalCalc::xMinD = xCenter - difference;
+	FractalCalc::xMaxD = xCenter + difference;
+	FractalCalc::yMinD = yCenter - difference;
+	FractalCalc::yMaxD = yCenter + difference;
 }
 
 void HSVtoRGB(double& fR, double& fG, double& fB, float fH, float fS, float fV) {
@@ -94,16 +137,33 @@ void RenderScene(void)
 {
 	if(verbose)
 	{
-		mp_exp_t exp;
-		cout << "Entering RenderScene++" << endl;
-		cout << "x=(" << FractalCalc::xMin << ", " << FractalCalc::xMax << ")" << endl;
-		cout << "y=(" << FractalCalc::yMin << ", " << FractalCalc::yMax << ")" << endl;
-		mpf_class center_x, center_y, width, height;
-		FractalCalc::getCenter(center_x, center_y);
-		FractalCalc::getWidth(width);
-		FractalCalc::getHeight(height);
-		cout << "center=(" << center_x.get_str(exp) << " " << exp << ", " << center_y.get_str(exp) << " " << exp << ")" << endl;
-		cout << "width=" << width.get_str(exp) << " " << exp << ", height=" << height.get_str(exp) << " " << exp << endl;
+		if(enableMPF)
+		{
+			cout << "Using mpf_class\n";
+			mp_exp_t exp;
+			cout << "Entering RenderScene++" << endl;
+			cout << "x=(" << FractalCalc::xMinM << ", " << FractalCalc::xMaxM << ")" << endl;
+			cout << "y=(" << FractalCalc::yMinM << ", " << FractalCalc::yMaxM << ")" << endl;
+			mpf_class center_x, center_y, width, height;
+			FractalCalc::getCenter(center_x, center_y);
+			FractalCalc::getWidth(width);
+			FractalCalc::getHeight(height);
+			cout << "center=(" << center_x.get_str(exp) << " " << exp << ", " << center_y.get_str(exp) << " " << exp << ")" << endl;
+			cout << "width=" << width.get_str(exp) << " " << exp << ", height=" << height.get_str(exp) << " " << exp << endl;
+		}
+		else
+		{
+			cout << "Using double\n";
+			cout << "Entering RenderScene++" << endl;
+			cout << "x=(" << FractalCalc::xMinD << ", " << FractalCalc::xMaxD << ")" << endl;
+			cout << "y=(" << FractalCalc::yMinD << ", " << FractalCalc::yMaxD << ")" << endl;
+			mpf_class center_x, center_y, width, height;
+			FractalCalc::getCenter(center_x, center_y);
+			FractalCalc::getWidth(width);
+			FractalCalc::getHeight(height);
+			cout << "center=(" << center_x  << ", " << center_y << ")" << endl;
+			cout << "width=" << width << ", height=" << height << endl;
+		}
 	}
 	
 	// Clear the model-view matrix
@@ -141,40 +201,78 @@ void RenderScene(void)
 	{ 0, height },
 	{ 0, height },
 	{ 0, height } };
-
-	thread t0(FractalCalc::calcMandelbrot, mandelbrot, width, height, vecX[0], vecY[0]);
-	thread t1(FractalCalc::calcMandelbrot, mandelbrot, width, height, vecX[1], vecY[1]);
-	thread t2(FractalCalc::calcMandelbrot, mandelbrot, width, height, vecX[2], vecY[2]);
-	thread t3(FractalCalc::calcMandelbrot, mandelbrot, width, height, vecX[3], vecY[3]);
-	
-	t0.join();
-	t1.join();
-	t2.join();
-	t3.join();
-
-	glBegin(GL_POINTS);
-	for (int i = 0; i < width; ++i)
+	if( enableMPF )
 	{
-		mpf_class x = FractalCalc::xMin + (FractalCalc::xMax - FractalCalc::xMin) * 
-			(mpf_class(i, FractalCalc::precision) / mpf_class(width, FractalCalc::precision));
-		for (int k = 0; k < height; ++k)
+		thread t0(FractalCalc::calcMandelbrotM, mandelbrot, width, height, vecX[0], vecY[0]);
+		thread t1(FractalCalc::calcMandelbrotM, mandelbrot, width, height, vecX[1], vecY[1]);
+		thread t2(FractalCalc::calcMandelbrotM, mandelbrot, width, height, vecX[2], vecY[2]);
+		thread t3(FractalCalc::calcMandelbrotM, mandelbrot, width, height, vecX[3], vecY[3]);
+
+		t0.join();
+		t1.join();
+		t2.join();
+		t3.join();
+
+		glBegin(GL_POINTS);
+		for (int i = 0; i < width; ++i)
 		{
-			// double y = yMin + (yMax - yMin) * (double(k) / double(height));
-			mpf_class y = FractalCalc::yMin + (FractalCalc::yMax - FractalCalc::yMin) * 
-				(mpf_class(k, FractalCalc::precision) / mpf_class(height, FractalCalc::precision));
-			double color = mandelbrot[i * width + k];
-			// color = sin( 2*M_PI*color - M_PI/2 ) + 1;
-			// cout << color << endl;
-			double r,g,b;
-			r = sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1;
-			g = sin( 2*M_PI*color - M_PI/2 			 ) + 1;
-			b = sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1;
-			//HSVtoRGB(r, g, b, 10*color * 360,1.0,1.0);
-			glColor3f(r, g, b);
-			glVertex2i(k, i);
+			mpf_class x = FractalCalc::xMinM + (FractalCalc::xMaxM - FractalCalc::xMinM) * 
+				(mpf_class(i, FractalCalc::precision) / mpf_class(width, FractalCalc::precision));
+			for (int k = 0; k < height; ++k)
+			{
+				// double y = yMin + (yMax - yMin) * (double(k) / double(height));
+				mpf_class y = FractalCalc::yMinM + (FractalCalc::yMaxM - FractalCalc::yMinM) * 
+					(mpf_class(k, FractalCalc::precision) / mpf_class(height, FractalCalc::precision));
+				double color = mandelbrot[i * width + k];
+				// color = sin( 2*M_PI*color - M_PI/2 ) + 1;
+				// cout << color << endl;
+				double r,g,b;
+				r = sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1;
+				g = sin( 2*M_PI*color - M_PI/2 			 ) + 1;
+				b = sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1;
+				//HSVtoRGB(r, g, b, 10*color * 360,1.0,1.0);
+				glColor3f(r, g, b);
+				glVertex2i(k, i);
+			}
 		}
+		glEnd();
 	}
-	glEnd();
+	else
+	{
+		thread t0(FractalCalc::calcMandelbrotD, mandelbrot, width, height, vecX[0], vecY[0]);
+		thread t1(FractalCalc::calcMandelbrotD, mandelbrot, width, height, vecX[1], vecY[1]);
+		thread t2(FractalCalc::calcMandelbrotD, mandelbrot, width, height, vecX[2], vecY[2]);
+		thread t3(FractalCalc::calcMandelbrotD, mandelbrot, width, height, vecX[3], vecY[3]);
+
+		t0.join();
+		t1.join();
+		t2.join();
+		t3.join();
+
+		glBegin(GL_POINTS);
+		for (int i = 0; i < width; ++i)
+		{
+			double x = FractalCalc::xMinD + (FractalCalc::xMaxD - FractalCalc::xMinD) * 
+				(double(i) / double(width));
+			for (int k = 0; k < height; ++k)
+			{
+				// double y = yMin + (yMax - yMin) * (double(k) / double(height));
+				double y = FractalCalc::yMinD + (FractalCalc::yMaxD - FractalCalc::yMinD) * 
+					(double(k) / double(height));
+				double color = mandelbrot[i * width + k];
+				// color = sin( 2*M_PI*color - M_PI/2 ) + 1;
+				// cout << color << endl;
+				double r,g,b;
+				r = sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1;
+				g = sin( 2*M_PI*color - M_PI/2 			 ) + 1;
+				b = sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1;
+				//HSVtoRGB(r, g, b, 10*color * 360,1.0,1.0);
+				glColor3f(r, g, b);
+				glVertex2i(k, i);
+			}
+		}
+		glEnd();
+	}
 
 	glFlush();
 	start = clock() - start;
@@ -269,7 +367,10 @@ void mouse(int button, int state, int x, int y) {
 		{
 			if(verbose)
 				cout << "Magnify: " << zoom << endl;
-			magnify(leftX, leftY, 1/zoom);
+			if( enableMPF )
+				magnifyM(leftX, leftY, 1/zoom);
+			else
+				magnifyD(leftX, leftY, 1/zoom);
 			ChangeSize(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 			RenderScene();
 		}
@@ -277,7 +378,10 @@ void mouse(int button, int state, int x, int y) {
 		{
 			if(verbose)
 				cout << "Magnify: " << 1/zoom << endl;
-			magnify(rightX, rightY, zoom);
+			if( enableMPF )
+				magnifyM(leftX, leftY, 1/zoom);
+			else
+				magnifyD(leftX, leftY, 1/zoom);
 			ChangeSize(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 			RenderScene();
 		}
