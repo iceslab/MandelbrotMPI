@@ -379,9 +379,9 @@ void mouse(int button, int state, int x, int y) {
 			if(verbose)
 				cout << "Magnify: " << 1/zoom << endl;
 			if( enableMPF )
-				magnifyM(leftX, leftY, 1/zoom);
+				magnifyM(leftX, leftY, zoom);
 			else
-				magnifyD(leftX, leftY, 1/zoom);
+				magnifyD(leftX, leftY, zoom);
 			ChangeSize(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 			RenderScene();
 		}
