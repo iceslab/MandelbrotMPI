@@ -7,6 +7,7 @@
 #include "FractalCalc.h"
 #include "Display.h"
 #include "Utils.h"
+#include "Comunicator.h"
 
 double zoom = 1.01;
 extern bool noDisplay;
@@ -54,32 +55,76 @@ struct TaskInfo
 	
 };
 
+enum TAGS
+{
+	WORKTAG,
+	DIETAG
+};
+
 void slave(int &argc, char** &argv)
 {
-	cout<<"Slave: ";
-	for(int i = 1; i < argc; ++i)
-		cout<<argv[i];
-	cout<<endl;
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	Comunicator com;
+	Package p;
+	MPI_Status status;
+	while( true )
+	{
+		status = com.recive( p, 0, MPI_ANY_TAG );
+		cout << "Core "<<rank<<": ";
+		if( status. MPI_TAG == DIETAG )
+		{
+			cout << "Package with DIETAG recived. End.\n";
+			return;
+		}
+		cout << "Package from master recived. Values: "<<p.begin <<", "<<p.end<<endl;
+
+	}
+
 }
 
 void master(int &argc, char** &argv)
 {
-	cout<<"Master"<<endl;
-	if(!noDisplay)
+	// if(!noDisplay)
+	// {
+	// 	// FractalCalc::setPosition(0.44455674999001, 0.409933299999945, 0.00000000000009, 0.00000000000009);
+	// 	FractalCalc::setPosition(0.44455674999001, 0.409933299999945, 2.0, 2.0);
+	// 	glutInit(&argc, argv);
+	// 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
+	// 	glutCreateWindow("Mandelbrot Set");
+	// 	glutDisplayFunc(RenderScene);
+	// 	glutReshapeFunc(ChangeSize);
+	// 	glutKeyboardFunc(keys);
+	// 	glutMouseFunc(mouse);
+	// 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	// }
+	// if(!noDisplay)
+	// 	glutMainLoop();
+
+	int cores, rank;
+	int result;
+	MPI_Status status;
+
+	MPI_Comm_size(MPI_COMM_WORLD, &cores);
+	
+	Package p;
+	p.begin = 2;
+	p.end = 100;
+	Comunicator com;
+
+	for( rank = 1; rank < cores; ++rank )
 	{
-		// FractalCalc::setPosition(0.44455674999001, 0.409933299999945, 0.00000000000009, 0.00000000000009);
-		FractalCalc::setPosition(0.44455674999001, 0.409933299999945, 2.0, 2.0);
-		glutInit(&argc, argv);
-		glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-		glutCreateWindow("Mandelbrot Set");
-		glutDisplayFunc(RenderScene);
-		glutReshapeFunc(ChangeSize);
-		glutKeyboardFunc(keys);
-		glutMouseFunc(mouse);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		com.send(p, rank, WORKTAG);
+		cout << "Package to "<<rank<<" sent. Values: "<<p.begin <<", "<<p.end<<endl;
+		p.begin = p.end;
+		p.end += 100;
+		
 	}
-	if(!noDisplay)
-		glutMainLoop();
+	p.begin = p.end = 0;
+	for( rank = 1; rank < cores; ++rank )
+	{
+		com.send(p, rank, DIETAG);
+	}
 }
 
 int main(int argc, char** argv)
@@ -103,11 +148,9 @@ int main(int argc, char** argv)
     // Get the number of processes
     int world_size;
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-    cout << world_size << endl;
     // Get the rank of the process
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    cout << rank << endl;
     if(rank == 0)
     	master(argc, argv);
     else
