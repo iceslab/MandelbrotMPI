@@ -7,6 +7,7 @@ bool isColor = true;
 bool verbose = false;
 bool noDisplay = true;
 bool enableMPF = false;
+MPI_Datatype MPI_INFO_TYPE;
 
 using namespace std;
 
@@ -75,4 +76,20 @@ void compareArguments(int argc, char** argv)
 			continue;
 		}
 	}
+}
+
+void registerMPIDataTypes()
+{
+
+	int blocksCount = 3;
+	int blocksLength[3] = {1, 1, 1};
+
+	MPI_Datatype types[3] = {MPI_INT, MPI_INT, EXP_MPI_TYPE};
+	MPI_Aint offsets[3];
+	offsets[0] = offsetof(info, _mp_prec);
+	offsets[1] = offsetof(info, _mp_size);
+	offsets[2] = offsetof(info, _mp_exp);
+
+	MPI_Type_create_struct(blocksCount, blocksLength, offsets, types, &MPI_INFO_TYPE);
+	MPI_Type_commit(&MPI_INFO_TYPE);
 }

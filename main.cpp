@@ -11,7 +11,7 @@
 
 double zoom = 1.01;
 extern bool noDisplay;
-
+extern MPI_Datatype MPI_INFO_TYPE;
 // Struktura która stoi za mpf_class
 // typedef struct
 // {
@@ -50,36 +50,72 @@ extern bool noDisplay;
 // typedef long int		mp_exp_t;
 // #endif
 
-struct TaskInfo
-{
-	
-};
-
 enum TAGS
 {
 	WORKTAG,
 	DIETAG
 };
 
+
+//     send.w = mat.size().width;
+//     send.h = mat.size().height;
+//     // Send image dimensions
+//     MPI_Send(&send, 1, custom_type, 1, 0, MPI_COMM_WORLD);
+//     // Send image data
+//     MPI_Send(mat.data, send.w*send.h*3, MPI_UNSIGNED_CHAR, 1, 0, MPI_COMM_WORLD);
+// }
+// if (rank == 1) {
+//     image recv;
+//     MPI_Status status;
+//     // Receive image dimensions
+//     MPI_Recv(&recv, 1, custom_type, 0, 0, MPI_COMM_WORLD, &status);
+//     // Allocate image matrix
+//     Mat mat(Size(recv.w, recv.h), CV_8UC3);
+//     // Receive image data
+//     MPI_Recv(mat.data, recv.w*recv.h*3, MPI_UNSIGNED_CHAR, 0, 0, MPI_COMM_WORLD, &status);
+//     ...
+
 void slave(int &argc, char** &argv)
 {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	Comunicator com;
-	Package p;
+	info recv;
 	MPI_Status status;
-	while( true )
-	{
-		status = com.recive( p, 0, MPI_ANY_TAG );
-		cout << "Core "<<rank<<": ";
-		if( status. MPI_TAG == DIETAG )
-		{
-			cout << "Package with DIETAG recived. End.\n";
-			return;
-		}
-		cout << "Package from master recived. Values: "<<p.begin <<", "<<p.end<<endl;
+    // Receive image dimensions
+    MPI_Recv(&recv, 1, MPI_INFO_TYPE, 0, 0, MPI_COMM_WORLD, &status);
+    mp_limb_t* limbs = (mp_limb_t*)malloc(recv._mp_size);
+    MPI_Recv(limbs, recv._mp_size, LIMB_MPI_TYPE, 0, 0, MPI_COMM_WORLD, &status);
 
-	}
+    mpf_t y;
+    y->_mp_prec = recv._mp_prec;
+    y->_mp_size = recv._mp_size;
+    y->_mp_exp = recv._mp_exp;
+    y->_mp_d = limbs;
+
+    mpf_class x(y);
+    
+    cout<<"Slave:"
+    <<"\n_mp_prec: "<<recv._mp_prec
+    <<"\n_mp_size: "<<recv._mp_size
+    <<"\n_mp_exp: "<<recv._mp_exp
+    <<endl;
+    cout<<x<<endl;
+
+ //    int rank;
+ //    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	// Comunicator com;
+	// Package p;
+	// MPI_Status status;
+	// while( true )
+	// {
+	// 	status = com.recive( p, 0, MPI_ANY_TAG );
+	// 	cout << "Core "<<rank<<": ";
+	// 	if( status. MPI_TAG == DIETAG )
+	// 	{
+	// 		cout << "Package with DIETAG recived. End.\n";
+	// 		return;
+	// 	}
+	// 	cout << "Package from master recived. Values: "<<p.begin <<", "<<p.end<<endl;
+
+	// }
 
 }
 
@@ -101,36 +137,56 @@ void master(int &argc, char** &argv)
 	// if(!noDisplay)
 	// 	glutMainLoop();
 
-	int cores, rank;
-	int result;
-	MPI_Status status;
+	mpf_class x(21231.22123, FractalCalc::precision);
+	// mpf_t y = ;
+	info send;
+	send._mp_prec = x.get_mpf_t()->_mp_prec;
+	send._mp_size = x.get_mpf_t()->_mp_size;
+	send._mp_exp = x.get_mpf_t()->_mp_exp;
+	cout<<"Master:"
+    <<"\n_mp_prec: "<< send._mp_prec
+    <<"\n_mp_size: "<<send._mp_size
+    <<"\n_mp_exp: "<<send._mp_exp
+    <<endl;
+    cout<<x<<endl;
 
-	MPI_Comm_size(MPI_COMM_WORLD, &cores);
+	MPI_Send(&send, 1, MPI_INFO_TYPE, 1, 0, MPI_COMM_WORLD);
+	MPI_Send(x.get_mpf_t()->_mp_d, send._mp_size, LIMB_MPI_TYPE, 1, 0, MPI_COMM_WORLD);
+	// int cores, rank;
+	// int result;
+	// MPI_Status status;
+
+	// MPI_Comm_size(MPI_COMM_WORLD, &cores);
+
 	
-	Package p;
-	p.begin = 2;
-	p.end = 100;
-	Comunicator com;
+	// Package p;
+	// p.begin = 2;
+	// p.end = 100;
+	// Comunicator com;
 	
-	for( rank = 1; rank < cores; ++rank )
-	{
-		com.send(p, rank, WORKTAG);
-		cout << "Package to "<<rank<<" sent. Values: "<<p.begin <<", "<<p.end<<endl;
-		p.begin = p.end;
-		p.end += 100;
+	// for( rank = 1; rank < cores; ++rank )
+	// {
+	// 	com.send(p, rank, WORKTAG);
+	// 	cout << "Package to "<<rank<<" sent. Values: "<<p.begin <<", "<<p.end<<endl;
+	// 	p.begin = p.end;
+	// 	p.end += 100;
 		
-	}
-	p.begin = p.end = 0;
-	for( rank = 1; rank < cores; ++rank )
-	{
-		com.send(p, rank, DIETAG);
-	}
+	// }
+	// p.begin = p.end = 0;
+	// for( rank = 1; rank < cores; ++rank )
+	// {
+	// 	com.send(p, rank, DIETAG);
+	// }
 }
 
 int main(int argc, char** argv)
 {
 	compareArguments(argc, argv);
-
+	cout<<"MPI_UNSIGNED: "<< MPI_UNSIGNED << endl;
+	cout<<"MPI_INT: "<< MPI_INT << endl;
+	cout<<"MPI_UNSIGNED_LONG_LONG: "<< MPI_UNSIGNED_LONG_LONG << endl;
+	cout<<"MPI_UNSIGNED_LONG: "<< MPI_UNSIGNED_LONG << endl;
+	cout<<"MPI_LONG_INT: "<< MPI_LONG_INT << endl;
 	// LEFT x: 133, y: 131
 	// Magnify: 2.01
 	// Using double
@@ -145,6 +201,7 @@ int main(int argc, char** argv)
 
 	// MPI initialization
     MPI_Init(&argc, &argv);
+    registerMPIDataTypes();
     // Get the number of processes
     int world_size;
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
