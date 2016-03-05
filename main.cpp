@@ -111,7 +111,7 @@ void master(int &argc, char** &argv)
 	p.begin = 2;
 	p.end = 100;
 	Comunicator com;
-
+	
 	for( rank = 1; rank < cores; ++rank )
 	{
 		com.send(p, rank, WORKTAG);

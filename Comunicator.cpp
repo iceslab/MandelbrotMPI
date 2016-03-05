@@ -13,8 +13,9 @@ Comunicator::~Comunicator()
 
 void Comunicator::calculate_size()
 {
-	ADD_MEMBER( INT, 1, size );
-	ADD_MEMBER( INT, 1, size );
+	int membersize;
+	MPI_Pack_size(sizeof( Package ), MPI_CHAR, MPI_COMM_WORLD, &membersize);\
+	size = membersize;
 }
 void Comunicator::alloc()
 {		
@@ -29,13 +30,13 @@ void Comunicator::clear()
 		buffer = nullptr;
 	}
 }
-int Comunicator::pack( Package& p )
+
+void Comunicator::pack( Package& p )
 {
 	alloc();
 	int position = 0;
-	PACK_MEMBER( p.begin, INT, 1, position);
-	PACK_MEMBER( p.end, INT, 1, position);
-	return position;
+	MPI_Pack(&p, sizeof(p), MPI_CHAR, buffer, size, &position, MPI_COMM_WORLD);
+	
 }
 void Comunicator::send( Package& p, unsigned dest, unsigned tag )
 {
@@ -56,8 +57,8 @@ MPI_Status Comunicator::recive( Package& p, unsigned src, unsigned tag )
 		std::cerr << "Critical! Cannot recive message. Wrong size!\n";
 		return status;
 	}
+
 	int position = 0;
-	UNPACK_MEMBER( p.begin, INT, 1, position);
-	UNPACK_MEMBER( p.end, INT, 1, position);
+	MPI_Unpack(buffer, size, &position, &p, sizeof(p), MPI_CHAR, MPI_COMM_WORLD);
 	return status;
 }
