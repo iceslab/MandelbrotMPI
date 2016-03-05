@@ -65,7 +65,9 @@ void FractalCalc::getHeight(double &height)
 void FractalCalc::mandelbrotFractal(complex<double> &z, complex<double> &c)
 {
 	// z = exp( z ) + c;
-	z = exp(pow(z,3)) - 0.521;
+	// z = z * exp( pow(z,2) ) - 0.521;
+	z = (pow(z,3.0)+z)/log(z) + 0.368;
+	// z = (pow(z,3.0)+pow(z,2.0) - z)/log(z) + 0.468;
 	// z = z * z + c;
 }
 void FractalCalc::mandelbrotFractal(complex<mpf_class> &z, complex<mpf_class> &c)
