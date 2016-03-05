@@ -385,6 +385,7 @@ void mouse(int button, int state, int x, int y) {
 			ChangeSize(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 			RenderScene();
 		}
+
 	}
 }
 
@@ -396,8 +397,9 @@ void keys(unsigned char key, int x, int y)
 	}
 	else if (key == 'c')
 	{
-		isColor = !isColor;
-		RenderScene();
+		int height = glutGet(GLUT_WINDOW_HEIGHT);
+		int width = glutGet(GLUT_WINDOW_WIDTH);
+		glutWarpPointer(width / 2, height / 2);
 	}
 	else if (key == '-')
 	{
@@ -420,5 +422,12 @@ void keys(unsigned char key, int x, int y)
 		}
 		else
 			zoom = 20.0;
+	}
+	else if(key == ' ')
+	{
+		int height = glutGet(GLUT_WINDOW_HEIGHT);
+		int width = glutGet(GLUT_WINDOW_WIDTH);
+		magnifyD(width / 2, height / 2, 1/zoom);
+		RenderScene();
 	}
 } 
