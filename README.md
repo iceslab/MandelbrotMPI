@@ -1,6 +1,6 @@
 # MandelbrotMPI
 Projekt zespołowy Mandelbrot w MPI
-Serwer Django: http://46.101.174.185:8000
+#####Serwer Django: http://46.101.174.185:8000
 
 ## Cluster - program uruchamiany na klastrze obliczeniowym
 Do kompilacji potrzebne są biblioteki openmpi-devel, gmp-devel i opengl. 
