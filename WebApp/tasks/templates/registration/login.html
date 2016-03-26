@@ -1,0 +1,38 @@
+{% extends "tasks/tasks.html" %}
+{% load i18n %}
+
+{% block menu %}
+    <div id="menu">
+				<ul>
+					<li><a href="{% url 'index' %}" accesskey="1" title="">Strona główna</a></li>
+                    {% if user.is_authenticated %}
+					    <li><a href="{% url 'generate' %}" accesskey="2" title="">Generuj fraktal</a></li>
+					    <li><a href="{% url 'fractals' %}" accesskey="3" title="">Moje fraktale</a></li>
+					    <li><a href="{% url 'animations' %}" accesskey="4" title="">Moje animacje</a></li>
+					    <li><a href="{% url 'auth_logout' %}" accesskey="5" title="">Wyloguj</a></li>
+                    {% else %}
+                        <li class="current_page_item"><a href="{% url 'auth_login' %}" accesskey="2" title="">Zaloguj</a></li>
+                    {% endif %}
+				</ul>
+			</div>
+{% endblock %}
+
+{% block reg_log %}
+    <h1>Logowanie</h1>
+    <br />
+    <div class="login">
+        <form method="post" action=".">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p>
+                <label>&nbsp;</label><input type="submit" value="{% trans 'Log in' %}"/>
+                <input type="hidden" name="next" value="{{ next }}"/>
+            </p>
+            <p>{% trans "Stracone hasło" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Reset hasła" %}</a>!
+            </p>
+            <p>{% trans "Konto jeszcze nie utworzone" %}? <a
+                    href="{% url 'registration_register' %}">{% trans "Zarejestruj" %}</a>!</p>
+        </form>
+    </div>
+
+{% endblock %}

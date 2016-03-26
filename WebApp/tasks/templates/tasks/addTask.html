@@ -1,0 +1,31 @@
+{% extends "tasks/index.html" %}
+
+{% block menu %}
+    <div id="menu">
+				<ul>
+					<li><a href="{% url 'index' %}" accesskey="1" title="">Strona główna</a></li>
+                    {% if user.is_authenticated %}
+					    <li class="current_page_item"><a href="{% url 'generate' %}" accesskey="2" title="">Generuj fraktal</a></li>
+					    <li><a href="{% url 'fractals' %}" accesskey="3" title="">Moje fraktale</a></li>
+					    <li><a href="{% url 'animations' %}" accesskey="4" title="">Moje animacje</a></li>
+					    <li><a href="{% url 'auth_logout' %}" accesskey="5" title="">Wyloguj</a></li>
+                    {% else %}
+                        <li><a href="{% url 'auth_login' %}" accesskey="2" title="">Zaloguj</a></li>
+                    {% endif %}
+				</ul>
+			</div>
+{% endblock %}
+
+{% block content %}
+     <h1>Generuj fraktal</h1>
+    <br /><br />
+        <form method="POST" class="addNick">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <p class="addNick-submit">
+            <button type="submit" class="addNick-button">Dodaj</button>
+            </p>
+        </form>
+{% endblock %}
