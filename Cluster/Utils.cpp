@@ -2,6 +2,12 @@
 #include <cstdarg>
 #include <iostream>
 #include <cstring>
+#include <mpi.h>
+#include <cstdio>
+#include <cmath>
+#include <iostream>
+#include <ctime>
+#include <vector>
 
 bool isColor = true;
 bool verbose = false;
@@ -90,7 +96,7 @@ void registerMPIInfoType()
 	int blocksCount = 3;
 	int blocksLength[3] = {1, 1, 1};
 
-	MPI_Datatype types[3] = {MPI_INT, MPI_INT, EXP_MPI_TYPE};
+	MPI_Datatype types[3] = {MPI::INT, MPI::INT, EXP_MPI_TYPE};
 	MPI_Aint offsets[3];
 	offsets[0] = offsetof(info, _mp_prec);
 	offsets[1] = offsetof(info, _mp_size);
@@ -102,18 +108,25 @@ void registerMPIInfoType()
 
 void registerMPIOrderType()
 {
-	int blocksCount = 5;
-	int blocksLength[5] = {1, 1, 1, 1, 1};
+	const int blocksCount = 6;
+	int blocksLength[blocksCount] = {1, 1, 1, 1, 1, 1};
 
-	MPI_Datatype types[5] = {MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT};
-	MPI_Aint offsets[5];
+	MPI_Datatype types[blocksCount] = {MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::BOOL};
+	MPI_Aint offsets[blocksCount];
 
 	offsets[0] = offsetof(Order, pictureWidth);
 	offsets[1] = offsetof(Order, pictureHeight);
 	offsets[2] = offsetof(Order, beginX);
 	offsets[3] = offsetof(Order, beginY);
 	offsets[4] = offsetof(Order, count);
+	offsets[5] = offsetof(Order, doWork);
 
 	MPI_Type_create_struct(blocksCount, blocksLength, offsets, types, &MPI_ORDER_TYPE);
 	MPI_Type_commit(&MPI_ORDER_TYPE);
+}
+
+void calcOffset(int width, int height, int beginX, int beginY, uint64_t count, int &endX, int &endY)
+{
+	endX = (beginX + count) % width;
+	endY = beginY + ((beginX + count) / height);
 }

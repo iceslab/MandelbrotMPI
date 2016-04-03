@@ -38,6 +38,8 @@
 // typedef long int		mp_exp_t;
 #endif
 
+using namespace std;
+
 void printHelp(void);
 
 bool compareArgumentStrings(int passedVars, ...);
@@ -49,6 +51,8 @@ void registerMPIDataTypes();
 void registerMPIInfoType();
 
 void registerMPIOrderType();
+
+void calcOffset(int width, int height, int beginX, int beginY, uint64_t count, int &endX, int &endY);
 
 typedef struct mpf_t_info {
    int _mp_prec;
@@ -62,6 +66,13 @@ typedef struct WorkOrder {
 	int beginX;
 	int beginY;
 	int count;
+	bool doWork;
 } Order;
+
+enum TAGS
+{
+	WORKTAG,
+	DIETAG
+};
 
 #endif 
