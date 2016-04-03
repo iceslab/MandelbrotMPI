@@ -8,6 +8,7 @@ bool verbose = false;
 bool noDisplay = true;
 bool enableMPF = false;
 MPI_Datatype MPI_INFO_TYPE;
+MPI_Datatype MPI_ORDER_TYPE;
 
 using namespace std;
 
@@ -80,7 +81,12 @@ void compareArguments(int argc, char** argv)
 
 void registerMPIDataTypes()
 {
+	registerMPIInfoType();
+	registerMPIOrderType();
+}
 
+void registerMPIInfoType()
+{
 	int blocksCount = 3;
 	int blocksLength[3] = {1, 1, 1};
 
@@ -92,4 +98,22 @@ void registerMPIDataTypes()
 
 	MPI_Type_create_struct(blocksCount, blocksLength, offsets, types, &MPI_INFO_TYPE);
 	MPI_Type_commit(&MPI_INFO_TYPE);
+}
+
+void registerMPIOrderType()
+{
+	int blocksCount = 5;
+	int blocksLength[5] = {1, 1, 1, 1, 1};
+
+	MPI_Datatype types[5] = {MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT};
+	MPI_Aint offsets[5];
+
+	offsets[0] = offsetof(Order, pictureWidth);
+	offsets[1] = offsetof(Order, pictureHeight);
+	offsets[2] = offsetof(Order, beginX);
+	offsets[3] = offsetof(Order, beginY);
+	offsets[4] = offsetof(Order, count);
+
+	MPI_Type_create_struct(blocksCount, blocksLength, offsets, types, &MPI_ORDER_TYPE);
+	MPI_Type_commit(&MPI_ORDER_TYPE);
 }

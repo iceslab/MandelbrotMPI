@@ -2,6 +2,7 @@
 #define _FRACTAL_CALC_H_
 #include <complex>
 #include <gmpxx.h>
+#include "Utils.h"
 
 typedef float point2[2];
 typedef int point2int[2];
@@ -44,6 +45,9 @@ public:
 	static void mandelbrotFractal(complex<double> &z, complex<double> &c);
 	static double getConvergence(double z_real, double z_imag, double c_real, double c_imag, FractalFnPtrD fn);
 	static void calcMandelbrotD(double* mandelbrot, int width, int height, point2int vecX, point2int vecY);
+
+	static int calcMandelbrotPart(double* mandelbrot, Order &order);
+	static int calcMandelbrotPart(double* mandelbrot, int width, int height, int beginX, int beginY, int count);
 };
 
 #endif
