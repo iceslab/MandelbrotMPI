@@ -79,13 +79,18 @@ double FractalCalc::getConvergence(double z_real, double z_imag, double c_real, 
 {
 	complex<double> z(z_real, z_imag);
 	complex<double> c(c_real, c_imag); // c_real => c(e)real xD
-		// Sprawdzanie zbieznosci
+	
+	// printf("%f %f %f %f %f\n", abs(z), z.real(), z.imag(), c.real(), c.imag());
+
+	// Sprawdzanie zbieznosci
 	int j = 0;
 	for (; j < convergenceSteps && abs(z) < divergenceLimitD; j++)
 	{
 		// z = exp(z.get_d()) + c;
 		fn(z, c);
 	}
+
+	// printf("%f %f %f %f %f\n", abs(z), z.real(), z.imag(), c.real(), c.imag());
 
 	double log_zn, nu, result;
 	if ( j < convergenceSteps ) 
@@ -142,20 +147,24 @@ int FractalCalc::calcMandelbrotPart(double* mandelbrot, int width, int height, i
 	
 	for (; i < count; ++i, ++iX)
 	{
-		if(iX == width)
+		if(iX >= width)
+		{
+			iX = 0;
 			++iY;
+		}
 
 		if(iY == height)
 			break;
 
 		double dX = xMinD + (xMaxD - xMinD) * (double(iX) / double(width));
 		double dY = yMaxD - (yMaxD - yMinD) * (double(iY) / double(height));
-
+		// printf("(%d %d) ", iX, iY);
+		// printf("(%f %f) ", dX, dY);
 		mandelbrot[i] = getConvergence(0, 0, dX, dY, mandelbrotFractal);
 		// cout<<mandelbrot[i]<<" ";
 	}
 
-	printf("\n%d %f %f %f %f\n", convergenceSteps, xMinD, xMaxD, yMinD, yMaxD);
+	// printf("\n%d %f %f %f %f\n", convergenceSteps, xMinD, xMaxD, yMinD, yMaxD);
 
 	return i;
 }

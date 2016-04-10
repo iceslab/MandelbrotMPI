@@ -32,8 +32,11 @@ void Master::work(int &argc, char** &argv)
 		sendDieOrder(i);
 	}
 
-	// for(auto i : results)
-	// 	cout<< i <<" ";
+	// for(int i = 0; i < results.size(); ++i)
+	// {
+	// 	printf("%d: %f, ", i, results[i]);
+	// }
+
 
     int xsize, ysize, r, g, b;
     xsize=300;
@@ -44,9 +47,11 @@ void Master::work(int &argc, char** &argv)
     	for (int y = 0; y < ysize; y++)
         {
         	double &color = results[y * 300 + x];
-            r = sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1;
-            g = sin( 2*M_PI*color - M_PI/2           ) + 1;
-            b = sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1;
+            r = (int)round((sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0);
+            g = (int)round((sin( 2*M_PI*color - M_PI/2           ) + 1) * 255.0);
+            b = (int)round((sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0);
+
+
             // r=rand()%256;
             // g=rand()%256;
             // b=rand()%256;
@@ -119,7 +124,7 @@ void Master::receiveResult(vector<double> &results, int slaveId)
 	vector<double> v(size);
 
 	MPI_Recv(v.data(), size, MPI_DOUBLE, slaveId, 0, MPI_COMM_WORLD, &status);
-	printf("Master: Received %ld bytes of data\n", size * sizeof(double));
+	printf("Master: Received %d variables\n", size);
 	for(auto x : v)
 		results.push_back(x);
 }
