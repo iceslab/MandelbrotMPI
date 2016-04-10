@@ -23,6 +23,8 @@ void Slave::work(int &argc, char** &argv)
 			size = executeOrder(order, resultArray);
 			if(size > 0)
 			{
+				// for(auto i : resultArray)
+				// 	cout<< i <<" ";
 				sendResult(resultArray, size);
 			}
 			else

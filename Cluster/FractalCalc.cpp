@@ -66,9 +66,9 @@ void FractalCalc::mandelbrotFractal(complex<double> &z, complex<double> &c)
 {
 	// z = exp( z ) + c;
 	// z = z * exp( pow(z,2) ) - 0.521;
-	z = (pow(z,3.0)+z)/log(z) + 0.368;
+	// z = (pow(z,3.0)+z)/log(z) + 0.368;
 	// z = (pow(z,3.0)+pow(z,2.0) - z)/log(z) + 0.468;
-	// z = z * z + c;
+	z = z * z + c;
 }
 void FractalCalc::mandelbrotFractal(complex<mpf_class> &z, complex<mpf_class> &c)
 {
@@ -86,7 +86,7 @@ double FractalCalc::getConvergence(double z_real, double z_imag, double c_real, 
 		// z = exp(z.get_d()) + c;
 		fn(z, c);
 	}
-	j %= convergenceSteps;
+
 	double log_zn, nu, result;
 	if ( j < convergenceSteps ) 
 	{
@@ -152,7 +152,10 @@ int FractalCalc::calcMandelbrotPart(double* mandelbrot, int width, int height, i
 		double dY = yMaxD - (yMaxD - yMinD) * (double(iY) / double(height));
 
 		mandelbrot[i] = getConvergence(0, 0, dX, dY, mandelbrotFractal);
+		// cout<<mandelbrot[i]<<" ";
 	}
+
+	printf("\n%d %f %f %f %f\n", convergenceSteps, xMinD, xMaxD, yMinD, yMaxD);
 
 	return i;
 }

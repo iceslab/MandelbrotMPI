@@ -3,6 +3,7 @@
 
 #include <mpi.h>
 #include <gmpxx.h>
+#include "bitmap_image.h"
 
 #ifdef __GMP_SHORT_LIMB
 #define LIMB_MPI_TYPE 			MPI_UNSIGNED

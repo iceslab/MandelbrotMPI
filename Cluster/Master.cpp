@@ -1,4 +1,5 @@
 #include "Master.h" 
+#include "Utils.h"
 
 Master::Master()
 {
@@ -30,6 +31,29 @@ void Master::work(int &argc, char** &argv)
 	{	
 		sendDieOrder(i);
 	}
+
+	// for(auto i : results)
+	// 	cout<< i <<" ";
+
+    int xsize, ysize, r, g, b;
+    xsize=300;
+    ysize=300;
+    bitmap_image image(xsize, ysize);
+    for (int x = 0; x < xsize; x++)
+    {
+    	for (int y = 0; y < ysize; y++)
+        {
+        	double &color = results[y * 300 + x];
+            r = sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1;
+            g = sin( 2*M_PI*color - M_PI/2           ) + 1;
+            b = sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1;
+            // r=rand()%256;
+            // g=rand()%256;
+            // b=rand()%256;
+            image.set_pixel(x, y, r, g, b);
+        }
+    }
+    image.save_image("image_name");
 }
 
 void Master::generateOrders(vector<Order> &orders)

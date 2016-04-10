@@ -31,8 +31,7 @@ int main(int argc, char** argv)
     	Slave s;
     	s.work(argc, argv);
     }
-    	
-
+    
     // Finalize the MPI environment.
     MPI_Finalize();
 }
