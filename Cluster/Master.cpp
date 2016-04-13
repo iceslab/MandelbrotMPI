@@ -38,25 +38,13 @@ void Master::work(int &argc, char** &argv)
 	// 	printf("%d: %f, ", i, results[i]);
 	// }
 
-
-    int xsize, ysize, r, g, b;
+    int xsize, ysize;
     xsize=300;
     ysize=300;
-    bitmap_image image(xsize, ysize);
-    for (int x = 0; x < xsize; x++)
-    {
-    	for (int y = 0; y < ysize; y++)
-        {
-        	double &color = results[y * 300 + x];
-            r = (int)round((sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0);
-            g = (int)round((sin( 2*M_PI*color - M_PI/2           ) + 1) * 255.0);
-            b = (int)round((sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0);
-            image.set_pixel(x, y, r, g, b);
-        }
-    }
     stringstream ss;
     ss<<"images/"<<1<<".bmp";
-    image.save_image(ss.str().c_str());
+
+	saveBitmap(results, xsize, ysize, s.str().c_str());
 }
 
 void Master::generateOrders(vector<Order> &orders)
