@@ -15,13 +15,14 @@ public:
 	void work(int &argc, char** &argv);	
 private:
 	 int world_size;
-	 int slavesNumber;
+	 int ordersCount;
 	 int rank;
 	 MPI_Status status;
-	 void generateOrders(vector<Order> &orders);
+	 void generateOrders(vector<Order> &orders, Scene &sceneConfig);
 	 void sendOrder(Order &order, int slaveId, int tag);
 	 void sendDieOrder(int slaveId);
-	 void receiveResult(vector<double> &results, int slaveId);
+	 void receiveResult(map<int, vector<double>> &results, int slaveId);
+	 void ordersByLine(vector<Order> &orders, Scene &sceneConfig);
 };
 
 

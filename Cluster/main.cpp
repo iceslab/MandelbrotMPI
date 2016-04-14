@@ -30,6 +30,7 @@ int main(int argc, char** argv)
     {
     	Slave s;
     	s.work(argc, argv);
+        cout <<"Slave: Work done.\n";
     }
     
     // Finalize the MPI environment.

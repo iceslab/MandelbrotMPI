@@ -2,36 +2,69 @@
 #include "Utils.h"
 #include <sstream>
 
+#define Y_SIZE 1080
+
 Master::Master()
 {
 	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    slavesNumber = world_size - 1;
+    ordersCount = Y_SIZE;
     // doWork = true;
 }
 
 void Master::work(int &argc, char** &argv)
 {
-	vector<Order> orders(slavesNumber);
-	generateOrders(orders);
+	Scene s;
+	s.duration = 1.0;
+	s.framerate = 1;
+	{Pixel2D temp;
+	temp.x = 1920;
+	temp.y = Y_SIZE;
+	s.frameSize = temp;}
+	{Coords2D temp;
+	temp.x = 0.0;
+	temp.y = 0.0;
+	s.pathStartPoint = temp;
+	s.pathEndPoint = temp;}
+	s.zoomStart = 1.0;
+	s.zoomEnd = 1.0;
+	s.colorStart = 0.0;
+	s.colorEnd = 0.0;
+	vector<Order> orders(ordersCount);
+	generateOrders(orders, s);
 
+	int ordersPendingCount = ordersCount;
 	for(int i = 1; i < world_size; ++i)
 	{
-		sendOrder(orders[i - 1], i, WORKTAG);
+		sendOrder(orders[ordersCount - ordersPendingCount], i, WORKTAG);
+		ordersPendingCount--;
+		
 	}
 
-	vector<double> results;
+	map<int, vector<double>> results;
 
-	int size;
-	for(int i = 1; i < world_size; ++i)
-	{	
-		receiveResult(results, i);
+	// int size;
+	// for(int i = 1; i < world_size; ++i)
+	// {	
+		
+	// }
+	int dieOrders = world_size -1;
+	while(dieOrders > 0)
+	{
+		receiveResult(results, MPI_ANY_SOURCE);
+		if(ordersPendingCount > 0)
+		{
+			sendOrder(orders[orders.size() - ordersPendingCount], status.MPI_SOURCE, WORKTAG);
+			ordersPendingCount--;
+			cout << "Master: Pending orders " << ordersPendingCount << endl;
+		}
+		else
+		{
+			sendDieOrder(status.MPI_SOURCE);
+			dieOrders--;
+		}
 	}
-
-	for(int i = 1; i < world_size; ++i)
-	{	
-		sendDieOrder(i);
-	}
+	cout << "============MASTER RECIVED ALL================\n\n";
 
 	// for(int i = 0; i < results.size(); ++i)
 	// {
@@ -40,14 +73,16 @@ void Master::work(int &argc, char** &argv)
 
 
     int xsize, ysize, r, g, b;
-    xsize=300;
-    ysize=300;
+    xsize=s.frameSize.x;
+    ysize=s.frameSize.y;
     bitmap_image image(xsize, ysize);
+    cout << "SIZE: "<< results.size() << " "<< xsize<< endl;
+    cout << "SIZE: "<< results[0].size() << " "<< ysize << endl;
     for (int x = 0; x < xsize; x++)
     {
     	for (int y = 0; y < ysize; y++)
         {
-        	double &color = results[y * 300 + x];
+        	double &color = results[y][x];
             r = (int)round((sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0);
             g = (int)round((sin( 2*M_PI*color - M_PI/2           ) + 1) * 255.0);
             b = (int)round((sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0);
@@ -57,40 +92,68 @@ void Master::work(int &argc, char** &argv)
     stringstream ss;
     ss<<"images/"<<1<<".bmp";
     image.save_image(ss.str().c_str());
+    cout << "============MASTER DONE================\n\n";
 }
 
-void Master::generateOrders(vector<Order> &orders)
+void Master::ordersByLine(vector<Order> &orders, Scene &sceneConfig)
 {
-	int width = 300, height = 300, begX = 0, begY = 0, endX = 0, endY = 0;
-	int count = (width * height) / slavesNumber;
-	orders.resize(slavesNumber);
-	for(int i = 0; i < slavesNumber; ++i)
+	orders.resize(ordersCount);
+	for(int i = 0; i < ordersCount; ++i)
 	{
-		if(i == slavesNumber - 1)
-		{
-			count = (width * height) - ((width * height) / slavesNumber) * i;
-		}
-
-		begX = endX;
-		begY = endY;
-
-		orders[i].pictureWidth = width;
-		orders[i].pictureHeight = height;
-		orders[i].beginX = begX;
-		orders[i].beginY = begY;
-		orders[i].count = count;
+		orders[i].orderID = i;
+		orders[i].pictureWidth = sceneConfig.frameSize.x;
+		orders[i].pictureHeight = sceneConfig.frameSize.y;
+		orders[i].beginX = 0;
+		orders[i].beginY = i;
+		orders[i].count = sceneConfig.frameSize.x;
 		orders[i].doWork = true;
 
-		printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
-			   i + 1, 
-			   width, 
-			   height, 
-			   begX, 
-			   begY, 
-			   count, 
-			   true);
-		calcOffset(width, height, begX, begY, count, endX, endY);
+		// printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
+		// 	   i, 
+		// 	   width, 
+		// 	   height, 
+		// 	   begX, 
+		// 	   begY, 
+		// 	   count, 
+		// 	   true);
+		// calcOffset(width, height, begX, begY, count, endX, endY);
 	}
+}
+
+void Master::generateOrders(vector<Order> &orders, Scene &sceneConfig)
+{
+	// int width = sceneConfig.frameSize.x, height = sceneConfig.frameSize.y, begX = 0, begY = 0, endX = 0, endY = 0;
+	// int count = (width * height) / ordersCount;
+	// orders.resize(ordersCount);
+	// for(int i = 0; i < ordersCount; ++i)
+	// {
+	// 	if(i == ordersCount - 1)
+	// 	{
+	// 		count = (width * height) - ((width * height) / ordersCount) * i;
+	// 	}
+
+	// 	begX = endX;
+	// 	begY = endY;
+
+	// 	orders[i].orderID = i;
+	// 	orders[i].pictureWidth = width;
+	// 	orders[i].pictureHeight = height;
+	// 	orders[i].beginX = begX;
+	// 	orders[i].beginY = begY;
+	// 	orders[i].count = count;
+	// 	orders[i].doWork = true;
+
+	// 	printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
+	// 		   i, 
+	// 		   width, 
+	// 		   height, 
+	// 		   begX, 
+	// 		   begY, 
+	// 		   count, 
+	// 		   true);
+	// 	calcOffset(width, height, begX, begY, count, endX, endY);
+	// }
+	ordersByLine(orders, sceneConfig);
 }
 
 void Master::sendOrder(Order &order, int slaveId, int tag)
@@ -113,16 +176,18 @@ void Master::sendDieOrder(int slaveId)
 	sendOrder(dieOrder, slaveId, DIETAG);
 }
 
-void Master::receiveResult(vector<double> &results, int slaveId)
+void Master::receiveResult(map<int, vector<double>> &results, int slaveId)
 {
 	int size = 0;
-	printf("Master: Waiting to receive result %d\n", slaveId);
-	MPI_Recv(&size, 1, MPI_INT, slaveId, 0, MPI_COMM_WORLD, &status);	
+	int id = 0;
+	MPI_Recv(&id, 1, MPI_INT, slaveId, 0, MPI_COMM_WORLD, &status);
+
+	printf("Master: Received id %d from %d\n", id, status.MPI_SOURCE);
+	MPI_Recv(&size, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);	
 	
 	vector<double> v(size);
 
-	MPI_Recv(v.data(), size, MPI_DOUBLE, slaveId, 0, MPI_COMM_WORLD, &status);
+	MPI_Recv(v.data(), size, MPI_DOUBLE, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
 	printf("Master: Received %d variables\n", size);
-	for(auto x : v)
-		results.push_back(x);
+		results[id] = v;
 }

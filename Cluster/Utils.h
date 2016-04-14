@@ -61,7 +61,18 @@ typedef struct mpf_t_info {
    mp_exp_t _mp_exp;
 } info;
 
-typedef struct WorkOrder {
+typedef struct {
+	unsigned x;
+	unsigned y;
+} Pixel2D;
+
+typedef struct {
+	double x;
+	double y;
+} Coords2D;
+
+typedef struct {
+	int orderID;
 	int pictureWidth;
 	int pictureHeight;
 	int beginX;
@@ -69,6 +80,18 @@ typedef struct WorkOrder {
 	int count;
 	bool doWork;
 } Order;
+
+typedef struct {
+	double duration;
+	unsigned framerate;
+	Pixel2D frameSize;
+	Coords2D pathStartPoint;
+	Coords2D pathEndPoint;
+	double zoomStart;
+	double zoomEnd;
+	double colorStart;
+	double colorEnd;
+} Scene;
 
 enum TAGS
 {

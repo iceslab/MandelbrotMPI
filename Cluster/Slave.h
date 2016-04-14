@@ -23,7 +23,8 @@ private:
 
 	void waitForOrder(Order &order);
 	int64_t executeOrder(Order &order, vector<double> &resultArray);
-	void sendResult(vector<double> &resultArray, int64_t size);
+	void sendResult(int64_t id, vector<double> &resultArray, int64_t size);
+	void sendID(int64_t id);
 	void sendSize(int64_t size);
 	void sendArray(vector<double> &resultArray, int64_t size);
 };

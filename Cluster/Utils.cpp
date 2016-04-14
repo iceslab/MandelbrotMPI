@@ -8,6 +8,7 @@
 #include <iostream>
 #include <ctime>
 #include <vector>
+#include <map>
 
 bool isColor = true;
 bool verbose = false;
@@ -108,18 +109,19 @@ void registerMPIInfoType()
 
 void registerMPIOrderType()
 {
-	const int blocksCount = 6;
-	int blocksLength[blocksCount] = {1, 1, 1, 1, 1, 1};
+	const int blocksCount = 7;
+	int blocksLength[blocksCount] = {1, 1, 1, 1, 1, 1, 1};
 
-	MPI_Datatype types[blocksCount] = {MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::BOOL};
+	MPI_Datatype types[blocksCount] = {MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::BOOL};
 	MPI_Aint offsets[blocksCount];
 
-	offsets[0] = offsetof(Order, pictureWidth);
-	offsets[1] = offsetof(Order, pictureHeight);
-	offsets[2] = offsetof(Order, beginX);
-	offsets[3] = offsetof(Order, beginY);
-	offsets[4] = offsetof(Order, count);
-	offsets[5] = offsetof(Order, doWork);
+	offsets[0] = offsetof(Order, orderID);
+	offsets[1] = offsetof(Order, pictureWidth);
+	offsets[2] = offsetof(Order, pictureHeight);
+	offsets[3] = offsetof(Order, beginX);
+	offsets[4] = offsetof(Order, beginY);
+	offsets[5] = offsetof(Order, count);
+	offsets[6] = offsetof(Order, doWork);
 
 	MPI_Type_create_struct(blocksCount, blocksLength, offsets, types, &MPI_ORDER_TYPE);
 	MPI_Type_commit(&MPI_ORDER_TYPE);

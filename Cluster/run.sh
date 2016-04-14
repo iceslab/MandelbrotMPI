@@ -5,9 +5,11 @@ if [ $# -lt 1 ]; then
 	exit
 fi
 
-if [ ! -f "./main" ]; then
-	make
+if make -j8 ; then
+	mpirun -np $1 ./main
+else
+	echo Some problems occurred during compilation.
 fi
 
-mpirun -np $1 ./main
+
 exit

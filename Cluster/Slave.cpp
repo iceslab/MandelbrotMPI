@@ -25,7 +25,8 @@ void Slave::work(int &argc, char** &argv)
 			{
 				// for(auto i : resultArray)
 				// 	cout<< i <<" ";
-				sendResult(resultArray, size);
+				int64_t id = order.orderID;
+				sendResult(id, resultArray, size);
 			}
 			else
 			{
@@ -61,8 +62,9 @@ int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
 	if(order.count > 0)
 	{
 	    resultArray.resize(order.count);
-	    printf("Slave %d: Calculating...\n", rank);
+	    printf("Slave %d: Calculating...%d\n", rank, order.count);
 	    size = FractalCalc::calcMandelbrotPart(resultArray.data(), order);
+
 	    printf("Slave %d: Calculated %ld\n", rank, size);
 	}
 	else
@@ -73,10 +75,18 @@ int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
     return size;
 }
 
-void Slave::sendResult(vector<double> &resultArray, int64_t size)
+void Slave::sendResult(int64_t id, vector<double> &resultArray, int64_t size)
 {
+	sendID(id);
 	sendSize(size);
 	sendArray(resultArray, size);
+}
+
+void Slave::sendID(int64_t id)
+{
+    printf("Slave %d: Sending id of result: %ld\n", rank, id);
+    MPI_Send(&id, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+    printf("Slave %d: ID of result (%ld) sent\n", rank, id);
 }
 
 void Slave::sendSize(int64_t size)

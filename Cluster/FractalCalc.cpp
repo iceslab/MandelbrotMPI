@@ -165,45 +165,44 @@ int FractalCalc::calcMandelbrotPart(double* mandelbrot, int width, int height, i
 	}
 
 	// printf("\n%d %f %f %f %f\n", convergenceSteps, xMinD, xMaxD, yMinD, yMaxD);
-
 	return i;
 }
 
-void FractalCalc::calcMandelbrotD(double* mandelbrot, int width, int height, point2int vecX, point2int vecY)
-{
-	for (int k = vecY[0]; k < vecY[1]; k++)
-	{
-		double y = yMaxD - (yMaxD - yMinD) * (double(k) / double(height));
-		for (int i = vecX[0]; i < vecX[1]; i++)
-		{
-			double x = xMinD + (xMaxD - xMinD) * (double(i) / double(width));
+// void FractalCalc::calcMandelbrotD(double* mandelbrot, int width, int height, point2int vecX, point2int vecY)
+// {
+// 	for (int k = vecY[0]; k < vecY[1]; k++)
+// 	{
+// 		double y = yMaxD - (yMaxD - yMinD) * (double(k) / double(height));
+// 		for (int i = vecX[0]; i < vecX[1]; i++)
+// 		{
+// 			double x = xMinD + (xMaxD - xMinD) * (double(i) / double(width));
 			
-			//complex<double> z(x, y);
-			//-0.70176-0.3842i
-			//-0.835-0.2321i
-			//complex<double> c(-0.70176, -0.3842);
+// 			//complex<double> z(x, y);
+// 			//-0.70176-0.3842i
+// 			//-0.835-0.2321i
+// 			//complex<double> c(-0.70176, -0.3842);
 			
-			mandelbrot[k * width + i] = getConvergence(0, 0, x, y, mandelbrotFractal);
-		}
-	}
-}
+// 			mandelbrot[k * width + i] = getConvergence(0, 0, x, y, mandelbrotFractal);
+// 		}
+// 	}
+// }
 
-void FractalCalc::calcMandelbrotM(double* mandelbrot, int width, int height, point2int vecX, point2int vecY)
-{
-	mpf_class zero(0, precision);
-	for (int k = vecY[0]; k < vecY[1]; k++)
-	{
-		mpf_class y = yMaxM - (yMaxM - yMinM) * (mpf_class(k, precision) / mpf_class(height, precision));
-		for (int i = vecX[0]; i < vecX[1]; i++)
-		{
-			mpf_class x = xMinM + (xMaxM - xMinM) * (mpf_class(i, precision) / mpf_class(width, precision));
+// void FractalCalc::calcMandelbrotM(double* mandelbrot, int width, int height, point2int vecX, point2int vecY)
+// {
+// 	mpf_class zero(0, precision);
+// 	for (int k = vecY[0]; k < vecY[1]; k++)
+// 	{
+// 		mpf_class y = yMaxM - (yMaxM - yMinM) * (mpf_class(k, precision) / mpf_class(height, precision));
+// 		for (int i = vecX[0]; i < vecX[1]; i++)
+// 		{
+// 			mpf_class x = xMinM + (xMaxM - xMinM) * (mpf_class(i, precision) / mpf_class(width, precision));
 			
-			//complex<double> z(x, y);
-			//-0.70176-0.3842i
-			//-0.835-0.2321i
-			//complex<double> c(-0.70176, -0.3842);
+// 			//complex<double> z(x, y);
+// 			//-0.70176-0.3842i
+// 			//-0.835-0.2321i
+// 			//complex<double> c(-0.70176, -0.3842);
 			
-			mandelbrot[k * width + i] = getConvergence(x, y, -0.85, 0.2321, mandelbrotFractal);
-		}
-	}
-}
+// 			mandelbrot[k * width + i] = getConvergence(x, y, -0.85, 0.2321, mandelbrotFractal);
+// 		}
+// 	}
+// }
