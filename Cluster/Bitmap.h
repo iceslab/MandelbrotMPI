@@ -1,26 +1,5 @@
-/*
-***************************************************************************
-*                                                                         *
-*                         Platform Independent                            *
-*                   Bitmap Image Reader Writer Library                    *
-*                                                                         *
-* Author: Arash Partow - 2002                                             *
-* URL: http://partow.net/programming/bitmap/index.html                    *
-*                                                                         *
-* Note: This library only supports 24-bits per pixel bitmap format files. *
-*                                                                         *
-* Copyright notice:                                                       *
-* Free use of the Platform Independent Bitmap Image Reader Writer Library *
-* is permitted under the guidelines and in accordance with the most       *
-* current version of the Common Public License.                           *
-* http://www.opensource.org/licenses/cpl1.0.php                           *
-*                                                                         *
-***************************************************************************
-*/
-
-
-#ifndef INCLUDE_BITMAP_IMAGE_H
-#define INCLUDE_BITMAP_IMAGE_H
+#ifndef INCLUDE_BITMAP_H
+#define INCLUDE_BITMAP_H
 
 #include <algorithm>
 #include <cmath>
@@ -31,8 +10,9 @@
 #include <limits>
 #include <string>
 
+void saveBitmap(int * _image, int _x, int _y, String _name);
 
-class bitmap_image
+class Bitmap
 {
 public:
 
@@ -48,7 +28,7 @@ public:
                     };
 
 
-   bitmap_image()
+   Bitmap()
    : file_name_(""),
      data_  (0),
      length_(0),
@@ -59,7 +39,7 @@ public:
      channel_mode_(bgr_mode)
    {}
 
-   bitmap_image(const std::string& filename)
+   Bitmap(const std::string& filename)
    : file_name_(filename),
      data_  (0),
      length_(0),
@@ -72,7 +52,7 @@ public:
       load_bitmap();
    }
 
-   bitmap_image(const unsigned int width, const unsigned int height)
+   Bitmap(const unsigned int width, const unsigned int height)
    : file_name_(""),
      data_  (0),
      length_(0),
@@ -85,7 +65,7 @@ public:
      create_bitmap();
    }
 
-   bitmap_image(const bitmap_image& image)
+   Bitmap(const Bitmap& image)
    : file_name_(image.file_name_),
      data_(0),
      width_(image.width_),
@@ -98,12 +78,12 @@ public:
       std::copy(image.data_, image.data_ + image.length_, data_);
    }
 
-  ~bitmap_image()
+  ~Bitmap()
    {
       delete [] data_;
    }
 
-   bitmap_image& operator=(const bitmap_image& image)
+   Bitmap& operator=(const Bitmap& image)
    {
       if (this != &image)
       {
@@ -193,7 +173,7 @@ public:
       data_[y_offset + x_offset + 2] = red;
    }
 
-   inline bool copy_from(const bitmap_image& image)
+   inline bool copy_from(const Bitmap& image)
    {
       if (
            (image.height_ != height_) ||
@@ -207,7 +187,7 @@ public:
       return true;
    }
 
-   inline bool copy_from(const bitmap_image& source_image,
+   inline bool copy_from(const Bitmap& source_image,
                          const unsigned int& x_offset,
                          const unsigned int& y_offset)
    {
@@ -228,7 +208,7 @@ public:
                       const unsigned int& y,
                       const unsigned int& width,
                       const unsigned int& height,
-                      bitmap_image& dest_image)
+                      Bitmap& dest_image)
    {
       if ((x + width ) > width_ ) { return false; }
       if ((y + height) > height_) { return false; }
@@ -325,7 +305,7 @@ public:
       return true;
    }
 
-   void reflective_image(bitmap_image& image)
+   void reflective_image(Bitmap& image)
    {
       image.setwidth_height(3 * width_, 3 * height_,true);
       image.copy_from(*this,width_,height_);
@@ -382,7 +362,7 @@ public:
 
       if (!stream)
       {
-         std::cout << "bitmap_image::save_image(): Error - Could not open file "  << file_name << " for writing!" << std::endl;
+         std::cout << "Bitmap::save_image(): Error - Could not open file "  << file_name << " for writing!" << std::endl;
          return;
       }
 
@@ -613,7 +593,7 @@ public:
       }
    }
 
-   inline void export_color_plane(const color_plane color, bitmap_image& image)
+   inline void export_color_plane(const color_plane color, Bitmap& image)
    {
       if (
            (width_  != image.width_ ) ||
@@ -846,7 +826,7 @@ public:
       }
    }
 
-   inline void subsample(bitmap_image& dest)
+   inline void subsample(Bitmap& dest)
    {
       /*
          Half sub-sample of original image.
@@ -957,7 +937,7 @@ public:
       }
    }
 
-   inline void upsample(bitmap_image& dest)
+   inline void upsample(Bitmap& dest)
    {
       /*
          2x up-sample of original image.
@@ -1004,7 +984,7 @@ public:
       }
    }
 
-   inline void alpha_blend(const double& alpha, const bitmap_image& image)
+   inline void alpha_blend(const double& alpha, const Bitmap& image)
    {
       if (
            (image.width_  != width_ ) ||
@@ -1033,7 +1013,7 @@ public:
       }
    }
 
-   inline double psnr(const bitmap_image& image)
+   inline double psnr(const Bitmap& image)
    {
       if (
            (image.width_  != width_ ) ||
@@ -1070,7 +1050,7 @@ public:
 
    inline double psnr(const unsigned int& x,
                       const unsigned int& y,
-                      const bitmap_image& image)
+                      const Bitmap& image)
    {
       if ((x + image.width()) > width_)   { return 0.0; }
       if ((y + image.height()) > height_) { return 0.0; }
@@ -1373,7 +1353,7 @@ private:
 
       if (!stream)
       {
-         std::cerr << "bitmap_image::load_bitmap() ERROR: bitmap_image - file " << file_name_ << " not found!" << std::endl;
+         std::cerr << "Bitmap::load_bitmap() ERROR: Bitmap - file " << file_name_ << " not found!" << std::endl;
          return;
       }
 
@@ -1386,14 +1366,14 @@ private:
       if (bfh.type != 19778)
       {
          stream.close();
-         std::cerr << "bitmap_image::load_bitmap() ERROR: bitmap_image - Invalid type value " << bfh.type << " expected 19778." << std::endl;
+         std::cerr << "Bitmap::load_bitmap() ERROR: Bitmap - Invalid type value " << bfh.type << " expected 19778." << std::endl;
          return;
       }
 
       if (bih.bit_count != 24)
       {
          stream.close();
-         std::cerr << "bitmap_image::load_bitmap() ERROR: bitmap_image - Invalid bit depth " << bih.bit_count << " expected 24." << std::endl;
+         std::cerr << "Bitmap::load_bitmap() ERROR: Bitmap - Invalid bit depth " << bih.bit_count << " expected 24." << std::endl;
 
          return;
       }
@@ -1614,8 +1594,8 @@ inline void upsample(const unsigned int& width,
 inline void checkered_pattern(const unsigned int x_width,
                               const unsigned int y_width,
                               const unsigned char value,
-                              const bitmap_image::color_plane color,
-                              bitmap_image& image)
+                              const Bitmap::color_plane color,
+                              Bitmap& image)
 {
    if (
         (x_width >= image.width ()) ||
@@ -1661,7 +1641,7 @@ inline void checkered_pattern(const unsigned int x_width,
                               const unsigned char red,
                               const unsigned char green,
                               const unsigned char blue,
-                              bitmap_image& image)
+                              Bitmap& image)
 {
    if (
         (x_width >= image.width ()) ||
@@ -1703,7 +1683,7 @@ inline void checkered_pattern(const unsigned int x_width,
    }
 }
 
-inline void plasma(bitmap_image& image,
+inline void plasma(Bitmap& image,
                    const double& x,     const double& y,
                    const double& width, const double& height,
                    const double& c1,    const double& c2,
@@ -1742,7 +1722,7 @@ inline void plasma(bitmap_image& image,
 
 inline double psnr_region(const unsigned int& x,     const unsigned int& y,
                           const unsigned int& width, const unsigned int& height,
-                          const bitmap_image& image1, const bitmap_image& image2)
+                          const Bitmap& image1, const Bitmap& image2)
 {
    if (
         (image1.width()  != image2.width ()) ||
@@ -1785,8 +1765,8 @@ inline double psnr_region(const unsigned int& x,     const unsigned int& y,
 
 inline void hierarchical_psnr_r(const double& x,     const double& y,
                                 const double& width, const double& height,
-                                const bitmap_image& image1,
-                                      bitmap_image& image2,
+                                const Bitmap& image1,
+                                      Bitmap& image2,
                                 const double& threshold,
                                 const rgb_store colormap[])
 {
@@ -1820,7 +1800,7 @@ inline void hierarchical_psnr_r(const double& x,     const double& y,
    }
 }
 
-inline void hierarchical_psnr(bitmap_image& image1,bitmap_image& image2, const double threshold, const rgb_store colormap[])
+inline void hierarchical_psnr(Bitmap& image1,Bitmap& image2, const double threshold, const rgb_store colormap[])
 {
    if (
         (image1.width()  != image2.width ()) ||
@@ -1842,7 +1822,7 @@ class image_drawer
 {
 public:
 
-   image_drawer(bitmap_image& image)
+   image_drawer(Bitmap& image)
    : image_(image),
      pen_width_(1),
      pen_color_red_  (0),
@@ -2097,7 +2077,7 @@ private:
    image_drawer(const image_drawer& id);
    image_drawer& operator =(const image_drawer& id);
 
-   bitmap_image& image_;
+   Bitmap& image_;
    unsigned int  pen_width_;
    unsigned char pen_color_red_;
    unsigned char pen_color_green_;

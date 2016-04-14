@@ -91,7 +91,7 @@ void Master::work(int &argc, char** &argv)
     }
     stringstream ss;
     ss<<"images/"<<1<<".bmp";
-    image.save_image(ss.str().c_str());
+    saveBitmap(results, xsize, ysize, s.str().c_str());
     cout << "============MASTER DONE================\n\n";
 }
 
