@@ -56,7 +56,6 @@ void Master::work(int &argc, char** &argv)
 		{
 			sendOrder(orders[orders.size() - ordersPendingCount], status.MPI_SOURCE, WORKTAG);
 			ordersPendingCount--;
-			cout << "Master: Pending orders " << ordersPendingCount << endl;
 		}
 		else
 		{
@@ -64,20 +63,17 @@ void Master::work(int &argc, char** &argv)
 			dieOrders--;
 		}
 	}
-	cout << "============MASTER RECIVED ALL================\n\n";
 
 	// for(int i = 0; i < results.size(); ++i)
 	// {
-	// 	printf("%d: %f, ", i, results[i]);
+	// 	// printf("%d: %f, ", i, results[i]);
 	// }
 
 
     int xsize, ysize, r, g, b;
     xsize=s.frameSize.x;
     ysize=s.frameSize.y;
-    bitmap_image image(xsize, ysize);
-    cout << "SIZE: "<< results.size() << " "<< xsize<< endl;
-    cout << "SIZE: "<< results[0].size() << " "<< ysize << endl;
+    Bitmap image(xsize, ysize);
     for (int x = 0; x < xsize; x++)
     {
     	for (int y = 0; y < ysize; y++)
@@ -91,8 +87,7 @@ void Master::work(int &argc, char** &argv)
     }
     stringstream ss;
     ss<<"images/"<<1<<".bmp";
-    saveBitmap(results, xsize, ysize, s.str().c_str());
-    cout << "============MASTER DONE================\n\n";
+    image.save_image(ss.str().c_str());
 }
 
 void Master::ordersByLine(vector<Order> &orders, Scene &sceneConfig)
@@ -108,7 +103,7 @@ void Master::ordersByLine(vector<Order> &orders, Scene &sceneConfig)
 		orders[i].count = sceneConfig.frameSize.x;
 		orders[i].doWork = true;
 
-		// printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
+		// // printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
 		// 	   i, 
 		// 	   width, 
 		// 	   height, 
@@ -143,7 +138,7 @@ void Master::generateOrders(vector<Order> &orders, Scene &sceneConfig)
 	// 	orders[i].count = count;
 	// 	orders[i].doWork = true;
 
-	// 	printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
+	// 	// printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
 	// 		   i, 
 	// 		   width, 
 	// 		   height, 
@@ -164,9 +159,9 @@ void Master::sendOrder(Order &order, int slaveId, int tag)
 	else if(WORKTAG == tag)
 		type = "WORKTAG";
 
-	printf("Master: Sending order (%s) to %d\n", type, slaveId);
+	// printf("Master: Sending order (%s) to %d\n", type, slaveId);
 	MPI_Send(&order, 1, MPI_ORDER_TYPE, slaveId, tag, MPI_COMM_WORLD);
-	printf("Master: Order (%s) to %d sent\n", type, slaveId);
+	// printf("Master: Order (%s) to %d sent\n", type, slaveId);
 }
 
 void Master::sendDieOrder(int slaveId)
@@ -182,12 +177,12 @@ void Master::receiveResult(map<int, vector<double>> &results, int slaveId)
 	int id = 0;
 	MPI_Recv(&id, 1, MPI_INT, slaveId, 0, MPI_COMM_WORLD, &status);
 
-	printf("Master: Received id %d from %d\n", id, status.MPI_SOURCE);
+	// printf("Master: Received id %d from %d\n", id, status.MPI_SOURCE);
 	MPI_Recv(&size, 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);	
 	
 	vector<double> v(size);
 
 	MPI_Recv(v.data(), size, MPI_DOUBLE, status.MPI_SOURCE, 0, MPI_COMM_WORLD, &status);
-	printf("Master: Received %d variables\n", size);
+	// printf("Master: Received %d variables\n", size);
 		results[id] = v;
 }

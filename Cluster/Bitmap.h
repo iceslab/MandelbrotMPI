@@ -10,8 +10,6 @@
 #include <limits>
 #include <string>
 
-void saveBitmap(int * _image, int _x, int _y, String _name);
-
 class Bitmap
 {
 public:
