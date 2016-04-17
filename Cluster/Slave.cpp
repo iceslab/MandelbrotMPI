@@ -78,7 +78,22 @@ int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
 	    resultArray.resize(order.count);
 	    // printf("Slave %d: Calculating...%d\n", rank, order.count);
 	    size = FractalCalc::calcMandelbrotPart(resultArray.data(), order);
-
+	    vector<double> colorArray(3*size);
+	    for (int x = 0; x < order.pictureWidth; x++)
+	    {
+	    	for (int y = 0; y < order.pictureHeight; y++)
+	        {
+	        	double &color = resultArray[x + order.pictureWidth * y];
+	            double r =(sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0;
+	            double g =(sin( 2*M_PI*color - M_PI/2           ) + 1) * 255.0;
+	            double b =(sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0;
+	            colorArray[3*(x + order.pictureWidth * y) + 0] = r;
+	            colorArray[3*(x + order.pictureWidth * y) + 1] = g;
+	            colorArray[3*(x + order.pictureWidth * y) + 2] = b;
+	        }
+	    }
+	    resultArray.swap(colorArray);
+	    size = resultArray.size();
 	    // printf("Slave %d: Calculated %ld\n", rank, size);
 	}
 	else

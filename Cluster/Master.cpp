@@ -99,11 +99,14 @@ void Master::work(int &argc, char** &argv)
 	    {
 	    	for (int y = 0; y < ysize; y++)
 	        {
-	        	
-	        	double &color = results[frame][x + xsize * y];
-	            r = color*255.0;//(int)round((sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0);
-	            g = color*255.0;//(int)round((sin( 2*M_PI*color - M_PI/2           ) + 1) * 255.0);
-	            b = color*255.0;//(int)round((sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0);
+	        	// double &color = results[frame][x + xsize * y];
+	         //    r = color*255.0;//(int)round((sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0);
+	         //    g = color*255.0;//(int)round((sin( 2*M_PI*color - M_PI/2           ) + 1) * 255.0);
+	         //    b = color*255.0;//(int)round((sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0);
+	            r = results[frame][3*(x+xsize*y)+0];
+	            g = results[frame][3*(x+xsize*y)+1];
+	            b = results[frame][3*(x+xsize*y)+2];
+	            // cout << "size: "<<results[frame].size();
 	            image.set_pixel(x, y, r, g, b);
 	        }
 	    }
