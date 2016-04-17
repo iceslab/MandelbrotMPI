@@ -2,7 +2,7 @@ CXX=mpic++
 CXXFLAGS=-c -O3 -std=c++11
 LIBS=-lGL -lglut -lGLU -lgmpxx -lgmp
 LDFLAGS=
-SOURCES=main.cpp FractalCalc.cpp Display.cpp Utils.cpp Comunicator.cpp
+SOURCES=main.cpp FractalCalc.cpp Utils.cpp Master.cpp Slave.cpp
 OBJECTS=$(SOURCES:%.cpp=%.o)
 EXECUTABLE=main
 

@@ -3,6 +3,7 @@
 
 #include <mpi.h>
 #include <gmpxx.h>
+#include "Bitmap.h"
 
 #ifdef __GMP_SHORT_LIMB
 #define LIMB_MPI_TYPE 			MPI_UNSIGNED
@@ -38,6 +39,8 @@
 // typedef long int		mp_exp_t;
 #endif
 
+using namespace std;
+
 void printHelp(void);
 
 bool compareArgumentStrings(int passedVars, ...);
@@ -45,24 +48,59 @@ bool compareArgumentStrings(int passedVars, ...);
 void compareArguments(int argc, char** argv);
 
 void registerMPIDataTypes();
-// Struktura która stoi za mpf_class
-// typedef struct
-// {
-//   int _mp_prec;			/* Max precision, in number of `mp_limb_t's.
-// 				   Set by mpf_init and modified by
-// 				   mpf_set_prec.  The area pointed to by the
-// 				   _mp_d field contains `prec' + 1 limbs.  */
-//   int _mp_size;			 abs(_mp_size) is the number of limbs the
-// 				   last field points to.  If _mp_size is
-// 				   negative this is a negative number.  
-//   mp_exp_t _mp_exp;		/* Exponent, in the base of `mp_limb_t'.  */
-//   mp_limb_t *_mp_d;		/* Pointer to the limbs.  */
-// } __mpf_struct;
+
+void registerMPIInfoType();
+
+void registerMPIOrderType();
+
+void calcOffset(int width, int height, int beginX, int beginY, uint64_t count, int &endX, int &endY);
 
 typedef struct mpf_t_info {
    int _mp_prec;
    int _mp_size;
    mp_exp_t _mp_exp;
 } info;
+
+typedef struct {
+	unsigned x;
+	unsigned y;
+} Pixel2D;
+
+typedef struct {
+	double x;
+	double y;
+} Coords2D;
+
+typedef struct {
+	int orderID;
+	int pictureWidth;
+	int pictureHeight;
+	int beginX;
+	int beginY;
+	int count;
+	bool doWork;
+	double dotSize;
+	double fractalX;
+	double fractalY;
+} Order;
+
+typedef struct {
+	double duration;
+	unsigned framerate;
+	Pixel2D frameSize;
+	double dotSize;
+	Coords2D pathStartPoint;
+	Coords2D pathEndPoint;
+	double zoomStart;
+	double zoomEnd;
+	double colorStart;
+	double colorEnd;
+} Scene;
+
+enum TAGS
+{
+	WORKTAG,
+	DIETAG
+};
 
 #endif 

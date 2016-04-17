@@ -1,0 +1,21 @@
+Opis sceny:
+[ Jednostka / Dokładność / Typ ]
+iX = [px / 1 / uint]
+iY = [px / 1 / uint]
+dX = [px / 1 / uint]
+dY = [1.0 / double_min / double]
+
+User:
+- Czas trwania: [s / 0.1 / double]
+- Framerate: [1 / 1 / uint]
+- Rozdzielczość - wysokość: iY
+- Rozdzielczość - szerokość: iX
+- Animacja względem ścieżki - punkt początkowy: dX, dY
+- Animacja względem ścieżki - punkt koncowy: dX, dY
+- Animacja względem przybliżenia - alpha początkowe: [ 1.0 / 0.001 / double ]
+- Animacja względem przybliżenia - alpha koncowe: [ 1.0 / 0.001 / double ]
+- Stała kolorystyka - kolor początkowy - kąt (Hue): [ rad / 0.01 / double ]
+- Stała kolorystyka - kolor końcowy - kąt (Hue): [ rad / 0.01 / double ]
+
+Admin:
+- Tryb zrównoleglania: [ 1, 1, enum(int) ] (FRAME_SERIES, FRAME, LINE, PIXELS)
