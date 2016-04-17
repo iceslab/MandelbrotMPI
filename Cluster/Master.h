@@ -23,6 +23,7 @@ private:
 	 void sendDieOrder(int slaveId);
 	 void receiveResult(map<int, vector<double>> &results, int slaveId);
 	 void ordersByLine(vector<Order> &orders, Scene &sceneConfig);
+	 void ordersByFrame(vector<Order> &orders, Scene &sceneConfig);
 };
 
 

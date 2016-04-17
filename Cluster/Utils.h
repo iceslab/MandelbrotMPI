@@ -79,12 +79,16 @@ typedef struct {
 	int beginY;
 	int count;
 	bool doWork;
+	double dotSize;
+	double fractalX;
+	double fractalY;
 } Order;
 
 typedef struct {
 	double duration;
 	unsigned framerate;
 	Pixel2D frameSize;
+	double dotSize;
 	Coords2D pathStartPoint;
 	Coords2D pathEndPoint;
 	double zoomStart;

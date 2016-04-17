@@ -136,30 +136,25 @@ double FractalCalc::getConvergence(mpf_class z_real, mpf_class z_imag, mpf_class
 
 int FractalCalc::calcMandelbrotPart(double* mandelbrot, Order &order)
 {
-	return calcMandelbrotPart(mandelbrot, order.pictureWidth, order.pictureHeight, order.beginX, order.beginY, order.count);
-}
-
-int FractalCalc::calcMandelbrotPart(double* mandelbrot, int width, int height, int beginX, int beginY, int count)
-{
-	int iX = beginX;
-	int iY = beginY;
+	int iX = order.beginX;
+	int iY = order.beginY;
 	int i = 0;
 	
-	for (; i < count; ++i, ++iX)
+	for (; i < order.count; ++i, ++iX)
 	{
-		if(iX >= width)
+		if(iX >= order.pictureWidth)
 		{
 			iX = 0;
 			++iY;
 		}
 
-		if(iY == height)
+		if(iY == order.pictureHeight)
 			break;
 
-		double dX = xMinD + (xMaxD - xMinD) * (double(iX) / double(width));
-		double dY = yMaxD - (yMaxD - yMinD) * (double(iY) / double(height));
+		double dX = (order.fractalX - order.pictureWidth/2 * order.dotSize) + order.dotSize*iX;
+		double dY = (order.fractalY - order.pictureHeight/2 * order.dotSize) + order.dotSize*iY;
 		// printf("(%d %d) ", iX, iY);
-		// printf("(%f %f) ", dX, dY);
+		// printf("(%f %f) \n", dX, dY);
 		mandelbrot[i] = getConvergence(0, 0, dX, dY, mandelbrotFractal);
 		// cout<<mandelbrot[i]<<" ";
 	}
@@ -167,6 +162,32 @@ int FractalCalc::calcMandelbrotPart(double* mandelbrot, int width, int height, i
 	// printf("\n%d %f %f %f %f\n", convergenceSteps, xMinD, xMaxD, yMinD, yMaxD);
 	return i;
 }
+
+// int FractalCalc::calcMandelbrotPart(double* mandelbrot, int width, int height, int beginX, int beginY, int count, double dotSize, double fractalX, double fractalY)
+// {
+// 	int iX = beginX;
+// 	int iY = beginY;
+// 	int i = 0;
+	
+// 	for (; i < count; ++i, ++iX)
+// 	{
+// 		if(iX >= width)
+// 		{
+// 			iX = 0;
+// 			++iY;
+// 		}
+
+// 		if(iY == height)
+// 			break;
+
+// 		double dX = fractalX + dotSize*iX;
+// 		double dY = fractalY - dotSize*iY;//why minus?
+// 		mandelbrot[i] = getConvergence(0, 0, dX, dY, mandelbrotFractal);
+// 	}
+
+// 	// printf("\n%d %f %f %f %f\n", convergenceSteps, xMinD, xMaxD, yMinD, yMaxD);
+// 	return i;
+// }
 
 // void FractalCalc::calcMandelbrotD(double* mandelbrot, int width, int height, point2int vecX, point2int vecY)
 // {

@@ -20,12 +20,26 @@ void Slave::work(int &argc, char** &argv)
 
 		if(true == order.doWork)
 		{
+				// printf("Received order %d: %d, %d, %d, %d, %d, %d, %lf, %lf, %lf\n", 
+			   		// 	order.orderID, 
+			   		// 	order.pictureWidth, 
+			   		//   	order.pictureHeight, 
+			   		//    	order.beginX, 
+			   		//    	order.beginY, 
+			   		//    	order.count, 
+			   		//    	order.doWork,
+			   		//    	order.dotSize,
+			   		//    	order.fractalX,
+			   		//    	order.fractalY);
 			size = executeOrder(order, resultArray);
+			// if(rank > 2)
+			// 	cout << "\n\nPoliczone!\n\n";
 			if(size > 0)
 			{
 				// for(auto i : resultArray)
 				// 	cout<< i <<" ";
 				int64_t id = order.orderID;
+				// cout << "Wysyłanie...\n\n";
 				sendResult(id, resultArray, size);
 			}
 			else
@@ -80,6 +94,8 @@ void Slave::sendResult(int64_t id, vector<double> &resultArray, int64_t size)
 	sendID(id);
 	sendSize(size);
 	sendArray(resultArray, size);
+	system("echo Slave: $(hostname)");
+	// printf("Slave %d\n", rank);
 }
 
 void Slave::sendID(int64_t id)

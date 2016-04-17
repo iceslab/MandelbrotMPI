@@ -24,6 +24,7 @@ int main(int argc, char** argv)
     if(rank == 0)
     {
     	Master m;
+        system("echo Master: $(hostname)");
     	m.work(argc, argv);
     }
     else

@@ -109,10 +109,10 @@ void registerMPIInfoType()
 
 void registerMPIOrderType()
 {
-	const int blocksCount = 7;
-	int blocksLength[blocksCount] = {1, 1, 1, 1, 1, 1, 1};
+	const int blocksCount = 10;
+	int blocksLength[blocksCount] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
-	MPI_Datatype types[blocksCount] = {MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::BOOL};
+	MPI_Datatype types[blocksCount] = {MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::INT, MPI::BOOL, MPI::DOUBLE, MPI::DOUBLE, MPI::DOUBLE};
 	MPI_Aint offsets[blocksCount];
 
 	offsets[0] = offsetof(Order, orderID);
@@ -122,6 +122,9 @@ void registerMPIOrderType()
 	offsets[4] = offsetof(Order, beginY);
 	offsets[5] = offsetof(Order, count);
 	offsets[6] = offsetof(Order, doWork);
+	offsets[7] = offsetof(Order, dotSize);
+	offsets[8] = offsetof(Order, fractalX);
+	offsets[9] = offsetof(Order, fractalY);
 
 	MPI_Type_create_struct(blocksCount, blocksLength, offsets, types, &MPI_ORDER_TYPE);
 	MPI_Type_commit(&MPI_ORDER_TYPE);

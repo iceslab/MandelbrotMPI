@@ -47,7 +47,7 @@ public:
 	static void calcMandelbrotD(double* mandelbrot, int width, int height, point2int vecX, point2int vecY);
 
 	static int calcMandelbrotPart(double* mandelbrot, Order &order);
-	static int calcMandelbrotPart(double* mandelbrot, int width, int height, int beginX, int beginY, int count);
+	// static int calcMandelbrotPart(double* mandelbrot, int width, int height, int beginX, int beginY, int count, double dotSize, double fractalX, double fractalY);
 };
 
 #endif
