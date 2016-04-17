@@ -18,7 +18,7 @@ private:
 	 int ordersCount;
 	 int rank;
 	 MPI_Status status;
-	 void generateOrders(vector<Order> &orders, Scene &sceneConfig);
+	 int generateOrders(vector<Order> &orders, Scene &sceneConfig, int length);
 	 void sendOrder(Order &order, int slaveId, int tag);
 	 void sendDieOrder(int slaveId);
 	 void receiveResult(map<int, vector<double>> &results, int slaveId);
