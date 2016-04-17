@@ -125,9 +125,9 @@ int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
 	    	for (int y = 0; y < order.pictureHeight; y++)
 	        {
 	        	double &color = resultArray[x + order.pictureWidth * y];
-	            double r =(sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0;
-	            double g =(sin( 2*M_PI*color - M_PI/2           ) + 1) * 255.0;
-	            double b =(sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0;
+	            double r =(sin( 4*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0;
+	            double g =(sin( 4*M_PI*color - M_PI/2           ) + 1) * 255.0;
+	            double b =(sin( 4*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0;
 	            // HSVtoRGB(r, g, b, 10*color * 360,1.0,1.0);
 	            colorArray[3*(x + order.pictureWidth * y) + 0] = r;
 	            colorArray[3*(x + order.pictureWidth * y) + 1] = g;
@@ -151,7 +151,7 @@ void Slave::sendResult(int64_t id, vector<double> &resultArray, int64_t size)
 	sendID(id);
 	sendSize(size);
 	sendArray(resultArray, size);
-	system("echo Slave: $(hostname -I)");
+	// system("echo Slave: $(hostname -I)");
 	// printf("Slave %d\n", rank);
 }
 

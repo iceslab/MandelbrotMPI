@@ -17,24 +17,24 @@ void Master::work(int &argc, char** &argv)
 {
 	Scene s;
 	s.duration = 1.0;
-	s.framerate = 30;
+	s.framerate = 10;
 	{Pixel2D temp;
-	temp.x = 640;
+	temp.x = 720;
 	// temp.y = Y_SIZE;
 	temp.y = 480;
 	s.frameSize = temp;}
-	s.dotSize = 5.0 / s.frameSize.x;
+	s.dotSize = 4.0 / s.frameSize.x;
 	{Coords2D temp;
-	temp.x = -1.1417714603531595L;
-	temp.y = -0.2669534948482316L;
+	temp.x = 0;//-0.6045018363100226L;
+	temp.y = 0;// 0.6930526910001000L;
 	s.pathStartPoint = temp;
 	s.pathEndPoint = temp;}
 	s.zoomStart = 1.0;
-	s.zoomEnd = 2000.0;
+	s.zoomEnd = 2e15;
 	s.colorStart = 0.0;
 	s.colorEnd = 0.0;
 	vector<Order> orders(ordersCount);
-	int orderLength = generateOrders(orders, s, s.frameSize.x*100);
+	int orderLength = generateOrders(orders, s, s.frameSize.x * s.frameSize.y );
 	// printf("Orders Generated.\n");
 	int ordersPendingCount = ordersCount;
 	for(int i = 1; i < world_size; ++i)
@@ -146,63 +146,63 @@ void Master::work(int &argc, char** &argv)
 	image.save_image(ss.str().c_str());
 }
 
-void Master::ordersByFrame(vector<Order> &orders, Scene &sceneConfig)
-{
-	// double deltaZoom = (sceneConfig.dotSize / sceneConfig.zoomStart - sceneConfig.dotSize / sceneConfig.zoomEnd)/ordersCount;
-	double deltaZoom = pow(sceneConfig.zoomStart / sceneConfig.zoomEnd, 1.0/ordersCount);
-	orders.resize(ordersCount);
-	for(int i = 0; i < ordersCount; ++i)
-	{
-		orders[i].orderID = i;
-		orders[i].pictureWidth = sceneConfig.frameSize.x;
-		orders[i].pictureHeight = sceneConfig.frameSize.y;
-		orders[i].beginX = 0;
-		orders[i].beginY = 0;
-		orders[i].count = sceneConfig.frameSize.x * sceneConfig.frameSize.y;
-		orders[i].doWork = true;
-		orders[i].dotSize = sceneConfig.dotSize * pow(deltaZoom,i);
-		orders[i].fractalX = sceneConfig.pathStartPoint.x;
-		orders[i].fractalY = sceneConfig.pathStartPoint.y;
+// void Master::ordersByFrame(vector<Order> &orders, Scene &sceneConfig)
+// {
+// 	// double deltaZoom = (sceneConfig.dotSize / sceneConfig.zoomStart - sceneConfig.dotSize / sceneConfig.zoomEnd)/ordersCount;
+// 	double deltaZoom = pow(sceneConfig.zoomStart / sceneConfig.zoomEnd, 1.0/ordersCount);
+// 	orders.resize(ordersCount);
+// 	for(int i = 0; i < ordersCount; ++i)
+// 	{
+// 		orders[i].orderID = i;
+// 		orders[i].pictureWidth = sceneConfig.frameSize.x;
+// 		orders[i].pictureHeight = sceneConfig.frameSize.y;
+// 		orders[i].beginX = 0;
+// 		orders[i].beginY = 0;
+// 		orders[i].count = sceneConfig.frameSize.x * sceneConfig.frameSize.y;
+// 		orders[i].doWork = true;
+// 		orders[i].dotSize = sceneConfig.dotSize * pow(deltaZoom,i);
+// 		orders[i].fractalX = sceneConfig.pathStartPoint.x;
+// 		orders[i].fractalY = sceneConfig.pathStartPoint.y;
 
-		// // printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
-		// 	   i, 
-		// 	   width, 
-		// 	   height, 
-		// 	   begX, 
-		// 	   begY, 
-		// 	   count, 
-		// 	   true);
-		// calcOffset(width, height, begX, begY, count, endX, endY);
-	}
-}
+// 		// // printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
+// 		// 	   i, 
+// 		// 	   width, 
+// 		// 	   height, 
+// 		// 	   begX, 
+// 		// 	   begY, 
+// 		// 	   count, 
+// 		// 	   true);
+// 		// calcOffset(width, height, begX, begY, count, endX, endY);
+// 	}
+// }
 
-void Master::ordersByLine(vector<Order> &orders, Scene &sceneConfig)
-{
-	orders.resize(ordersCount);
-	for(int i = 0; i < ordersCount; ++i)
-	{
-		orders[i].orderID = i;
-		orders[i].pictureWidth = sceneConfig.frameSize.x;
-		orders[i].pictureHeight = sceneConfig.frameSize.y;
-		orders[i].beginX = 0;
-		orders[i].beginY = i;
-		orders[i].count = sceneConfig.frameSize.x;
-		orders[i].doWork = true;
-		orders[i].dotSize = sceneConfig.dotSize;
-		orders[i].fractalX = sceneConfig.pathStartPoint.x;
-		orders[i].fractalY = sceneConfig.pathStartPoint.y;
+// void Master::ordersByLine(vector<Order> &orders, Scene &sceneConfig)
+// {
+// 	orders.resize(ordersCount);
+// 	for(int i = 0; i < ordersCount; ++i)
+// 	{
+// 		orders[i].orderID = i;
+// 		orders[i].pictureWidth = sceneConfig.frameSize.x;
+// 		orders[i].pictureHeight = sceneConfig.frameSize.y;
+// 		orders[i].beginX = 0;
+// 		orders[i].beginY = i;
+// 		orders[i].count = sceneConfig.frameSize.x;
+// 		orders[i].doWork = true;
+// 		orders[i].dotSize = sceneConfig.dotSize;
+// 		orders[i].fractalX = sceneConfig.pathStartPoint.x;
+// 		orders[i].fractalY = sceneConfig.pathStartPoint.y;
 
-		// // printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
-		// 	   i, 
-		// 	   width, 
-		// 	   height, 
-		// 	   begX, 
-		// 	   begY, 
-		// 	   count, 
-		// 	   true);
-		// calcOffset(width, height, begX, begY, count, endX, endY);
-	}
-}
+// 		// // printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
+// 		// 	   i, 
+// 		// 	   width, 
+// 		// 	   height, 
+// 		// 	   begX, 
+// 		// 	   begY, 
+// 		// 	   count, 
+// 		// 	   true);
+// 		// calcOffset(width, height, begX, begY, count, endX, endY);
+// 	}
+// }
 
 int Master::generateOrders(vector<Order> &orders, Scene &sceneConfig, int length)
 {
@@ -229,14 +229,13 @@ int Master::generateOrders(vector<Order> &orders, Scene &sceneConfig, int length
 		orders[i].beginY = endX;
 		orders[i].count = length;
 		orders[i].doWork = true;
-		orders[i].dotSize = sceneConfig.dotSize;// * pow(deltaZoom,i / length);
+		orders[i].dotSize = sceneConfig.dotSize * pow(deltaZoom,(1.0*i*length) / entireFrame);
 		orders[i].fractalX = sceneConfig.pathStartPoint.x;
 		orders[i].fractalY = sceneConfig.pathStartPoint.y;
 
 		begX = endX;
 		begY = endY;
-		if( begY > sceneConfig.frameSize.y - 10 || begY < 10)
-		printf("Generated order (ID %d): %3d, %3d, %3d, %d, %d, %0.3lf, %0.3lf, %0.3lf\n", 
+		printf("Generated order (ID %d): %3d, %3d, %3d, %d, %d, %0.20e, %0.20e, %0.20e\n", 
 			   i, 
 			   sceneConfig.frameSize.x, 
 			   sceneConfig.frameSize.y, 
@@ -248,7 +247,7 @@ int Master::generateOrders(vector<Order> &orders, Scene &sceneConfig, int length
 			   orders[i].fractalY);
 		calcOffset(sceneConfig.frameSize.x, sceneConfig.frameSize.y, begX, begY, length, endX, endY);
 	}
-	ordersByFrame(orders, sceneConfig);
+	// ordersByFrame(orders, sceneConfig);
 	return length;
 }
 
