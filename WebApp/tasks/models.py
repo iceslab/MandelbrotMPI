@@ -4,6 +4,8 @@ from django.utils import timezone
 
 
 class Task(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, )
-    time = models.DateTimeField(default=timezone.now)
-    cos = models.TextField('cos', default="", )
+	user = models.ForeignKey(User, on_delete=models.CASCADE, )
+	time = models.DateTimeField(default=timezone.now)
+	cos = models.TextField('cos', default="", )
+	status = models.TextField('status', default="pending", )
+	progress = models.TextField('progress', default="0", )

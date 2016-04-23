@@ -19,10 +19,10 @@
 {% block content %}
     <h1>Ostatnio zlecone zadania</h1>
     <br /><br />
-    <ul>
+    <ul class = tasks_list>
     {% if tasks.count > 0 %}
         {% for task in tasks %}
-            <li id={{ task.id }}>{{ num|add:forloop.counter }}. {{ task.user }} {{ task.time }} {{ task.cos }} <a
+            <li>{{ num|add:forloop.counter }}. {{ task.user }} {{ task.time }} {{ task.cos }} {{ task.status }} <p id="{{ task.id }}">{{ task.progress }}</p> <a
                     href="{% url 'del_task' task.id %}">[ - ]</a></li>
         {% endfor %}
     {% else %}
