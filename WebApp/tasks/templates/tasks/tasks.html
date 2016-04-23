@@ -1,5 +1,9 @@
 {% extends "tasks/index.html" %}
 
+{% load js %}
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="{% static "js/test.js" %}"></script>
+
 {% block menu %}
     <div id="menu">
 				<ul>
@@ -22,7 +26,7 @@
     <ul>
     {% if tasks.count > 0 %}
         {% for task in tasks %}
-            <li>{{ num|add:forloop.counter }}. {{ task.user }} {{ task.time }} {{ task.cos }} <a
+            <li id={{ task.id }}>{{ num|add:forloop.counter }}. {{ task.user }} {{ task.time }} {{ task.cos }} <a
                     href="{% url 'del_task' task.id %}">[ - ]</a></li>
         {% endfor %}
     {% else %}
