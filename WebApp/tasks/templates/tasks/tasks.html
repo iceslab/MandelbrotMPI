@@ -1,9 +1,5 @@
 {% extends "tasks/index.html" %}
-
-{% load js %}
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="{% static "js/test.js" %}"></script>
-
+{% load staticfiles %}
 {% block menu %}
     <div id="menu">
 				<ul>
@@ -33,9 +29,13 @@
         Nie ma żadnych zadań.
     {% endif %}
     </ul>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="{% static "js/test.js" %}"></script>
 {% endblock %}
 
 {% block main %}
     <h1>Strona Główna</h1>
     Zaloguj się aby rozpocząć korzystanie z serwisu. Jeżeli nie masz jeszcze konta <a href="{% url 'registration_register' %}">zarejestruj się!</a>
 {% endblock %}
+
+

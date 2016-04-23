@@ -8,6 +8,5 @@ def test_js_func(request):
 	tasks = Task.objects.filter(user=request.user).order_by('-time')
 	response_data={}
 	for task in tasks:
-		response_data['id'] = task.id
-		response_data['value'] = task.cos
+		response_data[task.id] = task.cos
 	return HttpResponse(json.dumps(response_data),content_type="application/json")
