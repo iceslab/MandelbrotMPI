@@ -19,18 +19,18 @@ void Master::work(int &argc, char** &argv)
 	s.duration = 1.0;
 	s.framerate = 10;
 	{Pixel2D temp;
-	temp.x = 720;
+	temp.x = 1600;
 	// temp.y = Y_SIZE;
-	temp.y = 480;
+	temp.y = 900;
 	s.frameSize = temp;}
 	s.dotSize = 4.0 / s.frameSize.x;
 	{Coords2D temp;
-	temp.x = 0;//-0.6045018363100226L;
-	temp.y = 0;// 0.6930526910001000L;
+	temp.x = 0.0;
+	temp.y = -0.0;//6265075904324992;
 	s.pathStartPoint = temp;
 	s.pathEndPoint = temp;}
 	s.zoomStart = 1.0;
-	s.zoomEnd = 2e15;
+	s.zoomEnd = 2e3;
 	s.colorStart = 0.0;
 	s.colorEnd = 0.0;
 	vector<Order> orders(ordersCount);
@@ -132,6 +132,10 @@ void Master::work(int &argc, char** &argv)
 	        r = results[orderID][3*i+0];
 			g = results[orderID][3*i+1];
 			b = results[orderID][3*i+2];
+
+			// if (r < 0.1 && g < 0.1 && b < 0.1)
+   //      	  	printf("Zjebało się\n");
+
 			// printf("R %d G %d B %d\n", r, g, b);
 			image.set_pixel(x++, y, r, g, b);
 			int tempX = x;

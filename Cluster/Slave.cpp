@@ -1,5 +1,6 @@
 #include "Slave.h" 
 #include "FractalCalc.h"
+#include <cmath>
 
 Slave::Slave() : order()
 {
@@ -111,6 +112,15 @@ void HSVtoRGB(double& fR, double& fG, double& fB, float fH, float fS, float fV) 
   fB += fM;
 }
 
+
+double color_between(double x, double beginY, double endY, int n)
+{
+	double beginX = 0.0;
+	double endX = 1.0;
+
+	return (endY - beginY)*0.5*(sin(1 / (endX - beginX)*M_PI*(x - beginX)*(2*n + 1) - M_PI / 2) + 1) + beginY;
+}
+
 int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
 {
 	int64_t size = 0;
@@ -124,10 +134,16 @@ int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
 	    {
 	    	for (int y = 0; y < order.pictureHeight; y++)
 	        {
-	        	double &color = resultArray[x + order.pictureWidth * y];
-	            double r =(sin( 4*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0;
-	            double g =(sin( 4*M_PI*color - M_PI/2           ) + 1) * 255.0;
-	            double b =(sin( 4*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0;
+	        	double color = resultArray[x + order.pictureWidth * y];
+	        	double r, g, b;
+	        	if(y < 50)
+	        		color = (1.0*x) / order.pictureWidth;
+	            // r = color_between(color, 0.0, 1.0, 0) * 255.0;
+            	// g = color_between(color, 0.0, 0.0, 0) * 255.0;
+        	    // b = color_between(color, 1.0, 0.0, 1) * 255.0;
+        	    r = 0.5*(sin(2*M_PI*color - M_PI/2 + M_PI /3) + 1) * 255.0;
+        	    g = 0.5*(sin(2*M_PI*color - M_PI/2) + 1) * 255.0;
+        	   b = 0.5*(sin(2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0;
 	            // HSVtoRGB(r, g, b, 10*color * 360,1.0,1.0);
 	            colorArray[3*(x + order.pictureWidth * y) + 0] = r;
 	            colorArray[3*(x + order.pictureWidth * y) + 1] = g;

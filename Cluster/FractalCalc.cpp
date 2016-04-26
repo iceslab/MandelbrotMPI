@@ -1,6 +1,6 @@
 #include "FractalCalc.h" 
 
-const int FractalCalc::convergenceSteps = 128;
+const int FractalCalc::convergenceSteps = 100;
 const double FractalCalc::divergenceLimitD = 2.0;
 
 void FractalCalc::mandelbrotFractal(complex<double> &z, complex<double> &c)
@@ -12,6 +12,7 @@ void FractalCalc::mandelbrotFractal(complex<double> &z, complex<double> &c)
 	// z = pow(z,4) * pow( exp( pow(z,0.5) ), 0.786) + 0.41;
 	z = z * z + c;
 }
+
 double FractalCalc::getConvergence(double z_real, double z_imag, double c_real, double c_imag, FractalFnPtrD fn)
 {
 	complex<double> z(z_real, z_imag);
@@ -21,12 +22,12 @@ double FractalCalc::getConvergence(double z_real, double z_imag, double c_real, 
 
 	// Sprawdzanie zbieznosci
 	int j = 0;
-	for (; j < convergenceSteps && abs(z) < divergenceLimitD; j++)
+	for (; j < 2 * convergenceSteps && abs(z) < divergenceLimitD; j++)
 	{
 		// z = exp(z.get_d()) + c;
 		fn(z, c);
 	}
-
+	j%=convergenceSteps;
 	// printf("%f %f %f %f %f\n", abs(z), z.real(), z.imag(), c.real(), c.imag());
 	double log_zn, nu, result;
 	if ( j < convergenceSteps ) 
@@ -63,7 +64,7 @@ int FractalCalc::calcMandelbrotPart(double* mandelbrot, Order &order)
 		// printf("%lf ", order.dotSize);
 		// printf("(%f %f) \n", dX, dY);
 
-		mandelbrot[i] = getConvergence(dX, dY, -0.41, 0.6, mandelbrotFractal);
+		mandelbrot[i] = getConvergence(dX, dY, 0.6, 0.4, mandelbrotFractal);
 		// cout<<mandelbrot[i]<<" ";
 	}
 
