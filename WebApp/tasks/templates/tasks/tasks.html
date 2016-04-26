@@ -1,5 +1,5 @@
 {% extends "tasks/index.html" %}
-
+{% load staticfiles %}
 {% block menu %}
     <div id="menu">
 				<ul>
@@ -19,19 +19,23 @@
 {% block content %}
     <h1>Ostatnio zlecone zadania</h1>
     <br /><br />
-    <ul>
+    <ul class = tasks_list>
     {% if tasks.count > 0 %}
         {% for task in tasks %}
-            <li>{{ num|add:forloop.counter }}. {{ task.user }} {{ task.time }} {{ task.cos }} <a
+            <li>{{ num|add:forloop.counter }}. {{ task.user }} {{ task.time }} {{ task.cos }} <p id="{{ task.id }}_status">{{ task.status }}</p> <p id="{{ task.id }}_progress">{{ task.progress }}</p> <a
                     href="{% url 'del_task' task.id %}">[ - ]</a></li>
         {% endfor %}
     {% else %}
         Nie ma żadnych zadań.
     {% endif %}
     </ul>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="{% static "js/get_tasks_progress.js" %}"></script>
 {% endblock %}
 
 {% block main %}
     <h1>Strona Główna</h1>
     Zaloguj się aby rozpocząć korzystanie z serwisu. Jeżeli nie masz jeszcze konta <a href="{% url 'registration_register' %}">zarejestruj się!</a>
 {% endblock %}
+
+

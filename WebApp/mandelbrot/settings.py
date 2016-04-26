@@ -79,7 +79,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mandel',
-        'HOST': 'localhost',
+        'HOST': '46.101.174.185',
         'PORT': '3306',
         'USER': 'mandelbrot',
         'PASSWORD': 'motznehaslo',
