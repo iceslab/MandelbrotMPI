@@ -9,5 +9,5 @@ urlpatterns = [
     url(r'^animations', views.animations, name='animations'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url(r'^(?P<task_id>\d+)/del_task', views.delete, name='del_task'),
-    url(r'^test_js_func/',api.test_js_func),
+    url(r'^get_tasks_progress/',api.get_tasks_progress),
 ]

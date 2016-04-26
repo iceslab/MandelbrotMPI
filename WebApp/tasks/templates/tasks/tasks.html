@@ -22,7 +22,7 @@
     <ul class = tasks_list>
     {% if tasks.count > 0 %}
         {% for task in tasks %}
-            <li>{{ num|add:forloop.counter }}. {{ task.user }} {{ task.time }} {{ task.cos }} {{ task.status }} <p id="{{ task.id }}">{{ task.progress }}</p> <a
+            <li>{{ num|add:forloop.counter }}. {{ task.user }} {{ task.time }} {{ task.cos }} <p id="{{ task.id }}_status">{{ task.status }}</p> <p id="{{ task.id }}_progress">{{ task.progress }}</p> <a
                     href="{% url 'del_task' task.id %}">[ - ]</a></li>
         {% endfor %}
     {% else %}
@@ -30,7 +30,7 @@
     {% endif %}
     </ul>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="{% static "js/test.js" %}"></script>
+<script src="{% static "js/get_tasks_progress.js" %}"></script>
 {% endblock %}
 
 {% block main %}
