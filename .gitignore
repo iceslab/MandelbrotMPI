@@ -29,4 +29,7 @@
 main
 
 .directory
-Cluster/images/
+./Cluster/images/*
+
+#python
+*.pyc
