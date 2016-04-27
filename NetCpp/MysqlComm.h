@@ -43,29 +43,29 @@ typedef struct {
 
 typedef struct {
 	unsigned id;
-	const char* datetime;
+	const char* created_time;
 	unsigned user_id;
 	unsigned progress;
 	const char* status;
 	const char* file_path;
 } Task;
 
-class MysqlComm{
+class MysqlComm {
 public:
-	MysqlComm(const char* _host, const char* _user, const char* _pass, const char* _db);
+	MysqlComm(const char* _host, const char* _user, const char* _pass,
+			const char* _db);
+	void Init();
 	Scene GetScene();
-	void SetScene(Scene _foo);
-	void TaskGet();
+	MYSQL_ROW GetRow();
+	Task GetTask();
 	void Select(const char* _table, const char* _values);
 	void Command(const char* _command);
-	void PrintRow();
 	void TaskUpdateProgress(unsigned _progress);
 	void TaskUpdateStatus(const char* _status);
-	void TaskClose();
+	void TaskClose(Scene _scene, Task _task, const char* _extension);
 	void Connect();
 	void Disconnect();
-
-	MYSQL_ROW GetRow();
+	void PrintRow();
 private:
 	const char* host;
 	const char* user;
@@ -75,11 +75,12 @@ private:
 	int state;
 	int num_fields;
 	Task task;
-	Scene s_scene;
+	Scene scene;
 	MYSQL_RES *result;
 	MYSQL_ROW row;
 	MYSQL *connection, mysql;
-	void DoCommand(const char* _cmd);
+	void HandleMysqlError();
+	void DoCommand(const char* _cmd, bool _gives_data);
 };
 
 #endif

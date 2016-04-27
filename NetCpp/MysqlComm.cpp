@@ -9,83 +9,131 @@ MysqlComm::MysqlComm(const char* _host, const char* _user, const char* _pass, co
 	, state( 0 )
 	, num_fields( 0 )
 	, task()
-	, s_scene()
+	, scene()
 	, result( nullptr )
 	, row( 0 )
 	, connection( nullptr )	
 	{
+	row = MYSQL_ROW();
+}
+void MysqlComm::Init() {
 	mysql_init(&mysql);
+	HandleMysqlError();
+}
+void MysqlComm::Connect() {
+	connection = mysql_real_connect(&mysql, host, user, pass, db, 0, NULL, 0);
+	HandleMysqlError();
 }
 
-void MysqlComm::Connect(){
-	connection = mysql_real_connect(&mysql,host, user, pass, db, 0,0,0);
-	perror("mysql_real_connect");
-}
-
-void MysqlComm::Disconnect(){
-	printf("No działa!\n");
-	if ( result )
-	{
-		mysql_free_result(result);
-		perror("mysql_free_result:");
-	}
+void MysqlComm::Disconnect() {
+	mysql_free_result(result);
+	HandleMysqlError();
 	mysql_close(connection);
-	perror("mysql_close:");
+	HandleMysqlError();
 }
 
-void MysqlComm::DoCommand(const char* _cmd){
-	state = mysql_query(connection, _cmd);
-	perror("mysql_query:");
-	result = mysql_store_result(connection);
-	perror("mysql_store_result:");
-	printf("%d\n", result );
-	num_fields=mysql_num_fields(result);
-	perror("mysql_num_fields:");
-	row=mysql_fetch_row(result);
-	perror("mysql_fetch_row:");
+void MysqlComm::DoCommand(const char* _cmd, bool _gives_data) {
+	mysql_query(connection, _cmd);
+	HandleMysqlError();
+	if (_gives_data) {
+		result = mysql_store_result(connection);
+		HandleMysqlError();
+		num_fields = mysql_num_fields(result);
+		HandleMysqlError();
+		row = mysql_fetch_row(result);
+		HandleMysqlError();
+	}
 }
-//id, creat_time, user, cos, progress, status, color_end, 
-void MysqlComm::TaskGet(){
-	DoCommand(SEL);
-	PrintRow();
+
+Task MysqlComm::GetTask() {
 	task.id = atoi(row[0]);
-	task.datetime = row[1];
+	task.created_time = row[1];
 	task.user_id = atoi(row[2]);
-	task.progress = atoi(row[3]);
-	task.status = row[4];
-	task.file_path = row[5];
+	task.progress = atoi(row[4]);
+	task.status = row[5];
+	task.file_path = row[10];
+	return task;
 }
 
-void MysqlComm::Select(const char* _table, const char* _values){
-	char* cmd = (char*)malloc(strlen("SELECT ")+strlen(_table)+strlen(" FROM ")+strlen(_values) + strlen(" WHERE status!='done' LIMIT 1")+1);
-	perror("Malloc:");
-	sprintf (cmd, "SELECT %s FROM %s WHERE status!='done' LIMIT 1",_values, _table);
-	perror("sprintf SELECT:");
-	DoCommand(cmd);
+Scene MysqlComm::GetScene(){
+	scene.duration=atof(row[9]);
+	scene.framerate=strtoul(row[13],NULL,10);
+	scene.frameSize=(Pixel2D){static_cast<unsigned int>(strtoul(row[11],NULL,10)),static_cast<unsigned int>(strtoul(row[12],NULL,10))};
+	scene.dotSize=atof(row[8]);
+	scene.pathStartPoint=(Coords2D){atof(row[16]), atof(row[17])};
+	scene.pathEndPoint=(Coords2D){atof(row[14]), atof(row[15])};
+	scene.zoomStart=atof(row[19]);
+	scene.zoomEnd=atof(row[18]);
+	scene.colorStart=atof(row[7]);
+	scene.colorEnd=atof(row[6]);
+	return scene;
 }
 
-void MysqlComm::Command(const char* _cmd){
-	DoCommand(_cmd);
+void MysqlComm::Select(const char* _table, const char* _values) {
+	char* cmd = (char*) malloc(
+			strlen("SELECT ") + strlen(_table) + strlen(" FROM ")
+					+ strlen(_values) + strlen(" WHERE status!='done' ORDER BY created_time LIMIT 1")
+					+ 1);
+	if (cmd == NULL)
+		throw "Malloc failed.";
+	sprintf(cmd, "SELECT %s FROM %s WHERE status!='done' ORDER BY created_time LIMIT 1", _values,
+			_table);
+	DoCommand(cmd, true);
 }
 
-void MysqlComm::TaskUpdateProgress(unsigned _progress){
-	char* cmd = (char*)malloc(strlen("UPDATE tasks_task SET progress= WHERE id=")+21);
-	sprintf(cmd, "UPDATE tasks_task SET progress=%d WHERE id=%d", _progress, task.id);
-	printf("%s\n", cmd);
-	DoCommand(cmd);
+void MysqlComm::TaskUpdateProgress(unsigned _progress) {
+	char* cmd = (char*) malloc(
+			strlen("UPDATE tasks_task SET progress= WHERE id=") + 23);
+	if (cmd == NULL)
+		throw "Malloc failed.";
+	sprintf(cmd, "UPDATE tasks_task SET progress=%d WHERE id=%d", _progress,
+			task.id);
+	DoCommand(cmd, false);
 }
 
-MYSQL_ROW MysqlComm::GetRow(){
+void MysqlComm::TaskClose(Scene _scene, Task _task, const char* _extension) {
+	// skrypt, plik, user, host
+	char* cmd = (char*) malloc(
+			strlen("./scp.sh mandel 46.101.174.185") + strlen(_extension)
+					+ 12);
+	if (cmd == NULL)
+		throw "Malloc failed.";
+	sprintf(cmd, "./scp.sh %d%s mandel 46.101.174.185", task.id, _extension);
+	system(cmd);
+	// koniec zapisu pliku na serwer
+	// aktualizacja bazy
+	cmd =
+			(char*) malloc(
+					strlen(
+							"UPDATE tasks_task SET progress=100, status='done', file_path='.' WHERE id=")
+							+ strlen(_extension) + 23);
+	if (cmd == NULL)
+		throw "Malloc failed.";
+	sprintf(cmd,
+			"UPDATE tasks_task SET progress=100, status='done', file_path='%d.%s' WHERE id=%d",
+			task.id, _extension, task.id);
+	DoCommand(cmd, false);
+}
+
+MYSQL_ROW MysqlComm::GetRow() {
 	return row;
 }
 
-void MysqlComm::PrintRow(){
-	for(int i =0;i<num_fields;i++)
+void MysqlComm::PrintRow() {
+	if (row == NULL)
+		throw "Row is empty.";
+	for (int i = 0; i < num_fields; i++)
 		printf("%s ", row[i]);
 	printf("\n");
 }
 
-int kbhit(void){
+void MysqlComm::HandleMysqlError() {
+	if ((strcmp(mysql_error(&mysql), "") != 0)) {
+		throw mysql_error(&mysql);
+	}
+}
+
+int kbhit(void) {
 	struct termios oldt, newt;
 	int ch;
 	int oldf;
@@ -102,7 +150,7 @@ int kbhit(void){
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	fcntl(STDIN_FILENO, F_SETFL, oldf);
 
-	if(ch != EOF){
+	if (ch != EOF) {
 		ungetc(ch, stdin);
 		return 1;
 	}

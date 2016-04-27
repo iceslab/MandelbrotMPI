@@ -15,7 +15,14 @@ Master::Master()
 
 void Master::work(int &argc, char** &argv)
 {
+	MysqlComm com(HOST, USER, PASS, DB);
+	com.Init();
+	com.Connect();
 	Scene s;
+	// s = com.GetScene();
+	// com.TaskUpdateProgress(77);
+	// com.PrintRow();
+	com.Disconnect();
 	s.duration = 1.0;
 	s.framerate = 10;
 	{Pixel2D temp;
