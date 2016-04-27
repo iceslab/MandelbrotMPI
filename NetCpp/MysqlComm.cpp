@@ -1,21 +1,36 @@
 #include "MysqlComm.h"
 
-MysqlComm::MysqlComm(const char* _host, const char* _user, const char* _pass, const char* _db){
+MysqlComm::MysqlComm(const char* _host, const char* _user, const char* _pass, const char* _db)
+	: host( _host )
+	, user( _user )
+	, pass( _pass )
+	, db( _db )
+	, command( nullptr )
+	, state( 0 )
+	, num_fields( 0 )
+	, task()
+	, s_scene()
+	, result( nullptr )
+	, row( 0 )
+	, connection( nullptr )	
+	{
 	mysql_init(&mysql);
-		num_fields = 0;
-		host = _host;
-		user = _user;
-		pass = _pass;
-		db = _db;
 }
 
 void MysqlComm::Connect(){
 	connection = mysql_real_connect(&mysql,host, user, pass, db, 0,0,0);
+	perror("mysql_real_connect");
 }
 
 void MysqlComm::Disconnect(){
-	mysql_free_result(result);
+	printf("No działa!\n");
+	if ( result )
+	{
+		mysql_free_result(result);
+		perror("mysql_free_result:");
+	}
 	mysql_close(connection);
+	perror("mysql_close:");
 }
 
 void MysqlComm::DoCommand(const char* _cmd){
@@ -23,12 +38,13 @@ void MysqlComm::DoCommand(const char* _cmd){
 	perror("mysql_query:");
 	result = mysql_store_result(connection);
 	perror("mysql_store_result:");
+	printf("%d\n", result );
 	num_fields=mysql_num_fields(result);
 	perror("mysql_num_fields:");
 	row=mysql_fetch_row(result);
 	perror("mysql_fetch_row:");
 }
-
+//id, creat_time, user, cos, progress, status, color_end, 
 void MysqlComm::TaskGet(){
 	DoCommand(SEL);
 	PrintRow();
