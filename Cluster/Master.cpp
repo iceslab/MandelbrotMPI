@@ -15,34 +15,30 @@ Master::Master()
 
 void Master::work(int &argc, char** &argv)
 {
+	for(;;)
+	{
+
 	MysqlComm com(HOST, USER, PASS, DB);
-	com.Init();
-	com.Connect();
-	Scene s;
-	// s = com.GetScene();
-	// com.TaskUpdateProgress(77);
-	// com.PrintRow();
-	com.Disconnect();
-	s.duration = 1.0;
-	s.framerate = 10;
-	{Pixel2D temp;
-	temp.x = 1600;
-	// temp.y = Y_SIZE;
-	temp.y = 900;
-	s.frameSize = temp;}
-	s.dotSize = 4.0 / s.frameSize.x;
-	{Coords2D temp;
-	temp.x = 0.0;
-	temp.y = -0.0;//6265075904324992;
-	s.pathStartPoint = temp;
-	s.pathEndPoint = temp;}
-	s.zoomStart = 1.0;
-	s.zoomEnd = 2e3;
-	s.colorStart = 0.0;
-	s.colorEnd = 0.0;
+	try{
+		com.Init();
+		com.Connect();
+		do
+		{
+			sleep(1);
+			com.Select("tasks_task","*");
+			cout<<"Bool: "<<com.AnythingToDo()<<endl;
+		}while( ! com.AnythingToDo() );
+	} catch(const char* e){
+		printf("%s\n", e);
+		fflush(stdout);
+	}
+
+	Task task = com.GetTask();
+	Scene s = com.GetScene();
+	com.PrintRow();
 	vector<Order> orders(ordersCount);
 	int orderLength = generateOrders(orders, s, s.frameSize.x * s.frameSize.y );
-	// printf("Orders Generated.\n");
+
 	int ordersPendingCount = ordersCount;
 	for(int i = 1; i < world_size; ++i)
 	{
@@ -52,74 +48,24 @@ void Master::work(int &argc, char** &argv)
 
 	map<int, vector<double>> results;
 
-	// int size;
-	// for(int i = 1; i < world_size; ++i)
-	// {	
-		
-	// }
 	int dieOrders = world_size -1;
-	while(dieOrders > 0)
+	while(ordersPendingCount > 0)
 	{
 		receiveResult(results, MPI_ANY_SOURCE);
-		if(ordersPendingCount > 0)
-		{
+		// if(ordersPendingCount > 0)
+		// {
 			sendOrder(orders[orders.size() - ordersPendingCount], status.MPI_SOURCE, WORKTAG);
 			ordersPendingCount--;
-			cout << ordersPendingCount << endl;
-		}
-		else
-		{
-			sendDieOrder(status.MPI_SOURCE);
-			dieOrders--;
-		}
+			int progress = 100 - (ordersPendingCount*100) / ordersCount;
+			com.TaskUpdateProgress(progress);
+			cout << progress << endl;
+		// }
+		// else
+		// {
+		// 	sendDieOrder(status.MPI_SOURCE);
+		// 	dieOrders--;
+		// }
 	}
-
-	// for(int i = 0; i < results.size(); ++i)
-	// {
-	// 	// printf("%d: %f, ", i, results[i]);
-	// }
-
-
-    // int xsize, ysize, r, g, b;
-    // xsize=s.frameSize.x;
-    // ysize=s.frameSize.y;
-    // Bitmap image(xsize, ysize);
-    // // for (int x = 0; x < xsize; x++)
-    // // {
-    // // 	for (int y = 0; y < ysize; y++)
-    // //     {
-    // //     	double &color = results[y][x];
-    // //         r = (int)round((sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0);
-    // //         g = (int)round((sin( 2*M_PI*color - M_PI/2           ) + 1) * 255.0);
-    // //         b = (int)round((sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0);
-    // //         image.set_pixel(x, y, r, g, b);
-    // //     }
-    // // }
-    // for(int frame = 0; frame < ordersCount; frame++)
-    // {
-	   //  int xsize, ysize, r, g, b;
-	   //  xsize=s.frameSize.x;
-	   //  ysize=s.frameSize.y;
-	   //  Bitmap image(xsize, ysize);
-	   //  // cout << "Frame: "<<frame << " "<<results[frame].size()<<endl;
-	   //  for (int x = 0; x < xsize; x++)
-	   //  {
-	   //  	for (int y = 0; y < ysize; y++)
-	   //      {
-	   //      	// double &color = results[frame][x + xsize * y];
-	   //       //    r = color*255.0;//(int)round((sin( 2*M_PI*color - M_PI/2 + M_PI / 3) + 1) * 255.0);
-	   //       //    g = color*255.0;//(int)round((sin( 2*M_PI*color - M_PI/2           ) + 1) * 255.0);
-	   //       //    b = color*255.0;//(int)round((sin( 2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0);
-	   //          r = results[frame][3*(x+xsize*y)+0];
-	   //          g = results[frame][3*(x+xsize*y)+1];
-	   //          b = results[frame][3*(x+xsize*y)+2];
-	   //          // cout << "size: "<<results[frame].size();
-	   //          image.set_pixel(x, y, r, g, b);
-	   //      }
-	   //  }
-	    
-	    
-    // }
     
     int x = 0, y = 0, r, g, b;
     Bitmap image(s.frameSize.x, s.frameSize.y);
@@ -140,80 +86,29 @@ void Master::work(int &argc, char** &argv)
 			g = results[orderID][3*i+1];
 			b = results[orderID][3*i+2];
 
-			// if (r < 0.1 && g < 0.1 && b < 0.1)
-   //      	  	printf("Zjebało się\n");
-
-			// printf("R %d G %d B %d\n", r, g, b);
 			image.set_pixel(x++, y, r, g, b);
 			int tempX = x;
 			x = tempX % s.frameSize.x;
 			y = (y + (tempX / s.frameSize.x)) % s.frameSize.y;
-			// printf("orderID: %d x = %d y = %d\n", orderID, x, y);
+
     	}
     	
     }
+    {
 	stringstream ss;
 	ss<<"images/"<<(orderID / ordersPerFrame)<<".bmp";
 	image.save_image(ss.str().c_str());
+	}
+	{
+		stringstream ss;
+		ss << "ffmpeg -framerate 30 -i images/%d.bmp -c:v libx264 -r 30 -pix_fmt yuv420p " << task.id <<".mp4";
+		system(ss.str().c_str());
+	}
+
+	com.TaskClose(s, task, ".mp4");
+	com.Disconnect();
+	}
 }
-
-// void Master::ordersByFrame(vector<Order> &orders, Scene &sceneConfig)
-// {
-// 	// double deltaZoom = (sceneConfig.dotSize / sceneConfig.zoomStart - sceneConfig.dotSize / sceneConfig.zoomEnd)/ordersCount;
-// 	double deltaZoom = pow(sceneConfig.zoomStart / sceneConfig.zoomEnd, 1.0/ordersCount);
-// 	orders.resize(ordersCount);
-// 	for(int i = 0; i < ordersCount; ++i)
-// 	{
-// 		orders[i].orderID = i;
-// 		orders[i].pictureWidth = sceneConfig.frameSize.x;
-// 		orders[i].pictureHeight = sceneConfig.frameSize.y;
-// 		orders[i].beginX = 0;
-// 		orders[i].beginY = 0;
-// 		orders[i].count = sceneConfig.frameSize.x * sceneConfig.frameSize.y;
-// 		orders[i].doWork = true;
-// 		orders[i].dotSize = sceneConfig.dotSize * pow(deltaZoom,i);
-// 		orders[i].fractalX = sceneConfig.pathStartPoint.x;
-// 		orders[i].fractalY = sceneConfig.pathStartPoint.y;
-
-// 		// // printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
-// 		// 	   i, 
-// 		// 	   width, 
-// 		// 	   height, 
-// 		// 	   begX, 
-// 		// 	   begY, 
-// 		// 	   count, 
-// 		// 	   true);
-// 		// calcOffset(width, height, begX, begY, count, endX, endY);
-// 	}
-// }
-
-// void Master::ordersByLine(vector<Order> &orders, Scene &sceneConfig)
-// {
-// 	orders.resize(ordersCount);
-// 	for(int i = 0; i < ordersCount; ++i)
-// 	{
-// 		orders[i].orderID = i;
-// 		orders[i].pictureWidth = sceneConfig.frameSize.x;
-// 		orders[i].pictureHeight = sceneConfig.frameSize.y;
-// 		orders[i].beginX = 0;
-// 		orders[i].beginY = i;
-// 		orders[i].count = sceneConfig.frameSize.x;
-// 		orders[i].doWork = true;
-// 		orders[i].dotSize = sceneConfig.dotSize;
-// 		orders[i].fractalX = sceneConfig.pathStartPoint.x;
-// 		orders[i].fractalY = sceneConfig.pathStartPoint.y;
-
-// 		// // printf("Generated order %d: %d, %d, %d, %d, %d, %d\n", 
-// 		// 	   i, 
-// 		// 	   width, 
-// 		// 	   height, 
-// 		// 	   begX, 
-// 		// 	   begY, 
-// 		// 	   count, 
-// 		// 	   true);
-// 		// calcOffset(width, height, begX, begY, count, endX, endY);
-// 	}
-// }
 
 int Master::generateOrders(vector<Order> &orders, Scene &sceneConfig, int length)
 {

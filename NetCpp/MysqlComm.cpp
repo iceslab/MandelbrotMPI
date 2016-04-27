@@ -45,27 +45,32 @@ void MysqlComm::DoCommand(const char* _cmd, bool _gives_data) {
 	}
 }
 
+bool MysqlComm::AnythingToDo()
+{
+	return static_cast<bool>(row != 0);
+}
+
 Task MysqlComm::GetTask() {
 	task.id = atoi(row[0]);
 	task.created_time = row[1];
 	task.user_id = atoi(row[2]);
-	task.progress = atoi(row[4]);
-	task.status = row[5];
-	task.file_path = row[10];
+	task.progress = atoi(row[3]);
+	task.status = row[4];
+	task.file_path = row[9];
 	return task;
 }
 
 Scene MysqlComm::GetScene(){
-	scene.duration=atof(row[9]);
-	scene.framerate=strtoul(row[13],NULL,10);
-	scene.frameSize=(Pixel2D){static_cast<unsigned int>(strtoul(row[11],NULL,10)),static_cast<unsigned int>(strtoul(row[12],NULL,10))};
-	scene.dotSize=atof(row[8]);
-	scene.pathStartPoint=(Coords2D){atof(row[16]), atof(row[17])};
-	scene.pathEndPoint=(Coords2D){atof(row[14]), atof(row[15])};
-	scene.zoomStart=atof(row[19]);
-	scene.zoomEnd=atof(row[18]);
-	scene.colorStart=atof(row[7]);
-	scene.colorEnd=atof(row[6]);
+	scene.duration=atof(row[8]);
+	scene.framerate=strtoul(row[12],NULL,10);
+	scene.frameSize=(Pixel2D){static_cast<unsigned int>(strtoul(row[10],NULL,10)),static_cast<unsigned int>(strtoul(row[11],NULL,10))};
+	scene.dotSize=atof(row[7]);
+	scene.pathStartPoint=(Coords2D){atof(row[15]), atof(row[16])};
+	scene.pathEndPoint=(Coords2D){atof(row[13]), atof(row[14])};
+	scene.zoomStart=atof(row[18]);
+	scene.zoomEnd=atof(row[17]);
+	scene.colorStart=atof(row[6]);
+	scene.colorEnd=atof(row[5]);
 	return scene;
 }
 
@@ -156,4 +161,12 @@ int kbhit(void) {
 	}
 
 	return 0;
+}
+void MysqlComm::TaskStart() {
+	char* cmd = (char*) malloc(
+			strlen("UPDATE tasks_task SET status='working' WHERE id=") + 11);
+	if (cmd == NULL)
+		throw "Malloc failed.";
+	sprintf(cmd, "UPDATE tasks_task SET status='working' WHERE id=%d", task.id);
+	DoCommand(cmd, false);
 }

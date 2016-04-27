@@ -22,12 +22,12 @@ double FractalCalc::getConvergence(double z_real, double z_imag, double c_real, 
 
 	// Sprawdzanie zbieznosci
 	int j = 0;
-	for (; j < 2 * convergenceSteps && abs(z) < divergenceLimitD; j++)
+	for (; j < convergenceSteps && abs(z) < divergenceLimitD; j++)
 	{
 		// z = exp(z.get_d()) + c;
 		fn(z, c);
 	}
-	j%=convergenceSteps;
+	// j%=convergenceSteps;
 	// printf("%f %f %f %f %f\n", abs(z), z.real(), z.imag(), c.real(), c.imag());
 	double log_zn, nu, result;
 	if ( j < convergenceSteps ) 
@@ -64,7 +64,7 @@ int FractalCalc::calcMandelbrotPart(double* mandelbrot, Order &order)
 		// printf("%lf ", order.dotSize);
 		// printf("(%f %f) \n", dX, dY);
 
-		mandelbrot[i] = getConvergence(dX, dY, 0.6, 0.4, mandelbrotFractal);
+		mandelbrot[i] = getConvergence(0, 0, dX, dY, mandelbrotFractal);
 		// cout<<mandelbrot[i]<<" ";
 	}
 

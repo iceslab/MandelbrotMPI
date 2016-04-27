@@ -60,8 +60,10 @@ public:
 	Task GetTask();
 	void Select(const char* _table, const char* _values);
 	void Command(const char* _command);
+	bool AnythingToDo();
 	void TaskUpdateProgress(unsigned _progress);
 	void TaskUpdateStatus(const char* _status);
+	void TaskStart();
 	void TaskClose(Scene _scene, Task _task, const char* _extension);
 	void Connect();
 	void Disconnect();
