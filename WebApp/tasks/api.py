@@ -6,7 +6,7 @@ from .models import Task
 
 @login_required(login_url='/')
 def get_tasks_progress(request):
-	tasks = Task.objects.filter(user=request.user).order_by('-time')
+	tasks = Task.objects.filter(user=request.user).order_by('-created_time')
 	response_data={}
 	
 	for task in tasks:

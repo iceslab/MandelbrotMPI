@@ -22,7 +22,8 @@
     <ul class = tasks_list>
     {% if tasks.count > 0 %}
         {% for task in tasks %}
-            <li>{{ num|add:forloop.counter }}. {{ task.user }} {{ task.time }} {{ task.cos }} <p id="{{ task.id }}_status">{{ task.status }}</p> <p id="{{ task.id }}_progress">{{ task.progress }}</p> <a
+            <li>{{ forloop.counter }}. {{ task.user }} {{ task.created_time }} <p id="{{ task.id }}_status">{{ task.status }}</p>
+            <progress id="{{ task.id }}_progress" value="{{ task.progress|floatformat:0 }}" max="100"></progress> <p id="{{ task.id }}_progresstext">{{ task.progress|floatformat:0 }}%</p> <a
                     href="{% url 'del_task' task.id %}">[ - ]</a></li>
         {% endfor %}
     {% else %}

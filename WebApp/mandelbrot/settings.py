@@ -123,9 +123,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
+STATIC_ROOT = "/home/dave/git/media/static/"
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
+    ("videos", "/home/mandel/"),
 )
 
 REGISTRATION_OPEN = True  # If True, users can register

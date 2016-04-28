@@ -4,9 +4,13 @@ from .forms import AddTaskForm
 from .models import Task
 
 
+def get_dotsize(value):
+    return 4.0 / value
+
+
 def index(request):
     if request.user.is_authenticated():
-        tasks = Task.objects.filter(user=request.user).order_by('-time')
+        tasks = Task.objects.filter(user=request.user).order_by('-created_time')
         return render(request, 'tasks/tasks.html', {'tasks': tasks})
     else:
         return render(request, 'tasks/tasks.html', {})
@@ -19,6 +23,7 @@ def add(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.user = request.user
+            post.dotSize = get_dotsize(post.frameSizeX)
             post.save()
             return redirect('/', pk=post.pk)
     else:
@@ -39,4 +44,8 @@ def fractals(request):
 
 @login_required(login_url='/')
 def animations(request):
-    return render(request, 'tasks/animations.html', {})
+    if request.user.is_authenticated():
+        tasks = Task.objects.filter(user=request.user, status='done').order_by('-created_time')
+        return render(request, 'tasks/animations.html', {'videos': tasks})
+    else:
+        return render(request, 'tasks/animations.htmll', {})
