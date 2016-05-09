@@ -17,7 +17,7 @@ void Master::work(int &argc, char** &argv)
 {
 	for(;;)
 	{
-
+		system("rm images/*.bmp");
 	MysqlComm com(HOST, USER, PASS, DB);
 	try{
 		com.Init();
@@ -32,9 +32,9 @@ void Master::work(int &argc, char** &argv)
 		printf("%s\n", e);
 		fflush(stdout);
 	}
-
 	Task task = com.GetTask();
 	Scene s = com.GetScene();
+	com.TaskStart();
 	com.PrintRow();
 	vector<Order> orders(ordersCount);
 	int orderLength = generateOrders(orders, s, s.frameSize.x * s.frameSize.y );
@@ -101,10 +101,10 @@ void Master::work(int &argc, char** &argv)
 	}
 	{
 		stringstream ss;
-		ss << "ffmpeg -framerate 30 -i images/%d.bmp -c:v libx264 -r 30 -pix_fmt yuv420p " << task.id <<".mp4";
+		ss << "ffmpeg -framerate 30 -y -i images/%d.bmp -c:v libx264 -r 30 -pix_fmt yuv420p " << task.id <<".mp4";
 		system(ss.str().c_str());
 	}
-
+	
 	com.TaskClose(s, task, ".mp4");
 	com.Disconnect();
 	}
@@ -126,6 +126,9 @@ int Master::generateOrders(vector<Order> &orders, Scene &sceneConfig, int length
 	orders.resize(ordersCount);
 	int begX = 0, begY = 0, endX = 0, endY = 0;
 	double deltaZoom = pow(sceneConfig.zoomStart / sceneConfig.zoomEnd, 1.0/static_cast<double>( sceneConfig.duration * sceneConfig.framerate));
+	double deltaPathX = (double)(sceneConfig.pathEndPoint.x - sceneConfig.pathStartPoint.x) / static_cast<double>( sceneConfig.duration * sceneConfig.framerate);
+	double deltaPathY = (double)(sceneConfig.pathEndPoint.y - sceneConfig.pathStartPoint.y) / static_cast<double>( sceneConfig.duration * sceneConfig.framerate);
+	cout << deltaPathX << " " << deltaPathY << endl;
 	for(int i = 0; i < ordersCount; ++i)
 	{
 		orders[i].orderID = i;
@@ -136,18 +139,13 @@ int Master::generateOrders(vector<Order> &orders, Scene &sceneConfig, int length
 		orders[i].count = length;
 		orders[i].doWork = true;
 		orders[i].dotSize = sceneConfig.dotSize * pow(deltaZoom,(1.0*i*length) / entireFrame);
-		orders[i].fractalX = sceneConfig.pathStartPoint.x;
-		orders[i].fractalY = sceneConfig.pathStartPoint.y;
+		orders[i].fractalX = sceneConfig.pathStartPoint.x + i*deltaPathX;
+		orders[i].fractalY = sceneConfig.pathStartPoint.y + i*deltaPathY;
 
 		begX = endX;
 		begY = endY;
-		printf("Generated order (ID %d): %3d, %3d, %3d, %d, %d, %0.20e, %0.20e, %0.20e\n", 
+		printf("Generated order (ID %d): %0.5e, %0.5e, %0.5e\n", 
 			   i, 
-			   sceneConfig.frameSize.x, 
-			   sceneConfig.frameSize.y, 
-			   begX, 
-			   begY, 
-			   length,
 			   orders[i].dotSize,
 			   orders[i].fractalX,
 			   orders[i].fractalY);

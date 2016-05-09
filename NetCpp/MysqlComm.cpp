@@ -96,28 +96,35 @@ void MysqlComm::TaskUpdateProgress(unsigned _progress) {
 	DoCommand(cmd, false);
 }
 
-void MysqlComm::TaskClose(Scene _scene, Task _task, const char* _extension) {
-	// skrypt, plik, user, host
-	char* cmd = (char*) malloc(
-			strlen("./scp.sh mandel 46.101.174.185") + strlen(_extension)
-					+ 12);
-	if (cmd == NULL)
-		throw "Malloc failed.";
-	sprintf(cmd, "./scp.sh %d%s mandel 46.101.174.185", task.id, _extension);
-	system(cmd);
-	// koniec zapisu pliku na serwer
-	// aktualizacja bazy
-	cmd =
-			(char*) malloc(
-					strlen(
-							"UPDATE tasks_task SET progress=100, status='done', file_path='.' WHERE id=")
-							+ strlen(_extension) + 23);
-	if (cmd == NULL)
-		throw "Malloc failed.";
-	sprintf(cmd,
-			"UPDATE tasks_task SET progress=100, status='done', file_path='%d.%s' WHERE id=%d",
-			task.id, _extension, task.id);
-	DoCommand(cmd, false);
+void MysqlComm::TaskClose(Scene scene, Task task, const char* _extension) {
+ char* cmd = (char*) malloc(
+   strlen("UPDATE tasks_task SET status='uploading' WHERE id=") + 12);
+ if (cmd == NULL)
+  throw "Malloc failed.";
+ sprintf(cmd, "UPDATE tasks_task SET status='uploading' WHERE id=%d", task.id);
+ DoCommand(cmd, false);
+
+ // skrypt, plik, user, host
+ cmd = (char*) malloc(
+   strlen("./scp.sh mandel 46.101.174.185") + strlen(_extension)
+     + 12);
+ if (cmd == NULL)
+  throw "Malloc failed.";
+ sprintf(cmd, "./scp.sh %d%s mandel 46.101.174.185", task.id, _extension);
+ system(cmd);
+ // koniec zapisu pliku na serwer
+ // aktualizacja bazy
+ cmd =
+   (char*) malloc(
+     strlen(
+       "UPDATE tasks_task SET progress=100, status='done', file_path='.' WHERE id=")
+       + strlen(_extension) + 23);
+ if (cmd == NULL)
+  throw "Malloc failed.";
+ sprintf(cmd,
+   "UPDATE tasks_task SET progress=100, status='done', file_path='%d%s' WHERE id=%d",
+   task.id, _extension, task.id);
+ DoCommand(cmd, false);
 }
 
 MYSQL_ROW MysqlComm::GetRow() {

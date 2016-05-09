@@ -11,6 +11,7 @@
 #include <string.h>
 
 #define HOST "46.101.174.185"
+#define HOST2 "156.17.41.50"
 #define USER "mandelbrot"
 #define PASS "motznehaslo"
 #define DB "mandel"

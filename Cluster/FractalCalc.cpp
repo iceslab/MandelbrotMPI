@@ -1,6 +1,6 @@
 #include "FractalCalc.h" 
 
-const int FractalCalc::convergenceSteps = 100;
+const int FractalCalc::convergenceSteps = 512;
 const double FractalCalc::divergenceLimitD = 2.0;
 
 void FractalCalc::mandelbrotFractal(complex<double> &z, complex<double> &c)

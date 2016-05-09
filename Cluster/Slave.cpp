@@ -164,11 +164,12 @@ int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
 
 void Slave::sendResult(int64_t id, vector<double> &resultArray, int64_t size)
 {
+	printf("Slave %d\n Sending...", rank);
 	sendID(id);
 	sendSize(size);
 	sendArray(resultArray, size);
-	// system("echo Slave: $(hostname -I)");
-	// printf("Slave %d\n", rank);
+	system("echo Slave: $(hostname -I)");
+	printf("Slave %d\n Done.", rank);
 }
 
 void Slave::sendID(int64_t id)
