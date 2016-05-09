@@ -1,0 +1,6 @@
+Zmiany:
+• naprawiono stopkê
+• uporz¹dkowano kod
+• zmieniono nazwy dla niektórych DIVów na bardziej intuicyjne
+	a) extra --> content
+	b) copyright --> footer
