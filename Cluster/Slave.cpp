@@ -1,5 +1,6 @@
 #include "Slave.h" 
 #include "FractalCalc.h"
+#include <cmath>
 
 Slave::Slave() : order()
 {
@@ -70,6 +71,56 @@ void Slave::waitForOrder(Order &order)
 	// printf("Slave %d: Received order\n", rank);
 }
 
+void HSVtoRGB(double& fR, double& fG, double& fB, float fH, float fS, float fV) {
+  float fC = fV * fS; // Chroma
+  float fHPrime = fmod(fH / 60.0, 6);
+  float fX = fC * (1 - fabs(fmod(fHPrime, 2) - 1));
+  float fM = fV - fC;
+  
+  if(0 <= fHPrime && fHPrime < 1) {
+    fR = fC;
+    fG = fX;
+    fB = 0;
+  } else if(1 <= fHPrime && fHPrime < 2) {
+    fR = fX;
+    fG = fC;
+    fB = 0;
+  } else if(2 <= fHPrime && fHPrime < 3) {
+    fR = 0;
+    fG = fC;
+    fB = fX;
+  } else if(3 <= fHPrime && fHPrime < 4) {
+    fR = 0;
+    fG = fX;
+    fB = fC;
+  } else if(4 <= fHPrime && fHPrime < 5) {
+    fR = fX;
+    fG = 0;
+    fB = fC;
+  } else if(5 <= fHPrime && fHPrime < 6) {
+    fR = fC;
+    fG = 0;
+    fB = fX;
+  } else {
+    fR = 0;
+    fG = 0;
+    fB = 0;
+  }
+  
+  fR += fM;
+  fG += fM;
+  fB += fM;
+}
+
+
+double color_between(double x, double beginY, double endY, int n)
+{
+	double beginX = 0.0;
+	double endX = 1.0;
+
+	return (endY - beginY)*0.5*(sin(1 / (endX - beginX)*M_PI*(x - beginX)*(2*n + 1) - M_PI / 2) + 1) + beginY;
+}
+
 int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
 {
 	int64_t size = 0;
@@ -78,7 +129,29 @@ int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
 	    resultArray.resize(order.count);
 	    // printf("Slave %d: Calculating...%d\n", rank, order.count);
 	    size = FractalCalc::calcMandelbrotPart(resultArray.data(), order);
-
+	    vector<double> colorArray(3*size);
+	    for (int x = 0; x < order.pictureWidth; x++)
+	    {
+	    	for (int y = 0; y < order.pictureHeight; y++)
+	        {
+	        	double color = resultArray[x + order.pictureWidth * y];
+	        	double r, g, b;
+	        	if(y < 50)
+	        		color = (1.0*x) / order.pictureWidth;
+	            // r = color_between(color, 0.0, 1.0, 0) * 255.0;
+            	// g = color_between(color, 0.0, 0.0, 0) * 255.0;
+        	    // b = color_between(color, 1.0, 0.0, 1) * 255.0;
+        	    r = 0.5*(sin(2*M_PI*color - M_PI/2 + M_PI /3) + 1) * 255.0;
+        	    g = 0.5*(sin(2*M_PI*color - M_PI/2) + 1) * 255.0;
+        	   b = 0.5*(sin(2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0;
+	            // HSVtoRGB(r, g, b, 10*color * 360,1.0,1.0);
+	            colorArray[3*(x + order.pictureWidth * y) + 0] = r;
+	            colorArray[3*(x + order.pictureWidth * y) + 1] = g;
+	            colorArray[3*(x + order.pictureWidth * y) + 2] = b;
+	        }
+	    }
+	    resultArray.swap(colorArray);
+	    size = resultArray.size();
 	    // printf("Slave %d: Calculated %ld\n", rank, size);
 	}
 	else
@@ -94,7 +167,7 @@ void Slave::sendResult(int64_t id, vector<double> &resultArray, int64_t size)
 	sendID(id);
 	sendSize(size);
 	sendArray(resultArray, size);
-	system("echo Slave: $(hostname)");
+	// system("echo Slave: $(hostname -I)");
 	// printf("Slave %d\n", rank);
 }
 

@@ -133,5 +133,5 @@ void registerMPIOrderType()
 void calcOffset(int width, int height, int beginX, int beginY, uint64_t count, int &endX, int &endY)
 {
 	endX = (beginX + count) % width;
-	endY = beginY + ((beginX + count) / height);
+	endY = (beginY + ((beginX + count) / width)) % height;
 }

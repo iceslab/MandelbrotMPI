@@ -1,8 +1,8 @@
 CXX=mpic++
-CXXFLAGS=-c -O3 -std=c++11
-LIBS=-lGL -lglut -lGLU -lgmpxx -lgmp
+CXXFLAGS=-c -O3 -std=c++11 -ggdb1 -I /usr/include/mysql
+LIBS= -lmysqlclient
 LDFLAGS=
-SOURCES=main.cpp FractalCalc.cpp Utils.cpp Master.cpp Slave.cpp
+SOURCES=main.cpp FractalCalc.cpp Utils.cpp Master.cpp Slave.cpp ../NetCpp/MysqlComm.cpp
 OBJECTS=$(SOURCES:%.cpp=%.o)
 EXECUTABLE=main
 

@@ -4,6 +4,7 @@
 #include <mpi.h>
 #include <gmpxx.h>
 #include "Bitmap.h"
+#include "../NetCpp/MysqlComm.h"
 
 #ifdef __GMP_SHORT_LIMB
 #define LIMB_MPI_TYPE 			MPI_UNSIGNED
@@ -61,15 +62,15 @@ typedef struct mpf_t_info {
    mp_exp_t _mp_exp;
 } info;
 
-typedef struct {
-	unsigned x;
-	unsigned y;
-} Pixel2D;
+// typedef struct {
+// 	unsigned x;
+// 	unsigned y;
+// } Pixel2D;
 
-typedef struct {
-	double x;
-	double y;
-} Coords2D;
+// typedef struct {
+// 	double x;
+// 	double y;
+// } Coords2D;
 
 typedef struct {
 	int orderID;
@@ -84,18 +85,18 @@ typedef struct {
 	double fractalY;
 } Order;
 
-typedef struct {
-	double duration;
-	unsigned framerate;
-	Pixel2D frameSize;
-	double dotSize;
-	Coords2D pathStartPoint;
-	Coords2D pathEndPoint;
-	double zoomStart;
-	double zoomEnd;
-	double colorStart;
-	double colorEnd;
-} Scene;
+// typedef struct {
+// 	double duration;
+// 	unsigned framerate;
+// 	Pixel2D frameSize;
+// 	double dotSize;
+// 	Coords2D pathStartPoint;
+// 	Coords2D pathEndPoint;
+// 	double zoomStart;
+// 	double zoomEnd;
+// 	double colorStart;
+// 	double colorEnd;
+// } Scene;
 
 enum TAGS
 {

@@ -7,10 +7,9 @@
 
 double zoom = 1.01;
 extern bool noDisplay;
-
 int main(int argc, char** argv)
 {
-	compareArguments(argc, argv);
+	// compareArguments(argc, argv);
 
 	// MPI initialization
     MPI_Init(&argc, &argv);
