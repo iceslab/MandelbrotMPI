@@ -17,8 +17,7 @@ void Master::work(int &argc, char** &argv)
 {
 	for(;;)
 	{
-
-	MysqlComm com(HOST, USER, PASS, DB);
+	MysqlComm com(argc==5?argv[1]:HOST, argc==5?argv[2]:USER, argc==5?argv[3]:PASS, argc==5?argv[4]:DB);
 	try{
 		com.Init();
 		com.Connect();
