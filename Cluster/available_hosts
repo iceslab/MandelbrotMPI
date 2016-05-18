@@ -1,8 +1,8 @@
-localhost slots=1 max-slots=1
-user@156.17.41.52
-user@156.17.41.56
-user@156.17.41.53
-user@156.17.41.58 slots=2 max-slots=2
+localhost 
+#user@156.17.41.52
+#user@156.17.41.56
+#user@156.17.41.53
+#user@156.17.41.58 slots=2 max-slots=2
 #user@192.168.30.196 slots=2 max-slots=2
 #user@192.168.30.195 slots=4 max-slots=4
 #kejt@192.168.30.194

@@ -3,111 +3,144 @@
 #include <sstream>
 
 #define Y_SIZE 1080
+#define _LOCALHOST_ONLY_
 
 Master::Master()
 {
 	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    // ordersCount = Y_SIZE;
     ordersCount = 0;
-    // doWork = true;
 }
 
 void Master::work(int &argc, char** &argv)
 {
+#ifndef _LOCALHOST_ONLY_
 	for(;;)
+#endif
 	{
 		system("rm images/*.bmp");
-	MysqlComm com(HOST, USER, PASS, DB);
-	try{
-		com.Init();
-		com.Connect();
-		do
+#ifndef _LOCALHOST_ONLY_
+		MysqlComm com(HOST, USER, PASS, DB);
+		try{
+			com.Init();
+			com.Connect();
+			do
+			{
+				sleep(1);
+				com.Select("tasks_task","*");
+				cout<<"Bool: "<<com.AnythingToDo()<<endl;
+			}while( ! com.AnythingToDo() );
+		} catch(const char* e){
+			printf("%s\n", e);
+			fflush(stdout);
+		}
+#endif
+#ifdef _LOCALHOST_ONLY_
+		Task task;
+		Scene s ;
+		//Define scene here for localhost-only
+		s.duration = 1.0;
+		s.framerate = 30.0;
+		s.frameSize = {200, 200};
+		s.dotSize = 0.01;
+		s.pathStartPoint = {-0.5, 0.0};
+		s.pathEndPoint = {-2.0, 0.0};
+		s.zoomStart = 1.0;
+		s.zoomEnd = 100.0;
+		s.colorStart = 1;
+		s.colorEnd = 1;
+#else
+		Task task = com.GetTask();
+		Scene s = com.GetScene();
+		com.TaskStart();
+		com.PrintRow();
+#endif
+
+		vector<Order> orders(ordersCount);
+		int orderLength = generateOrders(orders, s, s.frameSize.x * s.frameSize.y / atoi(argv[1]) );
+
+		int ordersPendingCount = ordersCount;
+		for(int i = 1; i < world_size; ++i)
 		{
-			sleep(1);
-			com.Select("tasks_task","*");
-			cout<<"Bool: "<<com.AnythingToDo()<<endl;
-		}while( ! com.AnythingToDo() );
-	} catch(const char* e){
-		printf("%s\n", e);
-		fflush(stdout);
-	}
-	Task task = com.GetTask();
-	Scene s = com.GetScene();
-	com.TaskStart();
-	com.PrintRow();
-	vector<Order> orders(ordersCount);
-	int orderLength = generateOrders(orders, s, s.frameSize.x * s.frameSize.y );
-
-	int ordersPendingCount = ordersCount;
-	for(int i = 1; i < world_size; ++i)
-	{
-		sendOrder(orders[ordersCount - ordersPendingCount], i, WORKTAG);
-		ordersPendingCount--;
-	}
-
-	map<int, vector<double>> results;
-
-	int dieOrders = world_size -1;
-	while(ordersPendingCount > 0)
-	{
-		receiveResult(results, MPI_ANY_SOURCE);
-		// if(ordersPendingCount > 0)
-		// {
-			sendOrder(orders[orders.size() - ordersPendingCount], status.MPI_SOURCE, WORKTAG);
+			sendOrder(orders[ordersCount - ordersPendingCount], i, WORKTAG);
 			ordersPendingCount--;
-			int progress = 100 - (ordersPendingCount*100) / ordersCount;
-			com.TaskUpdateProgress(progress);
-			cout << progress << endl;
-		// }
-		// else
-		// {
-		// 	sendDieOrder(status.MPI_SOURCE);
-		// 	dieOrders--;
-		// }
-	}
-    
-    int x = 0, y = 0, r, g, b;
-    Bitmap image(s.frameSize.x, s.frameSize.y);
-    const int ordersPerFrame = (s.frameSize.x * s.frameSize.y) / orderLength;
-    // printf("PerFrame: %d\n", ordersPerFrame );
-    int orderID = 0;
-    for(; orderID < ordersCount; ++orderID)
-    {
-    	if( orderID > 0 && (orderID % ordersPerFrame == 0) )
-    	{
-    		stringstream ss;
-    		ss<<"images/"<<(orderID / ordersPerFrame)<<".bmp";
-	    	image.save_image(ss.str().c_str());
-    	}
-    	for(int i = 0; i < results[orderID].size() / 3; ++i)
-    	{
-	        r = results[orderID][3*i+0];
-			g = results[orderID][3*i+1];
-			b = results[orderID][3*i+2];
+		}
 
-			image.set_pixel(x++, y, r, g, b);
-			int tempX = x;
-			x = tempX % s.frameSize.x;
-			y = (y + (tempX / s.frameSize.x)) % s.frameSize.y;
+		map<int, vector<double>> results;
 
-    	}
-    	
-    }
-    {
-	stringstream ss;
-	ss<<"images/"<<(orderID / ordersPerFrame)<<".bmp";
-	image.save_image(ss.str().c_str());
-	}
-	{
+#ifndef _LOCALHOST_ONLY_
+		while(ordersPendingCount > 0)
+		{
+			receiveResult(results, MPI_ANY_SOURCE);
+				sendOrder(orders[orders.size() - ordersPendingCount], status.MPI_SOURCE, WORKTAG);
+				ordersPendingCount--;
+				int progress = 100 - (ordersPendingCount*100) / ordersCount;
+				com.TaskUpdateProgress(progress);
+				cout << progress << endl;
+		}
+#else
+		int dieOrders = world_size -1;
+		while(dieOrders > 0)
+		{
+			receiveResult(results, MPI_ANY_SOURCE);
+			if(ordersPendingCount > 0)
+			{
+				sendOrder(orders[orders.size() - ordersPendingCount], status.MPI_SOURCE, WORKTAG);
+				ordersPendingCount--;
+				int progress = 100 - (ordersPendingCount*100) / ordersCount;
+				cout << progress << endl;
+			}
+			else
+			{
+				sendDieOrder(status.MPI_SOURCE);
+				dieOrders--;
+			}
+		}
+#endif
+
+
+	    int x = 0, y = 0, r, g, b;
+	    Bitmap image(s.frameSize.x, s.frameSize.y);
+	    const int ordersPerFrame = (s.frameSize.x * s.frameSize.y) / orderLength;
+	    // printf("PerFrame: %d\n", ordersPerFrame );
+	    int orderID = 0;
+	    for(; orderID < ordersCount; ++orderID)
+	    {
+	    	if( orderID > 0 && (orderID % ordersPerFrame == 0) )
+	    	{
+	    		stringstream ss;
+	    		ss<<"images/"<<(orderID / ordersPerFrame)<<".bmp";
+		    	image.save_image(ss.str().c_str());
+		    	cout << "IMG "<<ss.str()<<endl;
+	    	}
+	    	for(int i = 0; i < results[orderID].size() / 3; ++i)
+	    	{
+		        r = results[orderID][3*i+0];
+				g = results[orderID][3*i+1];
+				b = results[orderID][3*i+2];
+
+				image.set_pixel(x++, y, r, g, b);
+				int tempX = x;
+				x = tempX % s.frameSize.x;
+				y = (y + (tempX / s.frameSize.x)) % s.frameSize.y;
+	    	}
+	    }	    
+	    {
 		stringstream ss;
-		ss << "ffmpeg -framerate 30 -y -i images/%d.bmp -c:v libx264 -r 30 -pix_fmt yuv420p " << task.id <<".mp4";
-		system(ss.str().c_str());
+		ss<<"images/"<<(orderID / ordersPerFrame)<<".bmp";
+		image.save_image(ss.str().c_str());
+		}
+		{
+			stringstream ss;
+			ss << "ffmpeg -framerate 30 -y -i images/%d.bmp -c:v libx264 -r 30 -pix_fmt yuv420p " << task.id <<".mp4";
+			system(ss.str().c_str());
+		}
+#ifndef _LOCALHOST_ONLY_
+		com.TaskClose(s, task, ".mp4");
+		com.Disconnect();
+#endif
 	}
-	
-	com.TaskClose(s, task, ".mp4");
-	com.Disconnect();
-	}
+
 }
 
 int Master::generateOrders(vector<Order> &orders, Scene &sceneConfig, int length)
@@ -135,21 +168,22 @@ int Master::generateOrders(vector<Order> &orders, Scene &sceneConfig, int length
 		orders[i].pictureWidth = sceneConfig.frameSize.x;
 		orders[i].pictureHeight = sceneConfig.frameSize.y;
 		orders[i].beginX = begX;
-		orders[i].beginY = endX;
+		orders[i].beginY = begY;
 		orders[i].count = length;
 		orders[i].doWork = true;
-		orders[i].dotSize = sceneConfig.dotSize * pow(deltaZoom,(1.0*i*length) / entireFrame);
-		orders[i].fractalX = sceneConfig.pathStartPoint.x + i*deltaPathX;
-		orders[i].fractalY = sceneConfig.pathStartPoint.y + i*deltaPathY;
+		orders[i].dotSize = sceneConfig.dotSize * pow(deltaZoom,i*length / entireFrame);
+		orders[i].fractalX = sceneConfig.pathStartPoint.x + i*length / entireFrame*deltaPathX;
+		orders[i].fractalY = sceneConfig.pathStartPoint.y + i*length / entireFrame*deltaPathY;
 
+		calcOffset(sceneConfig.frameSize.x, sceneConfig.frameSize.y, begX, begY, length, endX, endY);
 		begX = endX;
 		begY = endY;
-		printf("Generated order (ID %d): %0.5e, %0.5e, %0.5e\n", 
-			   i, 
-			   orders[i].dotSize,
-			   orders[i].fractalX,
-			   orders[i].fractalY);
-		calcOffset(sceneConfig.frameSize.x, sceneConfig.frameSize.y, begX, begY, length, endX, endY);
+		// printf("Generated order (ID %d): %lf, %lf, %lf\n", 
+		// 	   i, 
+		// 	   orders[i].dotSize,
+		// 	   orders[i].fractalX,
+		// 	   orders[i].fractalY);
+		
 	}
 	// ordersByFrame(orders, sceneConfig);
 	return length;

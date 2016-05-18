@@ -130,26 +130,29 @@ int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
 	    // printf("Slave %d: Calculating...%d\n", rank, order.count);
 	    size = FractalCalc::calcMandelbrotPart(resultArray.data(), order);
 	    vector<double> colorArray(3*size);
-	    for (int x = 0; x < order.pictureWidth; x++)
-	    {
-	    	for (int y = 0; y < order.pictureHeight; y++)
-	        {
-	        	double color = resultArray[x + order.pictureWidth * y];
-	        	double r, g, b;
-	        	if(y < 50)
-	        		color = (1.0*x) / order.pictureWidth;
-	            // r = color_between(color, 0.0, 1.0, 0) * 255.0;
-            	// g = color_between(color, 0.0, 0.0, 0) * 255.0;
-        	    // b = color_between(color, 1.0, 0.0, 1) * 255.0;
-        	    r = 0.5*(sin(2*M_PI*color - M_PI/2 + M_PI /3) + 1) * 255.0;
-        	    g = 0.5*(sin(2*M_PI*color - M_PI/2) + 1) * 255.0;
-        	   b = 0.5*(sin(2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0;
-	            // HSVtoRGB(r, g, b, 10*color * 360,1.0,1.0);
-	            colorArray[3*(x + order.pictureWidth * y) + 0] = r;
-	            colorArray[3*(x + order.pictureWidth * y) + 1] = g;
-	            colorArray[3*(x + order.pictureWidth * y) + 2] = b;
-	        }
-	    }
+	    int x = order.beginX;
+	    int y = order.beginY;
+	    for(int i = 0; i < order.count; ++i)
+    	{
+        	double color = resultArray[i];
+        	double r, g, b;
+        	// if(y < 50)
+        	// 	color = (1.0*x) / order.pictureWidth;
+            // r = color_between(color, 0.0, 1.0, 0) * 255.0;
+        	// g = color_between(color, 0.0, 0.0, 0) * 255.0;
+    	    // b = color_between(color, 1.0, 0.0, 1) * 255.0;
+    	    r = 0.5*(sin(2*M_PI*color - M_PI/2 + M_PI /3) + 1) * 255.0;
+    	    g = 0.5*(sin(2*M_PI*color - M_PI/2) + 1) * 255.0;
+    		b = 0.5*(sin(2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0;
+            colorArray[3*i + 0] = r;
+            colorArray[3*i + 1] = g;
+            colorArray[3*i + 2] = b;
+            // printf("x = %d, y = %d\n", x, y );
+			int tempX = ++x;
+			x = tempX % order.pictureWidth;
+			y = (y + (tempX / order.pictureWidth)) % order.pictureHeight;
+
+    	}
 	    resultArray.swap(colorArray);
 	    size = resultArray.size();
 	    // printf("Slave %d: Calculated %ld\n", rank, size);
@@ -164,12 +167,12 @@ int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
 
 void Slave::sendResult(int64_t id, vector<double> &resultArray, int64_t size)
 {
-	printf("Slave %d\n Sending...", rank);
+	// printf("Slave %d\n Sending...", rank);
 	sendID(id);
 	sendSize(size);
 	sendArray(resultArray, size);
-	system("echo Slave: $(hostname -I)");
-	printf("Slave %d\n Done.", rank);
+	// system("echo Slave: $(hostname -I)");
+	// printf("Slave %d Done.\n", rank);
 }
 
 void Slave::sendID(int64_t id)
