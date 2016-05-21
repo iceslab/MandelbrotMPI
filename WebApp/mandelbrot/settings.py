@@ -79,7 +79,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mandel',
-        'HOST': '46.101.174.185',
+        'HOST': 'localhost',
         'PORT': '3306',
         'USER': 'mandelbrot',
         'PASSWORD': 'motznehaslo',
@@ -123,9 +123,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
+STATIC_ROOT = "/root/mandelbrot/static/"
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
+    os.path.join("videos", "/home/dave/"),
 )
 
 REGISTRATION_OPEN = True  # If True, users can register

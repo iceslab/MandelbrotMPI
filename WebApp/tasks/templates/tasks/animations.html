@@ -1,5 +1,5 @@
 {% extends "tasks/index.html" %}
-
+{% load staticfiles %}
 {% block menu %}
     <div id="menu">
 				<ul>
@@ -17,5 +17,24 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Moje animacje</h1>
+    <h1>Moje Animacje</h1>
+    <br /><br />
+    {% if videos.count > 0 %}
+        {% for video in videos %}
+            <h3>{{ forloop.counter }}.&nbsp&nbsp&nbsp{{ video.created_time }}</h3>
+            <video width="320" height="240" controls>
+                <source src="{% static "videos/"%}{{  video.file_path }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {% endfor %}
+    {% else %}
+        Nie znaleziono żadnych animacji wygenerowanych przez Ciebie.
+    {% endif %}
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="{% static "js/get_tasks_progress.js" %}"></script>
+{% endblock %}
+
+{% block main %}
+    <h1>Strona Główna</h1>
+    Zaloguj się aby rozpocząć korzystanie z serwisu. Jeżeli nie masz jeszcze konta <a href="{% url 'registration_register' %}">zarejestruj się!</a>
 {% endblock %}
