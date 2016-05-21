@@ -1,7 +1,7 @@
 # MandelbrotMPI
 Projekt zespołowy Mandelbrot w MPI
 #####Serwer Django: http://149.202.43.116:8000
-http://149.202.43.116
+http://149.202.43.116  
 http://makemeafractal.pl
 
 ## Cluster - program uruchamiany na klastrze obliczeniowym
