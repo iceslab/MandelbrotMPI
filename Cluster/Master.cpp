@@ -1,4 +1,4 @@
-#include "Master.h" 
+#include "Master.h"
 #include "Utils.h"
 #include <sstream>
 
@@ -14,11 +14,12 @@ Master::Master()
 
 void Master::work(int &argc, char** &argv)
 {
+   system("echo start $(date +%X) $(($(date +%s%N)/1000000)) >> time.log");
 #ifndef _LOCALHOST_ONLY_
 	for(;;)
 #endif
 	{
-		system("rm images/*.bmp");
+		//system("rm images/*.bmp");
 #ifndef _LOCALHOST_ONLY_
 		MysqlComm com(HOST, USER, PASS, DB);
 		try{
@@ -41,7 +42,7 @@ void Master::work(int &argc, char** &argv)
 		//Define scene here for localhost-only
 		s.duration = 1.0;
 		s.framerate = 30.0;
-		s.frameSize = {200, 200};
+		s.frameSize = {atoi(argv[2]), atoi(argv[2])};
 		s.dotSize = 0.01;
 		s.pathStartPoint = {-0.5, 0.0};
 		s.pathEndPoint = {-2.0, 0.0};
@@ -60,6 +61,7 @@ void Master::work(int &argc, char** &argv)
 		int orderLength = generateOrders(orders, s, s.frameSize.x * s.frameSize.y / atoi(argv[1]) );
 
 		int ordersPendingCount = ordersCount;
+		system("echo start_tasks $(date +%X) $(($(date +%s%N)/1000000)) >> time.log");
 		for(int i = 1; i < world_size; ++i)
 		{
 			sendOrder(orders[ordersCount - ordersPendingCount], i, WORKTAG);
@@ -97,7 +99,7 @@ void Master::work(int &argc, char** &argv)
 			}
 		}
 #endif
-
+        system("echo end_tasks $(date +%X) $(($(date +%s%N)/1000000)) >> time.log");
 
 	    int x = 0, y = 0, r, g, b;
 	    Bitmap image(s.frameSize.x, s.frameSize.y);
@@ -124,7 +126,7 @@ void Master::work(int &argc, char** &argv)
 				x = tempX % s.frameSize.x;
 				y = (y + (tempX / s.frameSize.x)) % s.frameSize.y;
 	    	}
-	    }	    
+	    }
 	    {
 		stringstream ss;
 		ss<<"images/"<<(orderID / ordersPerFrame)<<".bmp";
@@ -140,6 +142,7 @@ void Master::work(int &argc, char** &argv)
 		com.Disconnect();
 #endif
 	}
+    system("echo end_all $(date +%X) $(($(date +%s%N)/1000000)) >> time.log");
 
 }
 
@@ -178,12 +181,12 @@ int Master::generateOrders(vector<Order> &orders, Scene &sceneConfig, int length
 		calcOffset(sceneConfig.frameSize.x, sceneConfig.frameSize.y, begX, begY, length, endX, endY);
 		begX = endX;
 		begY = endY;
-		// printf("Generated order (ID %d): %lf, %lf, %lf\n", 
-		// 	   i, 
+		// printf("Generated order (ID %d): %lf, %lf, %lf\n",
+		// 	   i,
 		// 	   orders[i].dotSize,
 		// 	   orders[i].fractalX,
 		// 	   orders[i].fractalY);
-		
+
 	}
 	// ordersByFrame(orders, sceneConfig);
 	return length;
