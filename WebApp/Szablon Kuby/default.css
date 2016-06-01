@@ -130,8 +130,11 @@ body
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	height: 60px;		/* zafixowana wysokość stopki */
-	background: #333333;  
+	background: #333333;
+
+	/* Zafixowana wysokość stopki: 60px */
+	height: 42px;
+	padding-top: 18px;	/* górny margines wewnętrzny - wyrównanie tekstu */
 }
 	
 #footer p
