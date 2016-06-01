@@ -18,14 +18,15 @@
 
 {% block content %}
      <h1>Generuj fraktal</h1>
-    <br /><br />
+		<br /><br />
         <form method="POST" class="addNick">
             {% csrf_token %}
 
             {{ form.as_p }}
 
             <p class="addNick-submit">
-            <button type="submit" class="addNick-button">Dodaj</button>
+			<br />
+            <button type="submit" class="addNick-button" style="margin-left: 398px; width: 204px;">Dodaj</button>
             </p>
         </form>
 {% endblock %}

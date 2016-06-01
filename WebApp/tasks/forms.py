@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 from django import forms
 from .models import Task
 
@@ -9,16 +11,16 @@ class AddTaskForm(forms.ModelForm):
          ('60', '60'),
     )
 
-    frameSizeX = forms.IntegerField(required=True, label="Szerokosc")
-    frameSizeY = forms.IntegerField(required=True, label="Dlugosc")
-    framerate = forms.ChoiceField(choices=framerates, required=True, label="Liczba klatek/sekunde")
-    duration = forms.FloatField(required=True, label="Czas Trwania", help_text="(s)")
-    pathStartPointX = forms.FloatField(required=True, label="Punkt Startowy X")
-    pathStartPointY = forms.FloatField(required=True, label="Punkt Startowy Y")
-    pathEndPointX = forms.FloatField(required=True, label="Punkt Koncowy X")
-    pathEndPointY = forms.FloatField(required=True, label="Punkt Koncowy Y")
-    zoomStart = forms.FloatField(required=True, min_value=1, label="Powiekszenie startowe")
-    zoomEnd = forms.FloatField(required=True, min_value=1, label="Powiekszenie koncowe")
+    frameSizeX = forms.IntegerField(required=True, label="Szerokość obrazu [px]:")
+    frameSizeY = forms.IntegerField(required=True, label="Wysokość obrazu [px]:")
+    framerate = forms.ChoiceField(choices=framerates, required=True, label="Klatki na sekundę:")
+    duration = forms.FloatField(required=True, label="Czas trwania [s]:")
+    pathStartPointX = forms.FloatField(required=True, label="Punkt startowy X")
+    pathStartPointY = forms.FloatField(required=True, label="Punkt startowy Y")
+    pathEndPointX = forms.FloatField(required=True, label="Punkt końcowy X")
+    pathEndPointY = forms.FloatField(required=True, label="Punkt końcowy Y")
+    zoomStart = forms.FloatField(required=True, min_value=1, label="Powiększenie startowe")
+    zoomEnd = forms.FloatField(required=True, min_value=1, label="Powiększenie końcowe")
     # colorStart = forms.FloatField()
     # colorEnd = forms.FloatField()
 
