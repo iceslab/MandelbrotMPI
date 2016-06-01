@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}Cel projektu}{2}
+\contentsline {section}{\numberline {2}Wymagania}{2}
+\contentsline {subsection}{\numberline {2.1}Prototyp -- opis og\IeC {\'o}lny}{3}
+\contentsline {subsection}{\numberline {2.2}Prototyp -- opis szczeg\IeC {\'o}\IeC {\l }owy}{3}
+\contentsline {section}{\numberline {3}System w wersji finalnej}{5}
+\contentsline {subsection}{\numberline {3.1}Baza danych}{5}
+\contentsline {subsection}{\numberline {3.2}MPI}{6}
+\contentsline {subsubsection}{\numberline {3.2.1}Master}{6}
+\contentsline {subsubsection}{\numberline {3.2.2}Slave}{8}
+\contentsline {subsubsection}{\numberline {3.2.3}Mandelbrot -- generowanie fraktala}{9}
+\contentsline {subsection}{\numberline {3.3}Django}{10}
+\contentsline {subsection}{\numberline {3.4}Strona internetowa -- interfejs u\IeC {\.z}ytkownika}{13}
+\contentsline {section}{\numberline {4}Uruchamianie}{19}
+\contentsline {subsection}{\numberline {4.1}Kompilacja}{19}
+\contentsline {section}{\numberline {5}Testy wydajno\IeC {\'s}ci}{19}
+\contentsline {section}{\numberline {6}Podsumowanie}{30}
