@@ -1,5 +1,4 @@
 \documentclass[a4paper]{article}
-
 \usepackage[utf8]{inputenc}
 \usepackage{indentfirst}
 \usepackage{graphicx}
@@ -7,24 +6,28 @@
 \usepackage{float}
 \usepackage[left=2.5cm,right=2.5cm,top=2cm,bottom=2cm]{geometry}
 \linespread{1.3}
-
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
 \title{\textbf{Fractal Generator} \\ Aplikacje Internetowe i Rozproszone \\ projekt}
 \author{Jakub Burzała, Krzysztof Cabała, Bartosz Cieśla, Adrian Frydmański, Dawid Gracek, Bartosz Kardas}
-
 \usepackage{listings}
 \usepackage{color}
-
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
-
 \lstset{ %
   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
   basicstyle=\footnotesize,        % the size of the fonts that are used for the code
   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
   breaklines=true,                 % sets automatic line breaking
   captionpos=b,                    % sets the caption-position to bottom
-  commentstyle=\color{mygreen},    % comment style
+  %commentstyle=\color{mygreen},    % comment style
   deletekeywords={...},            % if you want to delete keywords from the given language
   escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
   extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
@@ -47,7 +50,6 @@
 }
 
 \begin{document}
-
 \begin{titlepage}
 	\centering
 	\includegraphics[width=\textwidth]{banner2.png}\par\vspace{1cm}
@@ -189,258 +191,24 @@ Tabela auth\_user zawiera użytkowników. Te i pozostałe tabele obsługuje serw
 Program co ustalony kwant czasu odpytuję bazę danych, sprawdzając czy są nowe zadania do wykonania. Jeśli znajdzie takowe, zaczyna je liczyć, zaprzęgając do pracy węzły MPI.
 
 Główna funkcja programu jest dość prosta. W zależności od roli, jaką ma pełnić program, uruchamiany jest master lub slave.
-\begin{lstlisting}
-#include "FractalCalc.h"
-#include "Display.h"
-#include "Utils.h"
-#include "Comunicator.h"
-#include "Master.h"
-#include "Slave.h"
 
-double zoom = 1.01;
-extern bool noDisplay;
-
-int main(int argc, char** argv) 
-{
-	// compareArguments(argc, argv);
-	
-	// MPI initialization
-    MPI_Init(&argc, &argv);
-    registerMPIDataTypes();
-    // Get the number of processes
-    int world_size;
-    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-    // Get the rank of the process
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if(rank == 0) 
-    {
-    	Master m;
-        system("echo Master: $(hostname)");
-    	m.work(argc, argv);
-    }
-    else 
-    {
-    	Slave s;
-    	s.work(argc, argv);
-    }
- 
-    // Finalize the MPI environment.
-    MPI_Finalize();
-    return 0;
-}
-\end{lstlisting}
 
 \subsubsection{Master}
 Master odpowiada za sprawdzanie bazy danych. 
 
-\begin{lstlisting}
-MysqlComm com(HOST, USER, PASS, DB);
-try
-{
-	com.Init();
-	com.Connect();
-	do
-	{
-		sleep(1);
-		com.Select("tasks_task","*");
-		cout<<"Bool: "<<com.AnythingToDo()<<endl;
-	}
-	while( ! com.AnythingToDo() );
-} catch(const char* e){
-	printf("%s\n", e);
-	fflush(stdout);
-}
-\end{lstlisting}
-
 Jeśli znajdzie zadanie, pobiera jego parametry i rozsyła zadanie slave'om. Po odebraniu zadania aktualizowany jest jego status, dzięki czemu na stronie internetowej widać pasek postępu -- o którym w dalszej części dokumentacji.
 
-\begin{lstlisting}
-Task task = com.GetTask();
-Scene s = com.GetScene();
-com.TaskStart();
-com.PrintRow();
-
-vector<Order> orders(ordersCount);
-int orderLength = generateOrders(orders, s, s.frameSize.x * s.frameSize.y / atoi(argv[1]) );
-
-int ordersPendingCount = ordersCount;
-system("echo start_tasks $(date +%X) $(($(date +%s%N)/1000000)) >> time.log");
-for(int i = 1; i < world_size; ++i)
-{
-	sendOrder(orders[ordersCount - ordersPendingCount], i, WORKTAG);
-	ordersPendingCount--;
-}
-map<int, vector<double>> results;
-while(ordersPendingCount > 0)
-{
-	receiveResult(results, MPI_ANY_SOURCE);
-	sendOrder(orders[orders.size() - ordersPendingCount], status.MPI_SOURCE, WORKTAG);
-	ordersPendingCount--;
-	int progress = 100 - (ordersPendingCount*100) / ordersCount;
-	com.TaskUpdateProgress(progress);
-	cout << progress << endl;
-}
-\end{lstlisting}
-
 Slave'y pobierają zadania -- pojedyncze klatki do wygenerowania. Wygenerowane obrazy odbierane są od slave'ów:
-
-\begin{lstlisting}
-for(; orderID < ordersCount; ++orderID)
-{
-	if( orderID > 0 && (orderID % ordersPerFrame == 0) )
-	{
-		stringstream ss;
-	 	ss<<"images/"<<(orderID / ordersPerFrame)<<".bmp";
-		image.save_image(ss.str().c_str());
-		cout << "IMG "<<ss.str()<<endl;
-	}
-	for(int i = 0; i < results[orderID].size() / 3; ++i)
-	{
-		r = results[orderID][3*i+0];
-		g = results[orderID][3*i+1];
-		b = results[orderID][3*i+2];
-
-		image.set_pixel(x++, y, r, g, b);
-		int tempX = x;
-		x = tempX % s.frameSize.x;
-		y = (y + (tempX / s.frameSize.x)) % s.frameSize.y;
-	}
-}
-\end{lstlisting}
 
 Kiedy wszystkie zadania sleve'ów zostaną wykonane, master łączy klatki w film za pomocą programu ffmpeg:
 
 \begin{lstlisting}
-stringstream ss;
-ss << "ffmpeg -framerate 30 -y -i images/%d.bmp -c:v libx264 -r 30 -pix_fmt yuv420p " << task.id <<".mp4";
-system(ss.str().c_str());
+ffmpeg -framerate 30 -y -i images/%d.bmp -c:v libx264 -r 30 -pix_fmt yuv420p nazwa_pliku.mp4
 \end{lstlisting}
 
 \subsubsection{Slave}
-Slave jest odpowiedzialny za generowanie fraktala.
+Slave jest odpowiedzialny za generowanie fraktala. Wywołuje metodę liczącą fraktal -- calcMandelbrotPart -- z klasy FractalCalc. Po policzeniu odsyła wynik masterowi.
 
-\begin{lstlisting}
-void Slave::work(int &argc, char** &argv)
-{
-	int64_t size = 0;
-	int tag = 0;
-	while(doWork)
-	{
-		waitForOrder(order);
-		doWork = order.doWork;
-		size = 0;
-		
-		if(true == order.doWork)
-		{
-			size = executeOrder(order, resultArray);
-			if(size > 0)
-			{
-				int64_t id = order.orderID;
-				sendResult(id, resultArray, size);
-			}
-			else
-				doWork = false;
-		}
-		else
-	}
-}
-\end{lstlisting}
-
-Wykonywanie zadania na poziomie slave'a odbywa się w metodzie executeOrder, a jego wynik dostępny w vectorze resultArray (polu klasy Slave).
-\begin{lstlisting}
-int64_t Slave::executeOrder(Order &order, vector<double> &resultArray)
-{
-	int64_t size = 0;
-	if(order.count > 0)
-	{
-	    resultArray.resize(order.count);
-	    size = FractalCalc::calcMandelbrotPart(resultArray.data(), order);
-	    vector<double> colorArray(3*size);
-	    int x = order.beginX;
-	    int y = order.beginY;
-	    for(int i = 0; i < order.count; ++i)
-    	{
-        	double color = resultArray[i];
-        	double r, g, b;
-    	    r = 0.5*(sin(2*M_PI*color - M_PI/2 + M_PI /3) + 1) * 255.0;
-    	    g = 0.5*(sin(2*M_PI*color - M_PI/2) + 1) * 255.0;
-    		b = 0.5*(sin(2*M_PI*color - M_PI/2 - M_PI / 3) + 1) * 255.0;
-            colorArray[3*i + 0] = r;
-            colorArray[3*i + 1] = g;
-            colorArray[3*i + 2] = b;
-			int tempX = ++x;
-			x = tempX % order.pictureWidth;
-			y = (y + (tempX / order.pictureWidth)) % order.pictureHeight;
-
-    	}
-	    resultArray.swap(colorArray);
-	    size = resultArray.size();
-	}
-    return size;
-}
-\end{lstlisting}
-
-\subsubsection{Mandelbrot -- generowanie fraktala}
-Slave wywołuje metodę liczącą fraktal -- calcMandelbrotPart -- z klasy FractalCalc.
-\begin{lstlisting}
-class FractalCalc
-{
-public:
-	typedef void (* FractalFnPtrD)(complex<double>&, complex<double>&);
-	static const int convergenceSteps;
-	static const double divergenceLimitD;
-	//double
-	static void mandelbrotFractal(complex<double> &z, complex<double> &c);
-	static double getConvergence(double z_real, double z_imag, double c_real, double c_imag, FractalFnPtrD fn);
-	static int calcMandelbrotPart(double* mandelbrot, Order &order);
-};
-
-void FractalCalc::mandelbrotFractal(complex<double> &z, complex<double> &c)
-{
-	z = z * z + c;
-}
-
-double FractalCalc::getConvergence(double z_real, double z_imag, double c_real, double c_imag, FractalFnPtrD fn)
-{
-	complex<double> z(z_real, z_imag);
-	complex<double> c(c_real, c_imag); // c_real => c(e)real xD
-
-	// Sprawdzanie zbieznosci
-	int j = 0;
-	for (; j < convergenceSteps && abs(z) < divergenceLimitD; j++)
-	{
-		fn(z, c);
-	}
-	double log_zn, nu, result;
-	if ( j < convergenceSteps ) 
-	{
-		log_zn = log( abs(z) );
-		nu = log( log_zn / log(2) ) / log(2);
-		result = (j + 1 - nu) / convergenceSteps;
-	}
-	return result;
-}
-
-int FractalCalc::calcMandelbrotPart(double* mandelbrot, Order &order)
-{
-	int iX = order.beginX;
-	int iY = order.beginY;
-	int i = 0;
-	for (; i < order.count; ++i, ++iX)
-	{
-		if(iX >= order.pictureWidth)
-		{
-			iX = 0;
-			++iY;
-		}
-		double dX = (order.fractalX - order.pictureWidth/2 * order.dotSize) + order.dotSize*iX;
-		double dY = (order.fractalY - order.pictureHeight/2 * order.dotSize) + order.dotSize*iY;
-		mandelbrot[i] = getConvergence(0, 0, dX, dY, mandelbrotFractal);
-	}
-	return i;
-}
-\end{lstlisting}
 \subsection{Django}
 Aplikacja internetowa napisana przy użyciu frameworku \textit{Django} jest kolejnym ważnym elementem systemu. To ona odpowiada za komunikację \textit{użytkownik -- baza danych}.
 
@@ -457,96 +225,6 @@ Wymagające zalogowania:
 \item dodawanie nowego zadania generacji
 \item przeglądanie wygenerowanych animacji
 \end{itemize}
-Poniżej umieszczono szablon strony głównej i strony \textit{Moje animacje}:
-
-\begin{lstlisting}
-{% load staticfiles %}
-<!DOCTYPE html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>{{ site.name }}</title>
-<meta name="keywords" content="" />
-<meta name="description" content="" />
-<link href="http://fonts.googleapis.com/css?family=Varela" rel="stylesheet" />
-<link href="{% static "default.css" %}" rel="stylesheet" />
-<link href="{% static "fonts.css" %}" rel="stylesheet" />
-<!--
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="{% static "js/test.js" %}"></script>
--->
-<!--[if IE 6]><link href="{% static "default_ie6.css" %}" rel="stylesheet" type="text/css" /><![endif]-->
-</head>
-<body>
-<div id="wrapper">
-	<div id="header-wrapper">
-		<div id="header" class="container">
-			<div id="logo">
-				<h2><a href="{% url 'index' %}">FRACTAL<br />GENERATOR</a></h2>
-			</div>
-            {% block menu %}
-            {% endblock %}
-		</div>
-	</div>
-	<div id="extra" class="container">
-        {% block reg_log %}
-            {% if user.is_anonymous %}
-                {% block main %}
-                {% endblock %}
-            {% endif %}
-        {% endblock %}
-        {% if user.is_authenticated %}
-		    {% block content %}
-            {% endblock %}
-        {% endif %}
-	</div>
-</div>
-<div id="copyright" class="container">
-	<p>&copy; Untitled. All rights reserved. | Photos by <a href="http://fotogrph.com/">Fotogrph</a> | Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>.</p>
-</div>
-</body>
-</html>
-\end{lstlisting}
-
-\begin{lstlisting}
-{% extends "tasks/index.html" %}
-{% load staticfiles %}
-{% block menu %}
-    <div id="menu">
-				<ul>
-					<li><a href="{% url 'index' %}" accesskey="1" title="">Strona glowna</a></li>
-                    {% if user.is_authenticated %}
-					    <li><a href="{% url 'generate' %}" accesskey="2" title="">Generuj fraktal</a></li>
-					    <li><a href="{% url 'fractals' %}" accesskey="3" title="">Moje fraktale</a></li>
-					    <li class="current_page_item"><a href="{% url 'animations' %}" accesskey="4" title="">Moje animacje</a></li>
-					    <li><a href="{% url 'auth_logout' %}" accesskey="5" title="">Wyloguj</a></li>
-                    {% else %}
-                        <li><a href="{% url 'auth_login' %}" accesskey="2" title="">Zaloguj</a></li>
-                    {% endif %}
-				</ul>
-			</div>
-{% endblock %}
-{% block content %}
-    <h1>Moje Animacje</h1>
-    <br /><br />
-    {% if videos.count > 0 %}
-        {% for video in videos %}
-            <h3>{{ forloop.counter }}.&nbsp&nbsp&nbsp{{ video.created_time }}</h3>
-            <video width="320" height="240" controls>
-                <source src="{% static "videos/"%}{{  video.file_path }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        {% endfor %}
-    {% else %}
-        Nie znaleziono zadnych animacji wygenerowanych przez Ciebie.
-    {% endif %}
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="{% static "js/get_tasks_progress.js" %}"></script>
-{% endblock %}
-{% block main %}
-    <h1>Strona Glowna</h1>
-    Zaloguj sie aby rozpoczac korzystanie z serwisu. Jezeli nie masz jeszcze konta <a href="{% url 'registration_register' %}">zarejestruj sie!</a>
-{% endblock %}
-\end{lstlisting}
 
 Dzięki systemowi szablonów, strony, których zawartość korzysta z powtarzającego się kodu, można sprowadzić do zapisu tylko różniących się fragmentów jako rozszerzenie głównego szablonu. Przykładem takiego zabiegu jest m.in. formularz rejestracji. Dodatkową funkcjonalnością jest autogeneracja kodu przez \textit{Django}. W poniższym przykładzie w miejscu \textit{\{\{form.as\_p\}\}} zostanie wygenerowany kod formularza rejestracyjnego.
 
@@ -563,240 +241,9 @@ Dzięki systemowi szablonów, strony, których zawartość korzysta z powtarzaj�
 {% endblock %}
 \end{lstlisting}
 
-Za załadowanie odpowiedniego szablonu i umieszczenie w nim danych odpowiedzialny jest widok. Wszystkie widoki są zdefiniowane w pliku \textit{views.py}:
-\begin{lstlisting}
-from django.shortcuts import redirect, render
-from django.contrib.auth.decorators import login_required
-from .forms import AddTaskForm
-from .models import Task
+Za załadowanie odpowiedniego szablonu i umieszczenie w nim danych odpowiedzialny jest widok. Wszystkie widoki są zdefiniowane w pliku \textit{views.py}.
 
-def get_dotsize(value):
-    return 4.0 / value
-
-def index(request):
-    if request.user.is_authenticated():
-        tasks = Task.objects.filter(user=request.user).order_by('-created_time')
-        return render(request, 'tasks/tasks.html', {'tasks': tasks})
-    else:
-        return render(request, 'tasks/tasks.html', {})
-
-@login_required(login_url='/')
-def add(request):
-    if request.method == "POST":
-        form = AddTaskForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.user = request.user
-            post.dotSize = get_dotsize(post.frameSizeX)
-            post.save()
-            return redirect('/', pk=post.pk)
-    else:
-        form = AddTaskForm()
-    return render(request, 'tasks/addTask.html', {'form': form})
-
-@login_required(login_url='/')
-def delete(request, task_id):
-    Task.objects.filter(user_id=request.user.id, id=task_id).delete()
-    return redirect('/')
-
-@login_required(login_url='/')
-def fractals(request):
-    return render(request, 'tasks/fractals.html', {})
-
-@login_required(login_url='/')
-def animations(request):
-    if request.user.is_authenticated():
-        tasks = Task.objects.filter(user=request.user, status='done').order_by('-created_time')
-        return render(request, 'tasks/animations.html', {'videos': tasks})
-    else:
-        return render(request, 'tasks/animations.htmll', {})
-\end{lstlisting}
-
-Ustawienia całej aplikacji internetowej zawarte są w pliku \textit{settings.py}. Poniżej znajduje się kod tego pliku:
-\begin{lstlisting}
-import os
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6=saxft6ij11khby3r@((*u*frkyo9e5c!49_=!sd0k64f1qp&'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-# Application definition
-
-INSTALLED_APPS = [
-    'tasks.apps.TasksConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-]
-
-MIDDLEWARE_CLASSES = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'mandelbrot.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
-WSGI_APPLICATION = 'mandelbrot.wsgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mandel',
-        'HOST': 'adres.bazy.com',
-        'PORT': '3306',
-        'USER': 'mandelbrot',
-        'PASSWORD': 'haslodobazy',
-    }
-}
-
-# Password validation
-# https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.9/topics/i18n/
-
-LANGUAGE_CODE = 'pl-pl'
-
-TIME_ZONE = 'Europe/Warsaw'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-
-STATIC_ROOT = "/root/mandelbrot/static/"
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join("videos", "/home/dave/"),
-)
-
-REGISTRATION_OPEN = True  # If True, users can register
-ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window; you may, of course, use a different value.
-REGISTRATION_AUTO_LOGIN = False  # If True, the user will be automatically logged in.
-LOGIN_REDIRECT_URL = '/'  # The page you want users to arrive at after they successful log in
-LOGIN_URL = '/accounts/login/'  # The page users are directed to if they are not logged in,
-# and are trying to access pages requiring authentication
-
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'fractalgenerator@gmail.com'
-EMAIL_HOST_PASSWORD = 'haslodokontapocztowego'
-\end{lstlisting}
-
-Aby aplikacja mogła wygenerować formularz trzeba go zdefiniować jako \textit{ModelForm}:
-\begin{lstlisting}
-from django import forms
-from .models import Task
-
-class AddTaskForm(forms.ModelForm):
-    framerates = (
-         ('24', '24'),
-         ('30', '30'),
-         ('60', '60'),
-    )
-
-    frameSizeX = forms.IntegerField(required=True, label="Szerokosc")
-    frameSizeY = forms.IntegerField(required=True, label="Dlugosc")
-    framerate = forms.ChoiceField(choices=framerates, required=True, label="Liczba klatek/sekunde")
-    duration = forms.FloatField(required=True, label="Czas Trwania", help_text="(s)")
-    pathStartPointX = forms.FloatField(required=True, label="Punkt Startowy X")
-    pathStartPointY = forms.FloatField(required=True, label="Punkt Startowy Y")
-    pathEndPointX = forms.FloatField(required=True, label="Punkt Koncowy X")
-    pathEndPointY = forms.FloatField(required=True, label="Punkt Koncowy Y")
-    zoomStart = forms.FloatField(required=True, min_value=1, label="Powiekszenie startowe")
-    zoomEnd = forms.FloatField(required=True, min_value=1, label="Powiekszenie koncowe")
-    # colorStart = forms.FloatField()
-    # colorEnd = forms.FloatField()
-
-    class Meta:
-        model = Task
-        exclude = ['dotSize', 'progress', 'user', 'file_path', 'status', 'created_time', '', 'colorStart', 'colorEnd']
-\end{lstlisting}
-
-Model zadania do realizacji prezentuje się następująco:
-\begin{lstlisting}
-from django.db import models
-from django.contrib.auth.models import User
-from django.utils import timezone
-
-class Task(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, )
-    created_time = models.DateTimeField(default=timezone.now, )
-    file_path = models.TextField(default="", )
-    status = models.TextField(default="pending", )
-    progress = models.FloatField(default="0", )
-    duration = models.FloatField(default="0",)
-    framerate = models.PositiveIntegerField(default="0")
-    frameSizeX = models.PositiveIntegerField(default="0")
-    frameSizeY = models.PositiveIntegerField(default="0")
-    dotSize = models.FloatField(default="0")
-    pathStartPointX = models.FloatField(default="0")
-    pathStartPointY = models.FloatField(default="0")
-    pathEndPointX = models.FloatField(default="0")
-    pathEndPointY = models.FloatField(default="0")
-    zoomStart = models.FloatField(default="0")
-    zoomEnd = models.FloatField(default="0")
-    colorStart = models.FloatField(default="0")
-    colorEnd = models.FloatField(default="0")
-
-def get_dotsize(self):
-    return 4.0 / self.frameSizeX
-\end{lstlisting}
+Ustawienia całej aplikacji internetowej zawarte są w pliku \textit{settings.py}. 
 
 \subsection{Strona internetowa -- interfejs użytkownika}
 Poniższe zrzuty ekranu prezentują działanie serwisu:
@@ -826,7 +273,7 @@ Rejestracja wymaga podania nazwy użytkownika, adresu email i hasła. Na podany 
     \caption{Generowanie fraktala}
     \label{fig:gen_page}
 \end{figure}
-Na tej stronie istnieje możliwość dodania nowego zadania do wykonania. Podawane są parametry animacji - dotyczące zarówno pliku wideo, jak i samego fraktala i jego pozycji.
+Na tej stronie istnieje możliwość dodania nowego zadania do wykonania. Podawane są parametry animacji -- dotyczące zarówno pliku wideo, jak i samego fraktala i jego pozycji.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{queue_page.png}
@@ -845,34 +292,36 @@ Na stronie Moje animacje widoczny jest podgląd wygenerowanych animacji.
 \newpage
 
 \section{Uruchamianie}
+\subsection{Baza danych}
+Model bazy danych (Doc/mandel.mvb) należy otworzyć za pomocą programu MySQL Workbench i zaimportować go na serwerze.
+
 \subsection{MPI}
 W celu uruchomienia aplikacji MPI potrzebne są następujące składniki:
-biblioteki:
+\begin{itemize}
+\item biblioteki:
 \begin{itemize}
 \item libmysql
-\item libctdc++6
+\item libstdc++6
 \item authorizedkeys
 \item rsync
 \item openmpi
 \end{itemize}
-oraz:
-\begin{itemize}
 \item serwer ssh
 \end{itemize}
 
-Program obsługujący MPI znajduje się w katalogu Cluster. Należy skompilować go poleceniem make. Model bazy danych (Doc/mandel.mvb) należy otworzyć za pomocą programu MySQL Workbench i na jego podstawie wypełnić bazę tabelami. Aplikacja internetowa znajduje się w katalogu WebApp.
+Program obsługujący MPI znajduje się w katalogu Cluster. Należy skompilować go poleceniem make.
 
 \subsection{Django}
-Aby uruchomić aplikację Django wymagane są:
+Aplikacja internetowa w \textit{Django} znajduje się w katalogu WebApp. Aby ją uruchomić wymagane są:
 \begin{itemize}
 \item python w wersji 2.7
 \item django w wersji min. 1.9.2
 \item MySQLdb
 \item django-registration
 \end{itemize}
-Przed włączeniem serwera należy utworzyć bazę danych wg. podanego wcześniej modelu - za pomocą importu lub poleceń w \textit{Django}.\\
+Przed włączeniem serwera należy utworzyć bazę danych wg. podanego wcześniej modelu -- za pomocą importu lub poleceń w \textit{Django}.\\
 
-
+\newpage
 
 \section{Testy wydajności}
 Testy zostały wykonane przy użyciu trzech fizycznych maszyn. 2 z nich były wyposażone w 2 (Intel i5), a jedna 4 (Intel i7) rdzenie procesora. Zastosowana w nich technologia HyperTreading pozwala na jednoczesną pracę dwóch wątków na jednym rdzeniu, zatem można stwierdzić, że były dostępne odpowiednio 4 i 8 rdzeni Maszyna na której uruchamiany był master pracowała pod kontrolą systemu operacyjnego Linux Mint, natomiast na pozostałych były zainstalowane maszyny wirtualne z systemem Linux Debian. Komputery były spięte do jednego switcha z portami FastEthernet. Dostępny sprzęt pozwolił przetestować następujące konfiguracje:
@@ -923,10 +372,12 @@ Na wszystkich wykresach można zaobserwować wzrost czasu trwania wykonania zada
 
 Na wykresach czasu trwania wykonania zadania od wielkości klatki w pikselach możemy zauważyć dwie tendencje dla czasu wykonania. Pierwsza z nich to spadkowa, jeśli zwiększamy ilość węzłów i jest ona zauważalna dla rozmiarów klatek 400, 800, 1200. Druga z nich to tendencja wzrostowa jeśli zwiększamy ilość węzłów i widać ją dla rozmiaru klatek 1600 i 2000. Tendencja spadkowa przy małych klatkach jest spowodowana zwiększeniem mocy obliczeniowej klastra. Natomiast tendencja wzrostowa wynika ze zbyt długiego czasu przesyłania wyniku do węzła master. W tym czasie inne węzły mogą ukończyć zadanie i niestety muszą czekać dłużej na swoją kolej obsługi. Drugim, dość oczywistym wnioskiem, jest to że im większy rozmiar klatki tym więcej czasu potrzeba na wykonanie zadania.
 
+\newpage
+
 \section{Podsumowanie}
 Otrzymane wyniki są dość niespodziewane. Wydawać by się mogło, że dodatkowe węzły liczące powinny powodować redukcję czasu potrzebnego na obliczenia. Tymczasem, nasze pomiary nie wykazują tej własności. Najprawdopodobniej użyty do łączenia maszyn interfejs FastEthernet ma zbyt małą przepustowość przez co procesory nie są maksymalnie wykorzystane i występuje długi czas oczekiwania na komunikację pomiędzy masterem i slavem.
 
-Projekt ten ukazał zalety wynikające z rozpraszania obliczeń na wielu maszynach. Ponadto pokazał, jak używać technologii rozproszonych i webowych (MPI, frameworku Django, języka Python).
+Cały projekt ukazał zalety wynikające z rozpraszania obliczeń na wielu maszynach i wszelkie trudności z tym związane -- zarówno przy tworzeniu oprogramowania, jak i konfiguracji maszyn do współdziałania w ramach klastra. Pokazał, jak używać technologii rozproszonych i webowych (MPI, frameworku Django, języka Python).
 
 \newpage
 \listoffigures

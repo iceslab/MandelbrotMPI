@@ -1,12 +1,12 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.1.13)  2 JUN 2016 18:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.3.15)  2 JUN 2016 20:05
 entering extended mode
-**./main.tex
-(main.tex
+**./Dokumentacja.tex
+(Dokumentacja.tex
 LaTeX2e <2015/10/01> patch level 2
-Babel <3.9m> and hyphenation patterns for 69 languages loaded.
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\article.cls"
+Babel <3.9n> and hyphenation patterns for 69 languages loaded.
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\article.cls"
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\size10.clo"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\size10.clo"
 File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
@@ -21,19 +21,19 @@ File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\inputenc.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\inputenc.sty"
 Package: inputenc 2015/03/17 v1.2c Input encoding file
 \inpenc@prehook=\toks14
 \inpenc@posthook=\toks15
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\utf8.def"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\utf8.def"
 File: utf8.def 2015/09/07 v1.1p UTF-8 support for inputenc
 Now handling font encoding OML ...
 ... no UTF-8 mapping file for font encoding OML
 Now handling font encoding T1 ...
 ... processing UTF-8 mapping file for font encoding T1
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\t1enc.dfu"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\t1enc.dfu"
 File: t1enc.dfu 2015/09/07 v1.1p UTF-8 support for inputenc
    defining Unicode char U+00A0 (decimal 160)
    defining Unicode char U+00A1 (decimal 161)
@@ -193,7 +193,7 @@ File: t1enc.dfu 2015/09/07 v1.1p UTF-8 support for inputenc
 Now handling font encoding OT1 ...
 ... processing UTF-8 mapping file for font encoding OT1
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ot1enc.dfu"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ot1enc.dfu"
 File: ot1enc.dfu 2015/09/07 v1.1p UTF-8 support for inputenc
    defining Unicode char U+00A0 (decimal 160)
    defining Unicode char U+00A1 (decimal 161)
@@ -234,7 +234,7 @@ File: ot1enc.dfu 2015/09/07 v1.1p UTF-8 support for inputenc
 Now handling font encoding OMS ...
 ... processing UTF-8 mapping file for font encoding OMS
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omsenc.dfu"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omsenc.dfu"
 File: omsenc.dfu 2015/09/07 v1.1p UTF-8 support for inputenc
    defining Unicode char U+00A7 (decimal 167)
    defining Unicode char U+00B6 (decimal 182)
@@ -258,34 +258,34 @@ Now handling font encoding U ...
    defining Unicode char U+2122 (decimal 8482)
    defining Unicode char U+2423 (decimal 9251)
 ))
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\indentfirst.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\indentfirst.sty"
 Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
 Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
 \KV@toks@=\toks16
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
 Package: graphics 2014/10/28 v1.0p Standard LaTeX Graphics (DPC,SPQR)
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\trig.sty"
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
 File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
 Package graphics Info: Driver file: pdftex.def on input line 94.
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
 File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
 Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
 Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 )
 \Gread@gobject=\count87
@@ -293,13 +293,14 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen103
 \Gin@req@width=\dimen104
 )
-("C:\Users\graco\AppData\Local\Programs\MiKTeX 2.9\tex\latex\polski\polski.sty"
+(C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\latex\polski\polski.sty
 Package: polski 2008/02/24 v1.3.3 Polish language package
+
 Document language package `polski' v1.3.3 <2008/02/24>
    Inputenc package detected. Catcodes not changed.
 \l@nohyphenation=\language70
    Switching to Polish text encoding and Polish maths fonts.
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ot4enc.def"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ot4enc.def"
 File: ot4enc.def 2005/09/27 v1.99g Standard LaTeX file
 Now handling font encoding OT4 ...
 ... no UTF-8 mapping file for font encoding OT4
@@ -307,7 +308,7 @@ Now handling font encoding OT4 ...
 LaTeX Font Info:    Try loading font information for OT4+cmr on input line 346.
 
 
-("C:\Users\graco\AppData\Local\Programs\MiKTeX 2.9\tex\latex\polski\ot4cmr.fd"
+(C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\latex\polski\ot4cmr.fd
 File: ot4cmr.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
@@ -341,7 +342,8 @@ LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
 (Font)                  OML/cmm/b/it --> OML/plm/b/it on input line 346.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/cmsy/b/n --> OMS/plsy/b/n on input line 346.
-) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\float\float.sty"
+)
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\float\float.sty"
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count88
 \float@exts=\toks17
@@ -349,18 +351,18 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks18
 \@floatcapt=\box27
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.sty"
 Package: geometry 2010/09/12 v5.6 Page Geometry
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
 Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
 Package ifpdf Info: pdfTeX in PDF mode is detected.
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty"
 Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
 Package ifvtex Info: VTeX not detected.
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
 Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 )
 \Gm@cnth=\count89
@@ -376,46 +378,158 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \Gm@layoutvoffset=\dimen112
 \Gm@dimlist=\toks19
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
-("C:\Users\graco\AppData\Local\Programs\MiKTeX 2.9\tex\latex\listings\listings.
-sty"
-\lst@mode=\count92
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty"
+Package: hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
+
+("E:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\hobsub-hyperref.sty"
+Package: hobsub-hyperref 2012/04/25 v1.12 Bundle oberdiek, subset hyperref (HO)
+
+
+("E:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\hobsub-generic.sty"
+Package: hobsub-generic 2012/04/25 v1.12 Bundle oberdiek, subset generic (HO)
+Package: hobsub 2012/04/25 v1.12 Construct package bundles (HO)
+Package hobsub Info: Skipping package `infwarerr' (already loaded).
+Package hobsub Info: Skipping package `ltxcmds' (already loaded).
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+Package hobsub Info: Skipping package `ifvtex' (already loaded).
+Package: intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
+Package hobsub Info: Skipping package `ifpdf' (already loaded).
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+Package: pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
+Package: bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO
+)
+Package: bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
+Package: uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
+)
+Package hobsub Info: Skipping package `hobsub' (already loaded).
+Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
+Package: hopatch 2011/06/24 v1.1 Wrapper for package hooks (HO)
+Package: xcolor-patch 2011/01/30 xcolor patch
+Package: atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
+Package atveryend Info: \enddocument detected (standard20110627).
+Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
+Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
+)
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty"
+Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
+)
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty"
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+)
+\@linkdim=\dimen113
+\Hy@linkcounter=\count92
+\Hy@pagecounter=\count93
+
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def"
+File: pd1enc.def 2012/11/06 v6.83m Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+\Hy@SavedSpaceFactor=\count94
+
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg"
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+Package hyperref Info: Hyper figures OFF on input line 4443.
+Package hyperref Info: Link nesting OFF on input line 4448.
+Package hyperref Info: Hyper index ON on input line 4451.
+Package hyperref Info: Plain pages OFF on input line 4458.
+Package hyperref Info: Backreferencing OFF on input line 4463.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4688.
+\c@Hy@tempcnt=\count95
+
+(C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\latex\url\url.sty
+\Urlmuskip=\muskip10
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 5041.
+\XeTeXLinkMargin=\dimen114
+\Fld@menulength=\count96
+\Field@Width=\dimen115
+\Fld@charsize=\dimen116
+Package hyperref Info: Hyper figures OFF on input line 6295.
+Package hyperref Info: Link nesting OFF on input line 6300.
+Package hyperref Info: Hyper index ON on input line 6303.
+Package hyperref Info: backreferencing OFF on input line 6310.
+Package hyperref Info: Link coloring OFF on input line 6315.
+Package hyperref Info: Link coloring with OCG OFF on input line 6320.
+Package hyperref Info: PDF/A mode OFF on input line 6325.
+LaTeX Info: Redefining \ref on input line 6365.
+LaTeX Info: Redefining \pageref on input line 6369.
+\Hy@abspage=\count97
+\c@Item=\count98
+\c@Hfootnote=\count99
+)
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def"
+File: hpdftex.def 2012/11/06 v6.83m Hyperref driver for pdfTeX
+\Fld@listcount=\count100
+\c@bookmark@seq@number=\count101
+
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty"
+Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+82.
+)
+\Hy@SectionHShift=\skip43
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 16.
+
+(C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\listings.sty
+\lst@mode=\count102
 \lst@gtempboxa=\box28
 \lst@token=\toks20
-\lst@length=\count93
-\lst@currlwidth=\dimen113
-\lst@column=\count94
-\lst@pos=\count95
-\lst@lostspace=\dimen114
-\lst@width=\dimen115
-\lst@newlines=\count96
-\lst@lineno=\count97
-\lst@maxwidth=\dimen116
+\lst@length=\count103
+\lst@currlwidth=\dimen117
+\lst@column=\count104
+\lst@pos=\count105
+\lst@lostspace=\dimen118
+\lst@width=\dimen119
+\lst@newlines=\count106
+\lst@lineno=\count107
+\lst@maxwidth=\dimen120
 
-("C:\Users\graco\AppData\Local\Programs\MiKTeX 2.9\tex\latex\listings\lstmisc.s
-ty"
+(C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstmisc.sty
 File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
-\c@lstnumber=\count98
-\lst@skipnumbers=\count99
+\c@lstnumber=\count108
+\lst@skipnumbers=\count109
 \lst@framebox=\box29
 )
-("C:\Users\graco\AppData\Local\Programs\MiKTeX 2.9\tex\latex\listings\listings.
-cfg"
+(C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\listings.cfg
 File: listings.cfg 2015/06/04 1.6 listings configuration
 ))
 Package: listings 2015/06/04 1.6 (Carsten Heinz)
- ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\color.sty"
+
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\color.sty"
 Package: color 2014/10/28 v1.1a Standard LaTeX Color (DPC)
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 142.
 )
-("C:\Users\graco\AppData\Local\Programs\MiKTeX 2.9\tex\latex\listings\lstlang1.
-sty"
+(C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
-) (main.aux
+)
+(Dokumentacja.aux
 
 LaTeX Warning: Label `fig:my_frac' multiply defined.
 
@@ -423,36 +537,36 @@ LaTeX Warning: Label `fig:my_frac' multiply defined.
 LaTeX Warning: Label `fig:my_frac' multiply defined.
 
 )
-\openout1 = `main.aux'.
+\openout1 = `Dokumentacja.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OT4/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-
-("C:\Users\graco\AppData\Local\Programs\MiKTeX 2.9\tex\context\base\supp-pdf.mk
-ii"
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 52.
+LaTeX Font Info:    ... okay on input line 52.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 52.
+LaTeX Font Info:    ... okay on input line 52.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 52.
+LaTeX Font Info:    ... okay on input line 52.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 52.
+LaTeX Font Info:    ... okay on input line 52.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 52.
+LaTeX Font Info:    ... okay on input line 52.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 52.
+LaTeX Font Info:    ... okay on input line 52.
+LaTeX Font Info:    Checking defaults for OT4/cmr/m/n on input line 52.
+LaTeX Font Info:    ... okay on input line 52.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 52.
+LaTeX Font Info:    ... okay on input line 52.
+ (C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count100
-\scratchdimen=\dimen117
+\scratchcounter=\count110
+\scratchdimen=\dimen121
 \scratchbox=\box30
-\nofMPsegments=\count101
-\nofMParguments=\count102
+\nofMPsegments=\count111
+\nofMParguments=\count112
 \everyMPshowfont=\toks21
-\MPscratchCnt=\count103
-\MPscratchDim=\dimen118
-\MPnumerator=\count104
-\makeMPintoPDFobject=\count105
+\MPscratchCnt=\count113
+\MPscratchDim=\dimen122
+\MPnumerator=\count114
+\makeMPintoPDFobject=\count115
 \everyMPtoPDFconversion=\toks22
 )
 *geometry* driver: auto-detecting
@@ -489,29 +603,49 @@ ii"
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\c@lstlisting=\count106
-<banner2.png, id=1, 1524.69624pt x 198.7425pt>
+\AtBeginShipoutBox=\box31
+Package hyperref Info: Link coloring ON on input line 52.
+("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
+Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
+
+("E:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
+Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
+)
+\c@section@level=\count116
+)
+LaTeX Info: Redefining \ref on input line 52.
+LaTeX Info: Redefining \pageref on input line 52.
+LaTeX Info: Redefining \nameref on input line 52.
+
+(Dokumentacja.out) (Dokumentacja.out)
+\@outlinefile=\write3
+\openout3 = `Dokumentacja.out'.
+
+\c@lstlisting=\count117
+
+<banner2.png, id=75, 1524.69624pt x 198.7425pt>
 File: banner2.png Graphic file (type png)
  <use banner2.png>
-Package pdftex.def Info: banner2.png used on input line 53.
+Package pdftex.def Info: banner2.png used on input line 55.
 (pdftex.def)             Requested size: 455.24411pt x 59.33813pt.
  [1
 
-{C:/Users/graco/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./banner2.p
+{C:/Users/adika/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./banner2.p
 ng>]
-(main.toc
+(Dokumentacja.toc
 LaTeX Font Info:    Try loading font information for OML+plm on input line 3.
 
-("C:\Users\graco\AppData\Local\Programs\MiKTeX 2.9\tex\latex\polski\omlplm.fd"
+(C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\latex\polski\omlplm.fd
 File: omlplm.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
 LaTeX Font Info:    Try loading font information for OMS+plsy on input line 3.
-("C:\Users\graco\AppData\Local\Programs\MiKTeX 2.9\tex\latex\polski\omsplsy.fd"
+
+(C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\latex\polski\omsplsy.fd
 File: omsplsy.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
 LaTeX Font Info:    Try loading font information for OMX+plex on input line 3.
- ("C:\Users\graco\AppData\Local\Programs\MiKTeX 2.9\tex\latex\polski\omxplex.fd
-"
+
+(C:\Users\adika\AppData\Roaming\MiKTeX\2.9\tex\latex\polski\omxplex.fd
 File: omxplex.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
 LaTeX Font Info:    External font `plex10' loaded for size
@@ -521,148 +655,161 @@ LaTeX Font Info:    External font `plex10' loaded for size
 LaTeX Font Info:    External font `plex10' loaded for size
 (Font)              <5> on input line 3.
 )
-\tf@toc=\write3
-\openout3 = `main.toc'.
+\tf@toc=\write4
+\openout4 = `Dokumentacja.toc'.
 
- [1
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.76 \newpage
+              [1
 
 ]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 85.
- ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omscmr.fd"
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 87.
+ ("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 85.
-
-[2] [3] [4] <sql.png, id=27, 642.14906pt x 490.83376pt>
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 87.
+ [2] [3] [4] <sql.png, id=160, 642.14906pt x 490.83376pt>
 File: sql.png Graphic file (type png)
  <use sql.png>
-Package pdftex.def Info: sql.png used on input line 180.
+Package pdftex.def Info: sql.png used on input line 182.
 (pdftex.def)             Requested size: 455.24411pt x 347.97762pt.
- [5 <./sql.png>]
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 203.
- [6]
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 247.
 
- ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omlcmr.fd"
+[5 <./sql.png>]
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <8> on input line 206.
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <6> on input line 206.
+LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 229.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 232.
+LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 232.
+ [6]
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 236.
+
+ ("E:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omlcmr.fd"
 File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <8> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 247.
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <8> on input line 271.
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <6> on input line 271.
-
-[7] [8] [9] [10] [11]
-LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 551.
- [12] [13] [14] [15] [16]
-<main_page.png, id=72, 875.52094pt x 721.94719pt>
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 236.
+ <main_page.png, id=178, 875.52094pt x 721.94719pt>
 File: main_page.png Graphic file (type png)
  <use main_page.png>
-Package pdftex.def Info: main_page.png used on input line 805.
+Package pdftex.def Info: main_page.png used on input line 252.
 (pdftex.def)             Requested size: 455.24411pt x 375.39267pt.
 
-<register_page.png, id=73, 875.52094pt x 721.94719pt>
+<register_page.png, id=179, 875.52094pt x 721.94719pt>
 File: register_page.png Graphic file (type png)
  <use register_page.png>
-Package pdftex.def Info: register_page.png used on input line 812.
+Package pdftex.def Info: register_page.png used on input line 259.
 (pdftex.def)             Requested size: 455.24411pt x 375.39267pt.
 
-[17 <./main_page.png>] <login_page.png, id=77, 875.52094pt x 721.94719pt>
+[7 <./main_page.png>] <login_page.png, id=198, 875.52094pt x 721.94719pt>
 File: login_page.png Graphic file (type png)
 
 <use login_page.png>
-Package pdftex.def Info: login_page.png used on input line 819.
+Package pdftex.def Info: login_page.png used on input line 266.
 (pdftex.def)             Requested size: 455.24411pt x 375.39267pt.
- <gen_page.png, id=78, 875.52094pt x 721.94719pt>
+ <gen_page.png, id=199, 875.52094pt x 721.94719pt>
 File: gen_page.png Graphic file (type png)
 
 <use gen_page.png>
-Package pdftex.def Info: gen_page.png used on input line 825.
+Package pdftex.def Info: gen_page.png used on input line 272.
 (pdftex.def)             Requested size: 455.24411pt x 375.39267pt.
- [18 <./register_page.png>] [19 <./login_page.png>]
-<queue_page.png, id=86, 875.52094pt x 721.94719pt>
+ [8 <./register_page.png>] [9 <./login_page.png>]
+<queue_page.png, id=210, 875.52094pt x 721.94719pt>
 File: queue_page.png Graphic file (type png)
  <use queue_page.png>
-Package pdftex.def Info: queue_page.png used on input line 832.
+Package pdftex.def Info: queue_page.png used on input line 279.
 (pdftex.def)             Requested size: 455.24411pt x 375.39267pt.
 
-[20 <./gen_page.png>] <my_frac.png, id=91, 875.52094pt x 746.79pt>
+[10 <./gen_page.png>] <my_frac.png, id=217, 875.52094pt x 746.79pt>
 File: my_frac.png Graphic file (type png)
 
 <use my_frac.png>
-Package pdftex.def Info: my_frac.png used on input line 839.
+Package pdftex.def Info: my_frac.png used on input line 286.
 (pdftex.def)             Requested size: 455.24411pt x 388.31024pt.
- [21 <./queue_page.png>] [22 <./my_frac.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 873--874
+ [11 <./queue_page.png>] [12 <./my_frac.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 322--323
 
  []
 
-[23] <1.png, id=102, 1179.65718pt x 1041.1397pt>
+[13] <1.png, id=234, 1179.65718pt x 1041.1397pt>
 File: 1.png Graphic file (type png)
  <use 1.png>
-Package pdftex.def Info: 1.png used on input line 892.
+Package pdftex.def Info: 1.png used on input line 341.
 (pdftex.def)             Requested size: 455.24411pt x 401.78526pt.
-
-<2.png, id=103, 1128.46594pt x 1028.34187pt>
+ [14]
+<2.png, id=245, 1128.46594pt x 1028.34187pt>
 File: 2.png Graphic file (type png)
  <use 2.png>
-Package pdftex.def Info: 2.png used on input line 901.
+Package pdftex.def Info: 2.png used on input line 350.
 (pdftex.def)             Requested size: 455.24411pt x 414.85999pt.
- [24 <./1.png>]
-<3.png, id=109, 566.86781pt x 1026.83624pt>
+ [15 <./1.png>]
+<3.png, id=252, 566.86781pt x 1026.83624pt>
 File: 3.png Graphic file (type png)
  <use 3.png>
-Package pdftex.def Info: 3.png used on input line 910.
+Package pdftex.def Info: 3.png used on input line 359.
 (pdftex.def)             Requested size: 227.62206pt x 412.30971pt.
- [25 <./2.png>]
-<6.png, id=114, 1134.48843pt x 1026.83624pt>
+ [16 <./2.png>]
+<6.png, id=259, 1134.48843pt x 1026.83624pt>
 File: 6.png Graphic file (type png)
  <use 6.png>
-Package pdftex.def Info: 6.png used on input line 919.
+Package pdftex.def Info: 6.png used on input line 368.
 (pdftex.def)             Requested size: 455.24411pt x 412.04335pt.
- [26 <./3.png>]
-[27 <./6.png>] (main.lof)
-\tf@lof=\write4
-\openout4 = `main.lof'.
+ [17 <./3.png>]
+[18 <./6.png>] [19] (Dokumentacja.lof)
+\tf@lof=\write5
+\openout5 = `Dokumentacja.lof'.
 
- [28] (main.aux)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 386.
+ [20]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 386.
+ (Dokumentacja.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 386.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 386.
+Package rerunfilecheck Info: File `Dokumentacja.out' has not changed.
+(rerunfilecheck)             Checksum: 75B2F06358699CDB76F423F827AD6B57;1076.
+
 
 LaTeX Warning: There were multiply-defined labels.
 
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 386.
  ) 
 Here is how much of TeX's memory you used:
- 4887 strings out of 493634
- 63759 string characters out of 3141314
- 452084 words of memory out of 3000000
- 8198 multiletter control sequences out of 15000+200000
- 16346 words of font info for 44 fonts, out of 3000000 for 9000
+ 8410 strings out of 493634
+ 118247 string characters out of 3141314
+ 283927 words of memory out of 3000000
+ 11572 multiletter control sequences out of 15000+200000
+ 16889 words of font info for 45 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 27i,7n,36p,869b,1700s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/pl/plit.enc
-}{C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/pl/plms.enc}
-{C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/pl/plrm.enc}{
-C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/pl/plsc.enc}<C
-:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/P
-rogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Pro
-gram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/
-graco/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/pl/plbx10.pfb><C:/Us
-ers/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/pl/plbx12.pfb><C
-:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/pl/plcsc10.p
-fb><C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/pl/plr1
-0.pfb><C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/pl/p
-lr12.pfb><C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/p
-l/plr5.pfb><C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
-/pl/plr8.pfb><C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
-ic/pl/plsy8.pfb><C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/p
-ublic/pl/plti10.pfb><C:/Users/graco/AppData/Local/Programs/MiKTeX 2.9/fonts/typ
-e1/public/pl/plti12.pfb>
-Output written on main.pdf (29 pages, 747027 bytes).
+ 29i,7n,36p,877b,1811s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/enc/dvips/pl/plit.enc}{C:/Us
+ers/adika/AppData/Roaming/MiKTeX/2.9/fonts/enc/dvips/pl/plms.enc}{C:/Users/adik
+a/AppData/Roaming/MiKTeX/2.9/fonts/enc/dvips/pl/plrm.enc}{C:/Users/adika/AppDat
+a/Roaming/MiKTeX/2.9/fonts/enc/dvips/pl/plsc.enc}<E:/Program Files (x86)/MiKTeX
+ 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><E:/Program Files (x86)/MiKTeX 2.
+9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><E:/Program Files (x86)/MiKTeX 2.9/
+fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/adika/AppData/Roaming/MiKTeX
+/2.9/fonts/type1/public/pl/plbx10.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.
+9/fonts/type1/public/pl/plbx12.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/f
+onts/type1/public/pl/plcsc10.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fon
+ts/type1/public/pl/plr10.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/t
+ype1/public/pl/plr12.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1
+/public/pl/plr5.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1/publ
+ic/pl/plr8.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/pl
+/plsy8.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/pl/plt
+i10.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/pl/plti12
+.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/pl/plti8.pfb
+>
+Output written on Dokumentacja.pdf (21 pages, 708247 bytes).
 PDF statistics:
- 171 PDF objects out of 1000 (max. 8388607)
- 0 named destinations out of 1000 (max. 500000)
- 61 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 364 PDF objects out of 1000 (max. 8388607)
+ 106 named destinations out of 1000 (max. 500000)
+ 205 words of extra memory for PDF output out of 10000 (max. 10000000)
 
