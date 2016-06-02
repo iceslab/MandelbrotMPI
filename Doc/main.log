@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.3.15)  2 JUN 2016 15:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.3.15)  2 JUN 2016 16:41
 entering extended mode
 **./main.tex
 (main.tex
@@ -608,13 +608,13 @@ Package pdftex.def Info: 2.png used on input line 873.
 <3.png, id=108, 566.86781pt x 1026.83624pt>
 File: 3.png Graphic file (type png)
  <use 3.png>
-Package pdftex.def Info: 3.png used on input line 884.
+Package pdftex.def Info: 3.png used on input line 882.
 (pdftex.def)             Requested size: 227.62206pt x 412.30971pt.
  [25 <./2.png>]
 <6.png, id=113, 1134.48843pt x 1026.83624pt>
 File: 6.png Graphic file (type png)
  <use 6.png>
-Package pdftex.def Info: 6.png used on input line 893.
+Package pdftex.def Info: 6.png used on input line 891.
 (pdftex.def)             Requested size: 455.24411pt x 412.04335pt.
  [26 <./3.png>]
 [27 <./6.png>] (main.lof)
@@ -650,7 +650,7 @@ ype1/public/pl/plr12.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1
 ic/pl/plr8.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/pl
 /plsy8.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/pl/plt
 i12.pfb>
-Output written on main.pdf (29 pages, 734513 bytes).
+Output written on main.pdf (29 pages, 734489 bytes).
 PDF statistics:
  167 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
