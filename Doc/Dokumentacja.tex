@@ -78,32 +78,31 @@
 \section{Cel projektu i wymagania}
 Celem projektu jest stworzenie aplikacji do generowania fraktali z użyciem technologii internetowych i zrównoleglonych obliczeń na klastrze MPI.
 
-\textbf{Użytkownik aplikacji powinien móc:}
+\textbf{Według wstępnych założeń aplikacji użytkownik powinien mieć możliwość:}
 \begin{enumerate}
-\item Wpisać dowolną funkcję zespoloną generującą fraktal
-\item Zobaczyć wygenrowany fraktal
+\item Wygenerować animację fraktala na podstawie
+\begin{itemize}
+\item dowolnej funkcji zespolonej
+\item czasu trwania animacji
+\item liczby klatek na sekundę
+\item rozdzielczości
+\end{itemize}
+a ponadto wybrać rodzaj animacji -- względem:
+\begin{itemize}
+\item przybliżenia -- wartość początkowa i końcowa
+\item punktu centralnego (ścieżki) -- wybranie dwóch punktów na płaszczyźnie (początek i koniec) oraz zdefiniowanie ścieżki pomiędzy nimi, która wskazuje w jaki sposób będzie poruszać się kamera
+\item parametrów zespolonych -- dowolność we wprowadzaniu parametrów w równaniu zespolonym. Każdy z nich może być zmieniany z zadanym krokiem podczas animacji
+\item kolorystyki -- wybór kolorystyki fraktala, definiowanie własnych zasad kolorowania
+\item kroków zbieżności -- ilość maksymalnej ilość kroków zbieżności, potrzebnych do obliczenia koloru danego piksela
+\end{itemize}
+\item Wyświetlić wygenerowaną animację
 \item Przybliżyć obraz w pewnym punkcie płaszczyzny
 \begin{itemize}
 \item klikając
 \item suwakiem
 \item zaznaczając pewien obszar
 \end{itemize}
-\item Określić:
-\begin{itemize}
-\item czas trwania animacji
-\item liczba klatek na sekundę
-\item rozdzielczość
-\end{itemize}
-
 \item Zatrzymać, przewinąć, wznowić animację
-\item Wybrać rodzaj animacji. Animowanie względem:
-\begin{itemize}
-\item przybliżenia -- wartość początkowa i końcowa
-\item punktu centralnego (ścieżki) -- wybranie dwóch punktów na płaszczyźnie (początek i koniec) oraz zdefiniowanie ścieżki pomiędzy nimi, która wskazuje w jaki sposób będzie poruszać się kamera
-\item parametrów zespolonych -- dowoloność we wprowadzaniu parametrów w równaniu zespolonym. Każdy z nich może być zmieniany z zadanym krokiem podczas animacji
-\item kolorystyki -- wybór kolorystyki fraktala, definiowanie własnych zasad kolorowania
-\item kroków zbieżności -- ilość maksymalnej ilość kroków zbieżności, potrzebnych do obliczenia koloru danego piksela
-\end{itemize}
 
 \item Łączyć powyższe animacje:
 \begin{itemize}
@@ -112,11 +111,11 @@ Celem projektu jest stworzenie aplikacji do generowania fraktali z użyciem tech
 \end{itemize}
 
 \item Zobaczyć postęp prac przy generacji animacji w postaci paska postępu oraz przewidywany czas zakończenia 
-\item Zobaczyć skalę przybliżenia w postaci łatwej do wyobrażenia jednostki. Przykładowo punkt początkowy: 100 px odpowiada 1 km. W miarę prybliżania aktualizowanie jednostki do m, cm, mm itd.
-\item Zapisać opis animiacji (funkcja, parametry itp) na swoje urządzenie
+\item Zobaczyć skalę przybliżenia w postaci łatwej do wyobrażenia jednostki. Przykładowo punkt początkowy: 100 px odpowiada 1 km. W miarę przybliżania aktualizowanie jednostki do m, cm, mm itd.
+\item Zapisać opis animacji (funkcja, parametry itp) na swoje urządzenie
 \item Odczytać wcześniej zapisany opis animacji
 \item Zapisać animację na swoje urządzenie
-\item Podzielić się wynikiem na Facebooku :)
+\item Podzielić się wynikiem na Facebooku
 \item Przygotowanie zadania, bez edytora tylko z pliku konfiguracyjnego
 \item Logować się na serwer
 \end{enumerate}
@@ -140,12 +139,12 @@ Celem projektu jest stworzenie aplikacji do generowania fraktali z użyciem tech
 
 \newpage
 
-\section{Prototyp}
+\section{Planowana funkcjonalność prototypu}
 \subsection{Opis ogólny}
 \begin{enumerate}
 \item Przynajmniej 2 liczące slave'y
-\item Może być jednoużytkownikowy system -- zlecamy zadanie i trzymamy na serwerze, żeby można było wrócić do niego po jakimś czasie.
-\item Wynikiem może być wykonanie fraktala (1 klatki) lub film -- dowolność.
+\item Może być jednoużytkownikowy system -- zadanie jest zlecone i trzymane na serwerze, by można było wrócić do niego po jakimś czasie.
+\item Wynikiem może być fraktal lub animacja -- dowolność.
 \item Zlecenie zadania z np. wczytywaną konfiguracją z pliku, przekazanie do serwera, zakończenie zadania i zwrócenie wyniku użytkownikowi.
 \end{enumerate}
 \subsection{Opis szczegółowy}
@@ -166,17 +165,19 @@ Celem projektu jest stworzenie aplikacji do generowania fraktali z użyciem tech
 \newpage
 
 \section{System w wersji finalnej}
-Aplikacja spełnia wymagania. Posiada czytelny interface użytkownika umożliwiający wprowadzanie nowych danych celem wykonania obliczeń. Wynikiem tychże jest animacja, której elementem jest fraktal. 
+Aplikacja spełnia większość wymagań. Posiada czytelny interface użytkownika umożliwiający zlecenie zadania wykonania animacji, której elementem jest fraktal. 
 \par
 Na działający serwis składa się kilka elementów. Są to:
 \begin{itemize}
 \item Serwer bazodanowy -- MySQL Server
 \item Klaster MPI generujący animacje
-\item Serwer internetowy
+\item Aplikacja internetowa
 \end{itemize}
 
 \subsection{Baza danych}
-Baza danych służy do przesyłania zadań pomiędzy aplikacją w \textit{Django}, a aplikacją rozproszoną oraz do zarządzania użytkownikami systemu. Umieszczona jest na serwerze MySQL. Poniżej widoczny jest jej model fizyczny.
+Aplikacja internetowa do działania wymaga bazy danych. Kluczową rolę spełniają tabele tasks\_task i auth\_user. Pierwsza z nich jest łącznikiem między aplikacją internetową, a klastrem. Zawiera informacje o zleconych zadaniach i ich statusie. Druga służy do identyfikacji użytkowników.
+
+Model fizyczny bazy danych przedstawia rysunek \ref{fig:db}:
  \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{sql.png}
@@ -184,27 +185,21 @@ Baza danych służy do przesyłania zadań pomiędzy aplikacją w \textit{Django
     \label{fig:db}
 \end{figure}
 
-Kluczową dla zapewnienia funkcjonalności serwisu jest tabela tasks\_task. Zawiera ona informację o zadaniach (zarówno parametry i status wykonania, jak i informację o dacie dodania i autorze). \\
-Tabela auth\_user zawiera użytkowników. Te i pozostałe tabele obsługuje serwer \textit{Django}, między innymi na nich opierając swoje działanie.
 
 \subsection{MPI}
-Program co ustalony kwant czasu odpytuję bazę danych, sprawdzając czy są nowe zadania do wykonania. Jeśli znajdzie takowe, zaczyna je liczyć, zaprzęgając do pracy węzły MPI.
-
-Główna funkcja programu jest dość prosta. W zależności od roli, jaką ma pełnić program, uruchamiany jest master lub slave.
-
-
 \subsubsection{Master}
-Master odpowiada za sprawdzanie bazy danych. 
+Program co ustalony kwant czasu odpytuję bazę danych, sprawdzając czy są nowe zadania do wykonania.  
 
-Jeśli znajdzie zadanie, pobiera jego parametry i rozsyła zadanie slave'om. Po odebraniu zadania aktualizowany jest jego status, dzięki czemu na stronie internetowej widać pasek postępu -- o którym w dalszej części dokumentacji.
+Jeśli znajdzie zadanie, pobiera jego parametry i rozsyła zadanie slave'om. Po odebraniu zadania aktualizowany jest jego status, dzięki czemu na stronie internetowej widać pasek postępu.
 
-Slave'y pobierają zadania -- pojedyncze klatki do wygenerowania. Wygenerowane obrazy odbierane są od slave'ów:
+Kiedy wszystkie zadania sleve'ów zostaną wykonane, master łączy klatki w film za pomocą programu ffmpeg:
 
-Kiedy wszystkie zadania sleve'ów zostaną wykonane, master łączy klatki w film za pomocą programu ffmpeg:\\
 \textit{ffmpeg -framerate 30 -y -i images/\%d.bmp -c:v libx264 -r 30 -pix\_fmt yuv420p nazwa\_pliku.mp4}
 
+Wygenerowany film przesyła na serwer aplikacji internetowej.
+
 \subsubsection{Slave}
-Slave jest odpowiedzialny za generowanie fraktala. Wywołuje metodę liczącą fraktal -- calcMandelbrotPart -- z klasy FractalCalc. Po policzeniu odsyła wynik masterowi.
+Slave jest odpowiedzialny za generowanie fragmentu animacji. Wywołuje metodę liczącą fraktal -- calcMandelbrotPart -- z klasy FractalCalc. Po policzeniu odsyła wynik masterowi.
 
 \subsection{Django}
 Aplikacja internetowa napisana przy użyciu frameworku \textit{Django} jest kolejnym ważnym elementem systemu. To ona odpowiada za komunikację \textit{użytkownik -- baza danych}.
@@ -243,48 +238,53 @@ Za załadowanie odpowiedniego szablonu i umieszczenie w nim danych odpowiedzialn
 Ustawienia całej aplikacji internetowej zawarte są w pliku \textit{settings.py}. 
 
 \subsection{Strona internetowa -- interfejs użytkownika}
-Poniższe zrzuty ekranu prezentują działanie serwisu:
+Poniższe zrzuty ekranu prezentują działanie serwisu.
+
+Na stronie głównej widoczna jest propozycja zalogowania się, lub rejestracji. Bez tego niemożliwe jest wysyłanie zadań do wykonania. 
  \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{main_page.png}
     \caption{Strona główna}
     \label{fig:main_page}
 \end{figure}
-Na stronie głównej widoczna jest propozycja zalogowania się, lub rejestracji. Bez tego niemożliwe jest wysyłanie zadań do wykonania. 
+\newpage
+Rejestracja wymaga podania nazwy użytkownika, adresu email i hasła. Na podany adres zostaje wysłany link aktywacyjny, po kliknięciu którego można korzystać z serwisu.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{register_page.png}
     \caption{Rejestracja}
     \label{fig:reg_page}
 \end{figure}
-Rejestracja wymaga podania nazwy użytkownika, adresu email i hasła. Na podany adres zostaje wysłany link aktywacyjny, po kliknięciu którego można korzystać z serwisu.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{login_page.png}
     \caption{Logowanie}
     \label{fig:activ_page}
 \end{figure}
+\newpage
+Na tej stronie istnieje możliwość dodania nowego zadania do wykonania. Podawane są parametry animacji -- dotyczące zarówno pliku wideo, jak i samego fraktala i jego pozycji.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{gen_page.png}
     \caption{Generowanie fraktala}
     \label{fig:gen_page}
 \end{figure}
-Na tej stronie istnieje możliwość dodania nowego zadania do wykonania. Podawane są parametry animacji -- dotyczące zarówno pliku wideo, jak i samego fraktala i jego pozycji.
+\newpage
+Po zalogowaniu się na stronie głównej widoczne są zlecone zadania i ich status wykonania wraz z paskiem postępu.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{queue_page.png}
     \caption{Kolejka zadań}
     \label{fig:queue_page}
 \end{figure}
-Po zalogowaniu się na stronie głównej widoczne są zlecone zadania i ich status wykonania wraz z paskiem postępu.
+\newpage
+Na stronie Moje animacje widoczny jest podgląd wygenerowanych animacji.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{my_frac.png}
     \caption{Moje animacje}
     \label{fig:my_frac}
 \end{figure}
-Na stronie Moje animacje widoczny jest podgląd wygenerowanych animacji.
 
 \newpage
 
@@ -293,11 +293,12 @@ Na stronie Moje animacje widoczny jest podgląd wygenerowanych animacji.
 \subsection{MPI}
 W celu uruchomienia aplikacji MPI potrzebne są następujące składniki:
 \begin{itemize}
-\item System Linux (testowane na Debian/Mint)
+\item System Linux (testowane na Debian 8/Mint 17.1)
 \item Serwer SSH na stacjach slave
-\item Logowanie do ssh slave przy użyciu klucza RSA (bez podawania hasła)
+\item Klient SSH na stacjach master
+\item Zarejestrowany klucz RSA mastera na maszynach slave
 \item Program rsync na stacji master
-\item Program ffmpeg
+\item Program ffmpeg na stacji master
 \item Biblioteki:
 \begin{itemize}
 \item libmysqlclient-dev
@@ -311,21 +312,19 @@ W celu uruchomienia aplikacji MPI potrzebne są następujące składniki:
 
 Program obsługujący MPI znajduje się w katalogu Cluster. Uruchomienie klastra odbywa się za pomocą skryptu \textit{Cluster/run.sh}. Przyjmuje on następujące parametry:
 \begin{itemize}
-\item liczbę slotów w klastrze (node’ów)
-\item wielkość ziarna jako część całej klatki np. 2 oznacza połowę klatki, 4 oznacza ćwierć, 10 oznacza jedną dziesiątą klatki itd.
+\item liczbę slotów w klastrze (wątków)
+\item wielkość ziarna, jako część całej klatki np. 2 oznacza połowę klatki, 4 oznacza ćwierć, 10 oznacza jedną dziesiątą klatki itd.
 \end{itemize}
 
-Program obsługujący MPI znajduje się w katalogu Cluster. Uruchomienie klastra odbywa się za pomocą skryptu Cluster/run.sh. Przyjmuje on następujące parametry:
-\begin{itemize}
-\item liczbę slotów w klastrze (node’ów)
-\item wielkość ziarna jako część całej klatki np. 2 oznacza połowę klatki, 4 oznacza ćwierć, 10 oznacza jedną dziesiątą klatki itd.
-\end{itemize}
+W pierwszej kolejności wykonywana jest kompilacja projektu. W pliku źródłowym \textit{Master.cpp} jest makrodefinicja \textit{\_LOCALHOST\_ONLY\_}. Determinuje ona źródło zadania -- zdalna baza danych lub opis sceny pobrany z kodu źródłowego. Konfiguracja bazy danych zapisana jest w pliku \textit{NetCpp/comm.h}. 
 
-W pierwszej kolejności wykonywana jest kompilacja projektu. W pliku źródłowym \textit{Master.cpp} jest makrodefinicja \textit{\_LOCALHOST\_ONLY\_}, dzięki której można wyspecyfikować czy program ma łączyć się ze zdalną bazą danych, której adres zmodyfikować można w pliku \textit{NetCpp/comm.h} czy opis sceny ma być pobierany z kodu źródłowego. Następnie pliki wykonywalne rozsyłane są za pośrednictwem programu rsync do poszczególnych node'ów. Polecenie to wygląda następująco:\\
-\textit{rsync -av -e "ssh" ./main user@host:~/main, gdzie\\
-user - nazwa użytkownika\\
+Pliki wykonywalne rozsyłane są za pośrednictwem programu rsync do poszczególnych node'ów. Polecenie to wygląda następująco:\\
+\textit{rsync -av -e "ssh" ./main user@host:~/main}, gdzie\\
+\textit{user - nazwa użytkownika\\
 host - adres ip node'a}\\
 W ostanim etapie uruchamiany jest klaster za pośrednictwem polecenia mpirun.
+
+\newpage
 
 \subsection{Aplikacja internetowa (Django + baza danych)}
 Aplikacja internetowa w \textit{Django} znajduje się w katalogu WebApp. Aby ją uruchomić wymagane są:
@@ -340,15 +339,15 @@ Przed włączeniem serwera należy utworzyć pustą bazę danych i wypełnić j�
 python manage.py miagrate}
 
 \section{Testy wydajności}
-Testy zostały wykonane przy użyciu trzech fizycznych maszyn. 2 z nich były wyposażone w 2 (Intel i5), a jedna 4 (Intel i7) rdzenie procesora. Zastosowana w nich technologia HyperTreading pozwala na jednoczesną pracę dwóch wątków na jednym rdzeniu, zatem można stwierdzić, że były dostępne odpowiednio 4 i 8 rdzeni Maszyna na której uruchamiany był master pracowała pod kontrolą systemu operacyjnego Linux Mint, natomiast na pozostałych były zainstalowane maszyny wirtualne z systemem Linux Debian. Komputery były spięte do jednego switcha z portami FastEthernet. Dostępny sprzęt pozwolił przetestować następujące konfiguracje:
-\begin{enumerate}
+Testy zostały wykonane przy użyciu trzech fizycznych maszyn. Dwie z nich były wyposażone w dwa (Intel i5), a jedna w cztery (Intel i7) rdzenie procesora. Zastosowana w nich technologia \textit{HyperTreading} pozwala na jednoczesną pracę dwóch wątków na jednym rdzeniu, zatem można stwierdzić, że były dostępne odpowiednio 4 i 8 rdzeni Maszyna na której uruchamiany był master pracowała pod kontrolą systemu operacyjnego Linux Mint, natomiast na pozostałych były zainstalowane maszyny wirtualne z systemem Linux Debian. Komputery były spięte do jednego switcha z portami \textit{FastEthernet}. Dostępny sprzęt pozwolił przetestować następujące konfiguracje:
+\begin{itemize}
 \item 1 maszyna fizyczna, 4 rdzenie
 \item 1 maszyna fizyczna, 8 rdzeni
 \item 2 maszyny fizyczne, 8 rdzeni (4 + 4)
 \item 2 maszyny fizyczne, 12 rdzeni (4 + 8)
 \item 3 maszyny fizyczne, 12 rdzeni (4 + 4 + 4)
 \item 3 maszyny fizyczne, 16 rdzeni (4 +4 +8)
-\end{enumerate}
+\end{itemize}
 
 Na wszystkich maszynach zostało uruchomione zadanie wygenerowania 1-sekundowej animacji (30 klatek) w różnej rozdzielczości (400x400 – 2000x2000 px ze skokiem co 200 px). Drugi scenariusz testowy dotyczył podziału klatki na mniejsze podzadania. W tym przypadku rozdzielczość została ustalona na 2000 x 2000 px, natomiast klatka była dzielona na 1, 2, 4, 8, 16 podzadań (seed). Wszystkie pomiary zostały wykonane 10-krotnie, a następnie uśredniono wyniki. Widoczny na wykresach przypadek all dotyczył czasu wykonania całego zadania, wraz z generowaniem animacji z gotowych klatek, natomiast mpi dotyczy wyłącznie czasu obliczeń zrównoleglonych. Wykresy na których nie ma tego podziału pokazują czasy tylko obliczeń zrównoleglonych.
 
@@ -391,9 +390,9 @@ Na wykresach czasu trwania wykonania zadania od wielkości klatki w pikselach mo
 \newpage
 
 \section{Podsumowanie}
-Otrzymane wyniki są dość niespodziewane. Wydawać by się mogło, że dodatkowe węzły liczące powinny powodować redukcję czasu potrzebnego na obliczenia. Tymczasem, nasze pomiary nie wykazują tej własności. Najprawdopodobniej użyty do łączenia maszyn interfejs FastEthernet ma zbyt małą przepustowość przez co procesory nie są maksymalnie wykorzystane i występuje długi czas oczekiwania na komunikację pomiędzy masterem i slavem.
+Otrzymane wyniki nie zgadzają się z oczekiwaniami. Wydawać by się mogło, że dodatkowe węzły liczące powinny powodować redukcję czasu potrzebnego na obliczenia. Tymczasem, nasze pomiary nie wykazują tej własności. Najprawdopodobniej użyty do łączenia maszyn interfejs FastEthernet ma zbyt małą przepustowość, przez co procesory nie są maksymalnie wykorzystane i występuje długi czas oczekiwania na komunikację pomiędzy masterem i slave'ami. 
 
-Cały projekt pokazał, że nie zawsze rozproszenie obliczeń skutkuje zwiększeniem wydajności. W tym celu należy odpowiednio dobierać parametry -- do uzyskania optimum. Podczas pisania napotkano na różne trudności związane zarówno z tworzeniem oprogramowania, jak i z konfiguracją maszyn do współdziałania w ramach klastra. Utrwalone zostały umiejętności związane z technologiami webowymi (framework \textit{Django}, język \textit{Python}) i pokazane te związane z obliczeniami rozproszonymi (MPI).
+Cały projekt pokazał, że nie zawsze rozproszenie obliczeń skutkuje zwiększeniem wydajności. W tym celu należy odpowiednio dobierać parametry -- między innymi ziarno dekompozycji -- do uzyskania optimum. Podczas realizacji projektu napotkano na różne trudności związane zarówno z tworzeniem oprogramowania, jak i z konfiguracją maszyn do współdziałania w ramach klastra. Utrwalone zostały umiejętności związane z technologiami webowymi (framework \textit{Django}, języki \textit{Python}, \textit{jQuery}, \textit{JavaScript}, \textit{CSS}) i poznane te związane z obliczeniami rozproszonymi (MPI).
 
 \newpage
 \listoffigures
