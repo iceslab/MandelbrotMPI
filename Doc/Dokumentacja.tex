@@ -61,6 +61,7 @@
 	\vspace{2cm}
 	{\Large\itshape Jakub Burzała \\ Krzysztof Cabała \\ Bartosz Cieśla \\ Adrian Frydmański \\ Dawid Gracek \\ Bartosz Kardas \par}
 	\vfill
+	prowadzący\par
 	dr hab. inż. Henryk \textsc{Maciejewski}
 
 	\vfill
@@ -314,6 +315,8 @@ Program obsługujący MPI znajduje się w katalogu Cluster. Uruchomienie klastra
 \item wielkość ziarna jako część całej klatki np. 2 oznacza połowę klatki, 4 oznacza ćwierć, 10 oznacza jedną dziesiątą klatki itd.
 \end{itemize}
 W pierwszej kolejności wykonywana jest (w razie potrzeby) kompilacja projektu, następnie pliki wykonywalne rozsyłane są za pośrednictwem programu \textit{rsync} do poszczególnych node'ów. W ostanim etapie uruchamiany jest klaster za pośrednictwem polecenia \textit{mpirun}.
+
+Nazwę użytkownika, listę dostępnych hostów i liczę dostępnych rdzeni hostów należy zdefiniować w pliku \textit{Cluster/available-hosts}.
 
 \subsection{Aplikacja internetowa (Django + baza danych)}
 Aplikacja internetowa w \textit{Django} znajduje się w katalogu WebApp. Aby ją uruchomić wymagane są:
