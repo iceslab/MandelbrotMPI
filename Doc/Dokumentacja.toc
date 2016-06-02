@@ -10,9 +10,8 @@
 \contentsline {subsection}{\numberline {3.3}Django}{6}{subsection.3.3}
 \contentsline {subsection}{\numberline {3.4}Strona internetowa -- interfejs u\IeC {\.z}ytkownika}{7}{subsection.3.4}
 \contentsline {section}{\numberline {4}Uruchamianie}{13}{section.4}
-\contentsline {subsection}{\numberline {4.1}Baza danych}{13}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}MPI}{13}{subsection.4.2}
-\contentsline {subsection}{\numberline {4.3}Django}{13}{subsection.4.3}
+\contentsline {subsection}{\numberline {4.1}MPI}{13}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Aplikacja internetowa (Django + baza danych)}{13}{subsection.4.2}
 \contentsline {section}{\numberline {5}Testy wydajno\IeC {\'s}ci}{14}{section.5}
 \contentsline {section}{\numberline {6}Podsumowanie}{19}{section.6}
 \contentsline {section}{Spis rysunk\IeC {\'o}w}{20}{section*.2}

@@ -176,7 +176,7 @@ Na działający serwis składa się kilka elementów. Są to:
 \end{itemize}
 
 \subsection{Baza danych}
-Baza danych służy do przesyłania zadań pomiędzy aplikacją w Django, a aplikacją rozproszoną oraz do zarządzania użytkownikami systemu. Umieszczona jest na serwerze MySQL. Poniżej widoczny jest jej model fizyczny.
+Baza danych służy do przesyłania zadań pomiędzy aplikacją w \textit{Django}, a aplikacją rozproszoną oraz do zarządzania użytkownikami systemu. Umieszczona jest na serwerze MySQL. Poniżej widoczny jest jej model fizyczny.
  \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{sql.png}
@@ -185,7 +185,7 @@ Baza danych służy do przesyłania zadań pomiędzy aplikacją w Django, a apli
 \end{figure}
 
 Kluczową dla zapewnienia funkcjonalności serwisu jest tabela tasks\_task. Zawiera ona informację o zadaniach (zarówno parametry i status wykonania, jak i informację o dacie dodania i autorze). \\
-Tabela auth\_user zawiera użytkowników. Te i pozostałe tabele obsługuje serwer Django, między innymi na nich opierając swoje działanie.
+Tabela auth\_user zawiera użytkowników. Te i pozostałe tabele obsługuje serwer \textit{Django}, między innymi na nich opierając swoje działanie.
 
 \subsection{MPI}
 Program co ustalony kwant czasu odpytuję bazę danych, sprawdzając czy są nowe zadania do wykonania. Jeśli znajdzie takowe, zaczyna je liczyć, zaprzęgając do pracy węzły MPI.
@@ -200,11 +200,8 @@ Jeśli znajdzie zadanie, pobiera jego parametry i rozsyła zadanie slave'om. Po 
 
 Slave'y pobierają zadania -- pojedyncze klatki do wygenerowania. Wygenerowane obrazy odbierane są od slave'ów:
 
-Kiedy wszystkie zadania sleve'ów zostaną wykonane, master łączy klatki w film za pomocą programu ffmpeg:
-
-\begin{lstlisting}
-ffmpeg -framerate 30 -y -i images/%d.bmp -c:v libx264 -r 30 -pix_fmt yuv420p nazwa_pliku.mp4
-\end{lstlisting}
+Kiedy wszystkie zadania sleve'ów zostaną wykonane, master łączy klatki w film za pomocą programu ffmpeg:\\
+\textit{ffmpeg -framerate 30 -y -i images/\%d.bmp -c:v libx264 -r 30 -pix\_fmt yuv420p nazwa\_pliku.mp4}
 
 \subsubsection{Slave}
 Slave jest odpowiedzialny za generowanie fraktala. Wywołuje metodę liczącą fraktal -- calcMandelbrotPart -- z klasy FractalCalc. Po policzeniu odsyła wynik masterowi.
@@ -292,34 +289,43 @@ Na stronie Moje animacje widoczny jest podgląd wygenerowanych animacji.
 \newpage
 
 \section{Uruchamianie}
-\subsection{Baza danych}
-Model bazy danych (Doc/mandel.mvb) należy otworzyć za pomocą programu MySQL Workbench i zaimportować go na serwerze.
 
 \subsection{MPI}
 W celu uruchomienia aplikacji MPI potrzebne są następujące składniki:
 \begin{itemize}
-\item biblioteki:
+\item System Linux (testowane na Debian/Mint)
+\item Serwer SSH na stacjach slave
+\item Logowanie do ssh slave przy użyciu klucza RSA (bez podawania hasła)
+\item Program rsync na stacji master
+\item Program ffmpeg
+\item Biblioteki:
 \begin{itemize}
-\item libmysql
+\item libmysqlclient-dev
 \item libstdc++6
-\item authorizedkeys
-\item rsync
-\item openmpi
+\item openmpi-devel
+\item gmp-devel
+\item opengl
 \end{itemize}
-\item serwer ssh
+\item Kompilator mpic++
 \end{itemize}
 
-Program obsługujący MPI znajduje się w katalogu Cluster. Należy skompilować go poleceniem make.
+Program obsługujący MPI znajduje się w katalogu Cluster. Należy skompilować go poleceniem make. Uruchamianie odbywa się poprzez skrypt \textit{Cluster/run.sh}. Skrypt przyjmuje  następujące parametry: 
+\begin{itemize}
+\item liczbę slotów w klastrze (node'ów)
+\item wielkość ziarna jako część całej klatki np. 2 oznacza połowę klatki, 4 oznacza ćwierć, 10 oznacza jedną dziesiątą klatki itd.
+\end{itemize}
 
-\subsection{Django}
+\subsection{Aplikacja internetowa (Django + baza danych)}
 Aplikacja internetowa w \textit{Django} znajduje się w katalogu WebApp. Aby ją uruchomić wymagane są:
 \begin{itemize}
-\item python w wersji 2.7
-\item django w wersji min. 1.9.2
+\item Python w wersji 2.7
+\item Django w wersji min. 1.9.2
 \item MySQLdb
 \item django-registration
 \end{itemize}
-Przed włączeniem serwera należy utworzyć bazę danych wg. podanego wcześniej modelu -- za pomocą importu lub poleceń w \textit{Django}.\\
+Przed włączeniem serwera należy utworzyć pustą bazę danych i wypełnić ją na podstawie modelu MySQL (Doc/mandel.mwb) lub poleceń w \textit{Django}:\\
+\textit{python manage.py makemigrations\\
+python manage.py miagrate}
 
 \newpage
 
@@ -377,7 +383,7 @@ Na wykresach czasu trwania wykonania zadania od wielkości klatki w pikselach mo
 \section{Podsumowanie}
 Otrzymane wyniki są dość niespodziewane. Wydawać by się mogło, że dodatkowe węzły liczące powinny powodować redukcję czasu potrzebnego na obliczenia. Tymczasem, nasze pomiary nie wykazują tej własności. Najprawdopodobniej użyty do łączenia maszyn interfejs FastEthernet ma zbyt małą przepustowość przez co procesory nie są maksymalnie wykorzystane i występuje długi czas oczekiwania na komunikację pomiędzy masterem i slavem.
 
-Cały projekt ukazał zalety wynikające z rozpraszania obliczeń na wielu maszynach i wszelkie trudności z tym związane -- zarówno przy tworzeniu oprogramowania, jak i konfiguracji maszyn do współdziałania w ramach klastra. Pokazał, jak używać technologii rozproszonych i webowych (MPI, frameworku Django, języka Python).
+Cały projekt ukazał zalety wynikające z rozpraszania obliczeń na wielu maszynach i wszelkie trudności z tym związane -- zarówno przy tworzeniu oprogramowania, jak i konfiguracji maszyn do współdziałania w ramach klastra. Pokazał, jak używać technologii rozproszonych i webowych (MPI, frameworku \textit{Django}, języka \textit{Python}).
 
 \newpage
 \listoffigures
