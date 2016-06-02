@@ -1,3 +1,5 @@
+# Pattern: user@host max-slots=8
+
 localhost max-slots=8
 user@192.168.30.182 max-slots=8
 user@192.168.30.196 max-slots=16
