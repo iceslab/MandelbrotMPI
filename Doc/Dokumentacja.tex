@@ -314,9 +314,18 @@ Program obsługujący MPI znajduje się w katalogu Cluster. Uruchomienie klastra
 \item liczbę slotów w klastrze (node’ów)
 \item wielkość ziarna jako część całej klatki np. 2 oznacza połowę klatki, 4 oznacza ćwierć, 10 oznacza jedną dziesiątą klatki itd.
 \end{itemize}
-W pierwszej kolejności wykonywana jest (w razie potrzeby) kompilacja projektu, następnie pliki wykonywalne rozsyłane są za pośrednictwem programu \textit{rsync} do poszczególnych node'ów. W ostanim etapie uruchamiany jest klaster za pośrednictwem polecenia \textit{mpirun}.
 
-Nazwę użytkownika, listę dostępnych hostów i liczę dostępnych rdzeni hostów należy zdefiniować w pliku \textit{Cluster/available-hosts}.
+Program obsługujący MPI znajduje się w katalogu Cluster. Uruchomienie klastra odbywa się za pomocą skryptu Cluster/run.sh. Przyjmuje on następujące parametry:
+\begin{itemize}
+\item liczbę slotów w klastrze (node’ów)
+\item wielkość ziarna jako część całej klatki np. 2 oznacza połowę klatki, 4 oznacza ćwierć, 10 oznacza jedną dziesiątą klatki itd.
+\end{itemize}
+
+W pierwszej kolejności wykonywana jest kompilacja projektu. W pliku źródłowym \textit{Master.cpp} jest makrodefinicja \textit{\_LOCALHOST\_ONLY\_}, dzięki której można wyspecyfikować czy program ma łączyć się ze zdalną bazą danych, której adres zmodyfikować można w pliku \textit{NetCpp/comm.h} czy opis sceny ma być pobierany z kodu źródłowego. Następnie pliki wykonywalne rozsyłane są za pośrednictwem programu rsync do poszczególnych node'ów. Polecenie to wygląda następująco:\\
+\textit{rsync -av -e "ssh" ./main user@host:~/main, gdzie\\
+user - nazwa użytkownika\\
+host - adres ip node'a}\\
+W ostanim etapie uruchamiany jest klaster za pośrednictwem polecenia mpirun.
 
 \subsection{Aplikacja internetowa (Django + baza danych)}
 Aplikacja internetowa w \textit{Django} znajduje się w katalogu WebApp. Aby ją uruchomić wymagane są:
@@ -329,8 +338,6 @@ Aplikacja internetowa w \textit{Django} znajduje się w katalogu WebApp. Aby ją
 Przed włączeniem serwera należy utworzyć pustą bazę danych i wypełnić ją na podstawie modelu MySQL (Doc/mandel.mwb) lub poleceń w \textit{Django}:\\
 \textit{python manage.py makemigrations\\
 python manage.py miagrate}
-
-\newpage
 
 \section{Testy wydajności}
 Testy zostały wykonane przy użyciu trzech fizycznych maszyn. 2 z nich były wyposażone w 2 (Intel i5), a jedna 4 (Intel i7) rdzenie procesora. Zastosowana w nich technologia HyperTreading pozwala na jednoczesną pracę dwóch wątków na jednym rdzeniu, zatem można stwierdzić, że były dostępne odpowiednio 4 i 8 rdzeni Maszyna na której uruchamiany był master pracowała pod kontrolą systemu operacyjnego Linux Mint, natomiast na pozostałych były zainstalowane maszyny wirtualne z systemem Linux Debian. Komputery były spięte do jednego switcha z portami FastEthernet. Dostępny sprzęt pozwolił przetestować następujące konfiguracje:
