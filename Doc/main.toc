@@ -1,16 +1,16 @@
-\contentsline {section}{\numberline {1}Cel projektu i wymagania}{2}
-\contentsline {section}{\numberline {2}Prototyp}{4}
-\contentsline {subsection}{\numberline {2.1}Opis og\IeC {\'o}lny}{4}
-\contentsline {subsection}{\numberline {2.2}Opis szczeg\IeC {\'o}\IeC {\l }owy}{4}
-\contentsline {section}{\numberline {3}System w wersji finalnej}{5}
-\contentsline {subsection}{\numberline {3.1}Baza danych}{5}
-\contentsline {subsection}{\numberline {3.2}MPI}{6}
-\contentsline {subsubsection}{\numberline {3.2.1}Master}{6}
-\contentsline {subsubsection}{\numberline {3.2.2}Slave}{8}
-\contentsline {subsubsection}{\numberline {3.2.3}Mandelbrot -- generowanie fraktala}{9}
-\contentsline {subsection}{\numberline {3.3}Django}{10}
-\contentsline {subsection}{\numberline {3.4}Strona internetowa -- interfejs u\IeC {\.z}ytkownika}{16}
-\contentsline {section}{\numberline {4}Uruchamianie}{23}
-\contentsline {section}{\numberline {5}Testy wydajno\IeC {\'s}ci}{23}
-\contentsline {section}{\numberline {6}Podsumowanie}{27}
-\contentsline {section}{Spis rysunk\IeC {\'o}w}{28}
+\contentsline {section}{\numberline {1}Cel projektu i wymagania}{2}{section.1}
+\contentsline {section}{\numberline {2}Prototyp}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}Opis og\IeC {\'o}lny}{4}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Opis szczeg\IeC {\'o}\IeC {\l }owy}{4}{subsection.2.2}
+\contentsline {section}{\numberline {3}System w wersji finalnej}{5}{section.3}
+\contentsline {subsection}{\numberline {3.1}Baza danych}{5}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}MPI}{6}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Master}{6}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Slave}{8}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}Mandelbrot -- generowanie fraktala}{9}{subsubsection.3.2.3}
+\contentsline {subsection}{\numberline {3.3}Django}{10}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Strona internetowa -- interfejs u\IeC {\.z}ytkownika}{16}{subsection.3.4}
+\contentsline {section}{\numberline {4}Uruchamianie}{23}{section.4}
+\contentsline {section}{\numberline {5}Testy wydajno\IeC {\'s}ci}{23}{section.5}
+\contentsline {section}{\numberline {6}Podsumowanie}{27}{section.6}
+\contentsline {section}{Spis rysunk\IeC {\'o}w}{29}{section*.2}
