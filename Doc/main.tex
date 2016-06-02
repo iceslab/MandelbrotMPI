@@ -441,12 +441,23 @@ int FractalCalc::calcMandelbrotPart(double* mandelbrot, Order &order)
 	return i;
 }
 \end{lstlisting}
-
-
 \subsection{Django}
-Aplikacja napisana z użyciem frameworku Django jest kolejnym ważnym elementem systemu. To ona odpowiada za komunikację użytkownik -- baza danych.
+Aplikacja internetowa napisana przy użyciu frameworku \textit{Django} jest kolejnym ważnym elementem systemu. To ona odpowiada za komunikację \textit{użytkownik -- baza danych}.
 
-Widoki dostępne w interfejsie użytkownika, to strona główna, logowanie, rejestracja, dodawanie nowego fraktala i przeglądanie już dodanych w postaci wygenerowanych animacji. Poniżej umieszczono przykładowy szablon strony głównej i strony Moje animacje:
+Widoki dostępne w interfejsie użytkownika dzielą się na:\\
+Ogólnodostępne:
+\begin{itemize}
+\item strona główna
+\item logowanie
+\item rejestracja
+\end{itemize}
+Wymagające zalogowania:
+\begin{itemize}
+\item lista zleconych zadań generacji
+\item dodawanie nowego zadania generacji
+\item przeglądanie wygenerowanych animacji
+\end{itemize}
+Poniżej umieszczono szablon strony głównej i strony \textit{Moje animacje}:
 
 \begin{lstlisting}
 {% load staticfiles %}
@@ -537,7 +548,8 @@ Widoki dostępne w interfejsie użytkownika, to strona główna, logowanie, reje
 {% endblock %}
 \end{lstlisting}
 
-Formularz rejestracji generuje Django.
+Dzięki systemowi szablonów, strony, których zawartość korzysta z powtarzającego się kodu, można sprowadzić do zapisu tylko różniących się fragmentów jako rozszerzenie głównego szablonu. Przykładem takiego zabiegu jest m.in. formularz rejestracji. Dodatkową funkcjonalnością jest autogeneracja kodu przez \textit{Django}. W poniższym przykładzie w miejscu \textit{\{\{form.as\_p\}\}} zostanie wygenerowany kod formularza rejestracyjnego.
+
 \begin{lstlisting}
 {% extends "tasks/tasks.html" %}
 {% load i18n %}
@@ -551,8 +563,7 @@ Formularz rejestracji generuje Django.
 {% endblock %}
 \end{lstlisting}
 
-Poniżej widoczne są przykładowe kody w Pythonie.\\
-Widoki w pliku views.py:
+Za załadowanie odpowiedniego szablonu i umieszczenie w nim danych odpowiedzialny jest widok. Wszystkie widoki są zdefiniowane w pliku \textit{views.py}:
 \begin{lstlisting}
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -601,7 +612,7 @@ def animations(request):
         return render(request, 'tasks/animations.htmll', {})
 \end{lstlisting}
 
-Plik z ustawieniami wygląda następująco:
+Ustawienia całej aplikacji internetowej zawarte są w pliku \textit{settings.py}. Poniżej znajduje się kod tego pliku:
 \begin{lstlisting}
 import os
 
@@ -727,7 +738,7 @@ EMAIL_HOST_USER = 'fractalgenerator@gmail.com'
 EMAIL_HOST_PASSWORD = 'haslodokontapocztowego'
 \end{lstlisting}
 
-Obsługa formularza:
+Aby aplikacja mogła wygenerować formularz trzeba go zdefiniować jako \textit{ModelForm}:
 \begin{lstlisting}
 from django import forms
 from .models import Task
@@ -757,7 +768,7 @@ class AddTaskForm(forms.ModelForm):
         exclude = ['dotSize', 'progress', 'user', 'file_path', 'status', 'created_time', '', 'colorStart', 'colorEnd']
 \end{lstlisting}
 
-Zadanie:
+Model zadania do realizacji prezentuje się następująco:
 \begin{lstlisting}
 from django.db import models
 from django.contrib.auth.models import User
@@ -834,17 +845,34 @@ Na stronie Moje animacje widoczny jest podgląd wygenerowanych animacji.
 \newpage
 
 \section{Uruchamianie}
-W celu uruchomienia aplikacji potrzebne są następujące składniki:
+\subsection{MPI}
+W celu uruchomienia aplikacji MPI potrzebne są następujące składniki:
+biblioteki:
 \begin{itemize}
-\item lib mysql
+\item libmysql
 \item libctdc++6
-\item serwer ssh
 \item authorizedkeys
 \item rsync
 \item openmpi
 \end{itemize}
+oraz:
+\begin{itemize}
+\item serwer ssh
+\end{itemize}
 
 Program obsługujący MPI znajduje się w katalogu Cluster. Należy skompilować go poleceniem make. Model bazy danych (Doc/mandel.mvb) należy otworzyć za pomocą programu MySQL Workbench i na jego podstawie wypełnić bazę tabelami. Aplikacja internetowa znajduje się w katalogu WebApp.
+
+\subsection{Django}
+Aby uruchomić aplikację Django wymagane są:
+\begin{itemize}
+\item python w wersji 2.7
+\item django w wersji min. 1.9.2
+\item MySQLdb
+\item django-registration
+\end{itemize}
+Przed włączeniem serwera należy utworzyć bazę danych wg. podanego wcześniej modelu - za pomocą importu lub poleceń w \textit{Django}.\\
+
+
 
 \section{Testy wydajności}
 Testy zostały wykonane przy użyciu trzech fizycznych maszyn. 2 z nich były wyposażone w 2 (Intel i5), a jedna 4 (Intel i7) rdzenie procesora. Zastosowana w nich technologia HyperTreading pozwala na jednoczesną pracę dwóch wątków na jednym rdzeniu, zatem można stwierdzić, że były dostępne odpowiednio 4 i 8 rdzeni Maszyna na której uruchamiany był master pracowała pod kontrolą systemu operacyjnego Linux Mint, natomiast na pozostałych były zainstalowane maszyny wirtualne z systemem Linux Debian. Komputery były spięte do jednego switcha z portami FastEthernet. Dostępny sprzęt pozwolił przetestować następujące konfiguracje:

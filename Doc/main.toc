@@ -9,8 +9,10 @@
 \contentsline {subsubsection}{\numberline {3.2.2}Slave}{8}
 \contentsline {subsubsection}{\numberline {3.2.3}Mandelbrot -- generowanie fraktala}{9}
 \contentsline {subsection}{\numberline {3.3}Django}{10}
-\contentsline {subsection}{\numberline {3.4}Strona internetowa -- interfejs u\IeC {\.z}ytkownika}{16}
+\contentsline {subsection}{\numberline {3.4}Strona internetowa -- interfejs u\IeC {\.z}ytkownika}{17}
 \contentsline {section}{\numberline {4}Uruchamianie}{23}
+\contentsline {subsection}{\numberline {4.1}MPI}{23}
+\contentsline {subsection}{\numberline {4.2}Django}{23}
 \contentsline {section}{\numberline {5}Testy wydajno\IeC {\'s}ci}{23}
 \contentsline {section}{\numberline {6}Podsumowanie}{27}
 \contentsline {section}{Spis rysunk\IeC {\'o}w}{28}
