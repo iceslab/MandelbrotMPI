@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.3.15)  2 JUN 2016 14:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.3.15)  2 JUN 2016 15:30
 entering extended mode
 **./main.tex
 (main.tex
@@ -617,14 +617,18 @@ File: 6.png Graphic file (type png)
 Package pdftex.def Info: 6.png used on input line 893.
 (pdftex.def)             Requested size: 455.24411pt x 412.04335pt.
  [26 <./3.png>]
-[27 <./6.png>] (main.aux)
+[27 <./6.png>] (main.lof)
+\tf@lof=\write4
+\openout4 = `main.lof'.
+
+ [28] (main.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4881 strings out of 493634
- 63536 string characters out of 3141314
+ 4884 strings out of 493634
+ 63556 string characters out of 3141314
  472084 words of memory out of 3000000
  8196 multiletter control sequences out of 15000+200000
  15810 words of font info for 43 fonts, out of 3000000 for 9000
@@ -646,9 +650,9 @@ ype1/public/pl/plr12.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1
 ic/pl/plr8.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/pl
 /plsy8.pfb><C:/Users/adika/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/pl/plt
 i12.pfb>
-Output written on main.pdf (28 pages, 733384 bytes).
+Output written on main.pdf (29 pages, 734513 bytes).
 PDF statistics:
- 164 PDF objects out of 1000 (max. 8388607)
+ 167 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  61 words of extra memory for PDF output out of 10000 (max. 10000000)
 

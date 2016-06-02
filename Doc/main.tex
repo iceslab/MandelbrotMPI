@@ -847,7 +847,7 @@ W celu uruchomienia aplikacji potrzebne są następujące składniki:
 Program obsługujący MPI znajduje się w katalogu Cluster. Należy skompilować go poleceniem make. Model bazy danych (Doc/mandel.mvb) należy otworzyć za pomocą programu MySQL Workbench i na jego podstawie wypełnić bazę tabelami. Aplikacja internetowa znajduje się w katalogu WebApp.
 
 \section{Testy wydajności}
-Testy zostały wykonane przy użyciu trzech fizycznych maszyn. 2 z nich były wyposażone w 2 (intel i5), a jedna 4 (intel i7) rdzenie procesora. Zastosowana w nich technologia HyperTreading pozwala na jednoczesną pracę dwóch wątków na jednym rdzeniu, zatem można stwierdzić, że były dostępne odpowiednio 4 i 8 rdzeni Maszyna na któtej uruchamiany był master pracowała pod kontrolą systemu operacyjnego Linux Mint, natomiast na pozostałych były zainstalowane maszyny wirtualne z systemem Linux Debian. Komputery były spięte do jednego switcha z portami FastEthernet. Dostępny sprzęt pozwolił przetestować następujące konfiguracje:
+Testy zostały wykonane przy użyciu trzech fizycznych maszyn. 2 z nich były wyposażone w 2 (Intel i5), a jedna 4 (Intel i7) rdzenie procesora. Zastosowana w nich technologia HyperTreading pozwala na jednoczesną pracę dwóch wątków na jednym rdzeniu, zatem można stwierdzić, że były dostępne odpowiednio 4 i 8 rdzeni Maszyna na której uruchamiany był master pracowała pod kontrolą systemu operacyjnego Linux Mint, natomiast na pozostałych były zainstalowane maszyny wirtualne z systemem Linux Debian. Komputery były spięte do jednego switcha z portami FastEthernet. Dostępny sprzęt pozwolił przetestować następujące konfiguracje:
 \begin{enumerate}
 \item 1 maszyna fizyczna, 4 rdzenie
 \item 1 maszyna fizyczna, 8 rdzeni
@@ -898,6 +898,10 @@ Na wszystkich wykresach można zaobserwować wzrost czasu trwania wykonania zada
 Na wykresach czasu trwania wykonania zadania od wielkości klatki w pikselach możemy zauważyć dwie tendencje dla czasu wykonania. Pierwsza z nich to spadkowa, jeśli zwiększamy ilość węzłów i jest ona zauważalna dla rozmiarów klatek 400, 800, 1200. Druga z nich to tendencja wzrostowa jeśli zwiększamy ilość węzłów i widać ją dla rozmiaru klatek 1600 i 2000. Tendencja spadkowa przy małych klatkach jest spowodowana zwiększeniem mocy obliczeniowej klastra. Natomiast tendencja wzrostowa wynika ze zbyt długiego czasu przesyłania wyniku do węzła master. W tym czasie inne węzły mogą ukończyć zadanie i niestety muszą czekać dłużej na swoją kolej obsługi. Drugim, dość oczywistym wnioskiem, jest to że im większy rozmiar klatki tym więcej czasu potrzeba na wykonanie zadania.
 
 \section{Podsumowanie}
-Projekt ten ukazał zalety wynikające z rozpraszania obliczeń na wielu maszynach. Ponadto pokazał, jak używać technologii webowych (frameworku Django, języka Python).
+Projekt ten ukazał zalety wynikające z rozpraszania obliczeń na wielu maszynach. Ponadto pokazał, jak używać technologii rozproszonych i webowych (MPI, frameworku Django, języka Python).
+
+\newpage
+\listoffigures
+\addcontentsline{toc}{section}{Spis rysunków}
 
 \end{document}
