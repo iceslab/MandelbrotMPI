@@ -308,11 +308,12 @@ W celu uruchomienia aplikacji MPI potrzebne są następujące składniki:
 \item Kompilator mpic++
 \end{itemize}
 
-Program obsługujący MPI znajduje się w katalogu Cluster. Należy skompilować go poleceniem make. Uruchamianie odbywa się poprzez skrypt \textit{Cluster/run.sh}. Skrypt przyjmuje  następujące parametry: 
+Program obsługujący MPI znajduje się w katalogu Cluster. Uruchomienie klastra odbywa się za pomocą skryptu \textit{Cluster/run.sh}. Przyjmuje on następujące parametry:
 \begin{itemize}
-\item liczbę slotów w klastrze (node'ów)
+\item liczbę slotów w klastrze (node’ów)
 \item wielkość ziarna jako część całej klatki np. 2 oznacza połowę klatki, 4 oznacza ćwierć, 10 oznacza jedną dziesiątą klatki itd.
 \end{itemize}
+W pierwszej kolejności wykonywana jest (w razie potrzeby) kompilacja projektu, następnie pliki wykonywalne rozsyłane są za pośrednictwem programu \textit{rsync} do poszczególnych node'ów. W ostanim etapie uruchamiany jest klaster za pośrednictwem polecenia \textit{mpirun}.
 
 \subsection{Aplikacja internetowa (Django + baza danych)}
 Aplikacja internetowa w \textit{Django} znajduje się w katalogu WebApp. Aby ją uruchomić wymagane są:
@@ -382,7 +383,7 @@ Na wykresach czasu trwania wykonania zadania od wielkości klatki w pikselach mo
 \section{Podsumowanie}
 Otrzymane wyniki są dość niespodziewane. Wydawać by się mogło, że dodatkowe węzły liczące powinny powodować redukcję czasu potrzebnego na obliczenia. Tymczasem, nasze pomiary nie wykazują tej własności. Najprawdopodobniej użyty do łączenia maszyn interfejs FastEthernet ma zbyt małą przepustowość przez co procesory nie są maksymalnie wykorzystane i występuje długi czas oczekiwania na komunikację pomiędzy masterem i slavem.
 
-Cały projekt ukazał zalety wynikające z rozpraszania obliczeń na wielu maszynach i wszelkie trudności z tym związane -- zarówno przy tworzeniu oprogramowania, jak i konfiguracji maszyn do współdziałania w ramach klastra. Pokazał, jak używać technologii rozproszonych i webowych (MPI, frameworku \textit{Django}, języka \textit{Python}).
+Cały projekt pokazał, że nie zawsze rozproszenie obliczeń skutkuje zwiększeniem wydajności. W tym celu należy odpowiednio dobierać parametry -- do uzyskania optimum. Podczas pisania napotkano na różne trudności związane zarówno z tworzeniem oprogramowania, jak i z konfiguracją maszyn do współdziałania w ramach klastra. Utrwalone zostały umiejętności związane z technologiami webowymi (framework \textit{Django}, język \textit{Python}) i pokazane te związane z obliczeniami rozproszonymi (MPI).
 
 \newpage
 \listoffigures
